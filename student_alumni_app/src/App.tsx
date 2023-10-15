@@ -5,7 +5,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to Student Alumni App</h1>
+      <h1>Welcome to Student Alumni Mentorship Portal</h1>
     </div>
   );
 }
