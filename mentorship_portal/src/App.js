@@ -1,16 +1,25 @@
-import LoginButton from './components/LoginButton';
-import Dashboard from './components/Dashboard';
-import { useAuth0 } from '@auth0/auth0-react';
+import Chat from './pages/Chat';
+import Login from './pages/Login';
+import ChatWelcome from './components/ChatWelcome';
+import Chatting from './components/Chatting';
+import { Route, Routes } from 'react-router-dom';
+import './style.css';
 
 function App() {
-  const { isAuthenticated } = useAuth0();
   return (
-    <main className="column">
-      <LoginButton />
-      {isAuthenticated && <Dashboard />}
-    </main>
+    <>
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='app' element={<Chat />}>
+          <Route path='welcome' element={<ChatWelcome />}></Route>
+          <Route path='chat' element={<Chatting />}></Route>
+        </Route>
+      </Routes>
+    </>
   );
 }
+
+
 
 export default App;
 
