@@ -82,8 +82,32 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const getMyProfile = (req, res, next) => {
+export const getMyProfile = async (req, res, next) => {
   try {
+    if (req.user_type === "student") {
+      const user = req.user;
+      const std = await Student.findOne({ _id: user.more_info });
+      res.status(200).json({
+        success: true,
+        user_type: "student",
+        name: std.name,
+        email: user.email,
+        batch: std.batch,
+        branch: std.branch,
+        roll_no: std.roll_no,
+      });
+    } else if (req.user_type === "alumni") {
+      const user = req.user;
+      res.status(200).json({
+        success: true,
+        user_type: "alumni",
+        name: user.name,
+        email: user.email,
+        batch: user.batch,
+        branch: user.branch,
+        current_work: user.current_work,
+      });
+    }
   } catch (error) {
     next(error);
   }

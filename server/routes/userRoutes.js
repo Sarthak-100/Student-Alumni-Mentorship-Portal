@@ -13,8 +13,6 @@ userRouter.post("/register", register);
 
 userRouter.get("/login", login);
 
-// userRouter.post("/login", login);
-
 userRouter.get("/myProfile", isAuthenticated, getMyProfile);
 
 export default userRouter;
