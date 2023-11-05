@@ -65,6 +65,6 @@ const alumniSchema = mongoose.Schema({
     required: true,
   },
 });
-const Alumni = mongoose.model("User", studentSchema);
+const Alumni = mongoose.model("User", alumniSchema);
 
 export default { User, Student, Alumni };
