@@ -1,13 +1,13 @@
 import express from "express";
 import isAuthenticated from "../middlewares/auth.js";
 
-
 import {
   register,
   login,
   getMyProfile,
 } from "../controllers/userController.js";
-import register from "../controllers/alumniController.js";
+
+import registerAlumni from "../controllers/alumniController.js";
 
 const userRouter = express.Router();
 
