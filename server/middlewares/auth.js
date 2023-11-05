@@ -1,6 +1,6 @@
-import User from "../models/user.js";
+// import User from "../models/user.js";
 import jwt from "jsonwebtoken";
-import { Alumni } from "../models/userModel.js";
+import { User, Admin, Alumni } from "../models/userModel.js";
 
 const isAuthenticated = async (req, res, next) => {
   const { token } = req.cookies;
@@ -15,11 +15,18 @@ const isAuthenticated = async (req, res, next) => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   let out = await User.findById(decoded._id);
-  if (!out) {
+  if (out) {
     req.user = out;
     req.user_type = "student";
   } else {
     out = await Alumni.findById(decoded._id);
+    req.user = out;
+    req.user_type = "alumni";
+    if (out === null) {
+      out = await Admin.findById(decoded._id);
+      req.user = out;
+      req.user_type = "admin";
+    }
   }
   next();
 };
