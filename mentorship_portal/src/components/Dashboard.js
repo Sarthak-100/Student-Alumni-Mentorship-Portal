@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -11,32 +11,18 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './dashboard copy/listItems';
-import { TextField } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { Input } from '@mui/material';
-// IMPORT 
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import ProfilePage from '../pages/ProfilePage';
+import FilterMenu from './Filter'; // Import the FilterMenu component
+import { Link } from 'react-router-dom';
+import FilterIcon from '@mui/icons-material/Filter'; // Import the Filter icon
+import { mainListItems, secondaryListItems } from './dashboard copy/listItems';
 
 const drawerWidth = 240;
 
@@ -84,53 +70,47 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
+  const [showProfilePage, setShowProfilePage] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleProfileMenuOpen = (event) => {
+    setProfileMenuAnchor(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchor(null);
+  };
+
+  const openProfilePage = () => {
+    setShowProfilePage(true);
+    handleProfileMenuClose();
+  };
+
+  const closeProfilePage = () => {
+    setShowProfilePage(false);
+  };
+
+  const openFilterMenu = () => {
+    setShowFilterMenu(true);
+  };
+
+  const closeFilterMenu = () => {
+    setShowFilterMenu(false);
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -164,14 +144,37 @@ export default function Dashboard() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {/* <TextField id="standard-basic" label="Search For Alumni" variant="standard" /> */}
-            <Input placeholder="Search For Alumni" sx={{ width: '78%', fontSize: '15px', fontWeight: '550', marginLeft: '5px', marginBottom: '-3px'}}/>
-        {/* <Button variant="contained" color="primary" sx={{ width: '18%', fontSize: '15px', fontWeight: '550', margin: '4px 5% -13px 5%', maxWidth: '200px'}}>Send</Button> */}
-            <Copyright sx={{ pt: 4 }} />
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', alignItems: 'center' }}>
+            <Input
+              placeholder="Search For Alumni"
+              sx={{
+                width: '78%',
+                fontSize: '15px',
+                fontWeight: '550',
+                marginLeft: '5px',
+                marginBottom: '-3px',
+              }}
+            />
+            <IconButton
+              color="inherit"
+              onClick={openFilterMenu}
+              sx={{ marginLeft: '10px' }}
+            >
+              <FilterIcon />
+            </IconButton>
+            <FilterMenu open={showFilterMenu} onClose={closeFilterMenu} />
           </Container>
         </Box>
       </Box>
+      <Menu
+        anchorEl={profileMenuAnchor}
+        open={Boolean(profileMenuAnchor)}
+        onClose={handleProfileMenuClose}
+      >
+        <MenuItem onClick={openProfilePage}>My Profile</MenuItem>
+        <MenuItem onClick={handleProfileMenuClose}>Logout</MenuItem>
+      </Menu>
+      {showProfilePage && <ProfilePage closeProfilePage={closeProfilePage} />}
     </ThemeProvider>
   );
 }
