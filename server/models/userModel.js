@@ -30,11 +30,16 @@ const userSchema = mongoose.Schema({
     required: true,
   },
 });
-const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
+// export default User;
 
 const studentSchema = mongoose.Schema({
   studentId: {
     type: String,
+    required: true,
+  },
+  batch: {
+    type: Number,
     required: true,
   },
   branch: {
@@ -47,15 +52,19 @@ const studentSchema = mongoose.Schema({
     required: true,
   },
 });
-const Student = mongoose.model("User", studentSchema);
+export const Student = mongoose.model("student", studentSchema);
 
 const alumniSchema = mongoose.Schema({
   batch: {
+    type: Number,
+    required: true,
+  },
+  branch: {
     type: String,
     required: true,
   },
   current_work: {
-    // {company_name: "xyz", designation: "abc", work_exprerience: "2 years"}
+    // {company_name: "xyz", designation: "abc", timeperiod: "2 years"}
     type: Object,
     required: true,
   },
@@ -65,6 +74,13 @@ const alumniSchema = mongoose.Schema({
     required: true,
   },
 });
-const Alumni = mongoose.model("User", alumniSchema);
+export const Alumni = mongoose.model("alumni", alumniSchema);
 
-export default { User, Student, Alumni };
+const adminSchema = mongoose.Schema({
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+    required: true,
+  },
+});
+export const Admin = mongoose.model("admin", adminSchema);

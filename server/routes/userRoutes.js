@@ -1,15 +1,13 @@
 import express from "express";
 
-import {
-  register,
-  login,
-  getMyProfile,
-} from "../controllers/userController.js";
+import register from "../controllers/userController.js";
 
-userRouter = express.Router();
+const userRouter = express.Router();
 
 userRouter.post("/register", register);
 
-userRouter.post("/login", login);
+// userRouter.post("/login", login);
 
-userRouter.get("/profile", getMyProfile);
+// userRouter.get("/profile", getMyProfile);
+
+export default userRouter;
