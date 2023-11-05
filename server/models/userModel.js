@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
     enum: ["student", "alumni", "admin"],
     required: true,
   },
-  profile: {
+  more_info: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: "user_type",
   },
