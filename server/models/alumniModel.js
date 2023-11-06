@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//defining the schema for alumni
+
 const alumniSchema = mongoose.Schema({
     user_name: {
         type: String,

@@ -1,6 +1,8 @@
 import { Int32 } from "mongodb";
 import mongoose from "mongoose";
 
+//defining the schema for users
+
 const userSchema = mongoose.Schema({
   email: {
     type: String,
@@ -32,6 +34,7 @@ const userSchema = mongoose.Schema({
     required: true,
   },
 });
+
 export const User = mongoose.model("user", userSchema);
 
 const alumniSchema = mongoose.Schema({
@@ -62,6 +65,7 @@ const alumniSchema = mongoose.Schema({
     select: false,
   },
 });
+
 export const Alumni = mongoose.model("alumni", alumniSchema);
 
 const studentSchema = mongoose.Schema({
@@ -88,6 +92,7 @@ const studentSchema = mongoose.Schema({
     required: true,
   },
 });
+
 export const Student = mongoose.model("student", studentSchema);
 
 const adminSchema = mongoose.Schema({
@@ -106,4 +111,5 @@ const adminSchema = mongoose.Schema({
     select: false,
   },
 });
+
 export const Admin = mongoose.model("admin", adminSchema);

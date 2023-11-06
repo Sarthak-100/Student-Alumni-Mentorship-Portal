@@ -6,7 +6,7 @@ const connectDB = async () => {
       dbName: "mentorship_portal",
     })
     .then(() => {
-      console.log("MongoDB connected");
+      console.log("App database connected");
     })
     .catch((err) => {
       console.log(err);

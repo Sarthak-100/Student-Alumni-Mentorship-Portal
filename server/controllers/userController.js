@@ -3,21 +3,29 @@ import { ErrorHandler } from "../middlewares/error.js";
 import sendCookie from "../utils/features.js";
 import bcrypt, { hash } from "bcrypt";
 
+//identifying user type after login
+
 export const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
     let user = await User.findOne({ email });
 
-    if (user) return next(new ErrorHandler("User Already exists", 404));
+    if (user) {
+      return next(
+        new ErrorHandler("User Already exists", 404
+      ));
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const urecord = await Student.find({ email: email });
-    if (!urecord)
+    if (!urecord) {
       return next(
-        new ErrorHandler("User not available in the organization", 404)
-      );
+        new ErrorHandler("User not available in the organization", 404
+      ));
+    }
+
     const more_info = urecord[0]._id;
 
     user = await User.create({
@@ -27,7 +35,8 @@ export const register = async (req, res, next) => {
     });
 
     sendCookie(user, res, 201, "Created user successfully");
-  } catch (error) {
+
+  }catch (error) {
     next(error);
   }
 };
