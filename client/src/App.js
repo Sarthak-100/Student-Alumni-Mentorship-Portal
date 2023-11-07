@@ -6,11 +6,11 @@ import SignInSide from './components/SignIn';
 
 const App = () => {
   return (
-    // <Routes>
-    //   <Route path="/profile" element={<ProfilePage />} />
-    //   <Route path="/" element={<Dashboard />} />
-    // </Routes>
-    <SignInSide />
+    <Routes>
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      {/* <Route path="/login" element={<SignInSide />} /> */}
+    </Routes>
   )
 }
 
