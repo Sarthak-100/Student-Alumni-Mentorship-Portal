@@ -23,9 +23,9 @@ app.use(cookieParser());
 //   })
 // );
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 app.use("/api/v1/users", userRouter);
@@ -35,6 +35,10 @@ app.use("/api/v1/student/filter-alumni", filterRouter);
 
 app.get("/", (req, res) => {
   res.send("Nice Working");
+});
+
+app.get("/api/data", (req, res) => {
+  res.status(200).json({ message: "This is a sample response" });
 });
 
 export default app;

@@ -13,12 +13,12 @@ export const register = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const urecord = await Student.find({ email: email });
+    const urecord = await Student.findOne({ email: email });
     if (!urecord)
       return next(
         new ErrorHandler("User not available in the organization", 404)
       );
-    const more_info = urecord[0]._id;
+    const more_info = urecord._id;
 
     user = await User.create({
       email: email,
@@ -56,7 +56,8 @@ export const login = async (req, res, next) => {
       if (!user)
         return next(new ErrorHandler("Invalid email or password", 404));
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      // const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = password === user.password;
 
       if (isMatch) {
         sendCookie(user, res, 200, `Welcome back, ${user.name}`);
@@ -64,12 +65,15 @@ export const login = async (req, res, next) => {
         return next(new ErrorHandler("Invalid email or password", 404));
       }
     } else {
+      console.log(email);
+      console.log(password);
       const user = await Admin.findOne({ email }).select("+password");
 
       if (!user)
         return next(new ErrorHandler("Invalid email or password", 404));
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      // const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = password === user.password;
 
       if (isMatch) {
         sendCookie(user, res, 200, `Welcome back, ${user.name}`);
@@ -106,6 +110,14 @@ export const getMyProfile = async (req, res, next) => {
         batch: user.batch,
         branch: user.branch,
         current_work: user.current_work,
+      });
+    } else {
+      const user = req.user;
+      res.status(200).json({
+        success: true,
+        user_type: "admin",
+        name: user.name,
+        email: user.email,
       });
     }
   } catch (error) {
