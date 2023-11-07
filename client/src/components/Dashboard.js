@@ -21,8 +21,8 @@ import { Input } from '@mui/material';
 import ProfilePage from '../pages/ProfilePage';
 import FilterMenu from './Filter'; // Import the FilterMenu component
 import { Link } from 'react-router-dom';
-import FilterIcon from '@mui/icons-material/Filter'; // Import the Filter icon
 import { mainListItems, secondaryListItems } from './dashboard copy/listItems';
+import FilterIcon from '@mui/icons-material/Filter';
 
 const drawerWidth = 240;
 
@@ -91,8 +91,9 @@ export default function Dashboard() {
   };
 
   const openProfilePage = () => {
-    setShowProfilePage(true);
-    handleProfileMenuClose();
+    // You can remove this function since we'll navigate through the "My Profile" icon.
+    // setShowProfilePage(true);
+    // handleProfileMenuClose();
   };
 
   const closeProfilePage = () => {
@@ -111,6 +112,46 @@ export default function Dashboard() {
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
+        <AppBar position="absolute" open={open}>
+          <Toolbar
+            sx={{
+              pr: '24px',
+            }}
+          >
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={toggleDrawer}
+              sx={{
+                marginRight: '36px',
+                ...(open && { display: 'none' }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              sx={{ flexGrow: 1 }}
+            >
+              Dashboard
+            </Typography>
+            <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <IconButton color="inherit" onClick={handleProfileMenuClose}>
+                <AccountCircleIcon />
+              </IconButton>
+            </Link>
+
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -144,7 +185,7 @@ export default function Dashboard() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', alignItems: 'center' }}>
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Input
               placeholder="Search For Alumni"
               sx={{
@@ -155,11 +196,7 @@ export default function Dashboard() {
                 marginBottom: '-3px',
               }}
             />
-            <IconButton
-              color="inherit"
-              onClick={openFilterMenu}
-              sx={{ marginLeft: '10px' }}
-            >
+            <IconButton onClick={openFilterMenu} sx={{ marginLeft: '10px' }}>
               <FilterIcon />
             </IconButton>
             <FilterMenu open={showFilterMenu} onClose={closeFilterMenu} />
@@ -171,10 +208,10 @@ export default function Dashboard() {
         open={Boolean(profileMenuAnchor)}
         onClose={handleProfileMenuClose}
       >
-        <MenuItem onClick={openProfilePage}>My Profile</MenuItem>
+        {/* Remove the My Profile MenuItem */}
+        {/* <MenuItem onClick={openProfilePage}>My Profile</MenuItem> */}
         <MenuItem onClick={handleProfileMenuClose}>Logout</MenuItem>
       </Menu>
-      {showProfilePage && <ProfilePage closeProfilePage={closeProfilePage} />}
     </ThemeProvider>
   );
 }
