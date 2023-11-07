@@ -13,12 +13,12 @@ export const register = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const urecord = await Student.find({ email: email });
+    const urecord = await Student.findOne({ email: email });
     if (!urecord)
       return next(
         new ErrorHandler("User not available in the organization", 404)
       );
-    const more_info = urecord[0]._id;
+    const more_info = urecord._id;
 
     user = await User.create({
       email: email,
