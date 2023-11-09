@@ -61,6 +61,11 @@ const alumniSchema = mongoose.Schema({
     required: true,
     select: false,
   },
+  img: {
+    type: String,
+    default:
+      "https://images.pexels.com/photos/5483063/pexels-photo-5483063.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
 });
 export const Alumni = mongoose.model("alumni", alumniSchema);
 
