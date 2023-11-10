@@ -1,4 +1,9 @@
-import { User, Alumni, Student, Admin } from "../models/userModel.js";
+import {
+  StudentRegistered,
+  Alumni,
+  Student,
+  Admin,
+} from "../models/userModel.js";
 import { ErrorHandler } from "../middlewares/error.js";
 import sendCookie from "../utils/features.js";
 import bcrypt, { hash } from "bcrypt";
@@ -7,7 +12,7 @@ export const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    let user = await User.findOne({ email });
+    let user = await StudentRegistered.findOne({ email });
 
     if (user) return next(new ErrorHandler("User Already exists", 404));
 
@@ -20,7 +25,7 @@ export const register = async (req, res, next) => {
       );
     const more_info = urecord._id;
 
-    user = await User.create({
+    user = await StudentRegistered.create({
       email: email,
       password: hashedPassword,
       more_info: more_info,
@@ -37,7 +42,9 @@ export const login = async (req, res, next) => {
     const { email, password, user_type } = req.body;
 
     if (user_type === "student") {
-      const user = await User.findOne({ email }).select("+password");
+      const user = await StudentRegistered.findOne({ email }).select(
+        "+password"
+      );
 
       if (!user)
         return next(new ErrorHandler("Invalid email or password", 404));
@@ -99,25 +106,28 @@ export const getMyProfile = async (req, res, next) => {
         batch: std.batch,
         branch: std.branch,
         roll_no: std.roll_no,
+        img: std.img,
       });
     } else if (req.user_type === "alumni") {
-      const user = req.user;
+      const alumni = req.user;
       res.status(200).json({
         success: true,
         user_type: "alumni",
-        name: user.name,
-        email: user.email,
-        batch: user.batch,
-        branch: user.branch,
-        current_work: user.current_work,
+        name: alumni.name,
+        email: alumni.email,
+        batch: alumni.batch,
+        branch: alumni.branch,
+        current_work: alumni.current_work,
+        img: alumni.img,
       });
     } else {
-      const user = req.user;
+      const admin = req.user;
       res.status(200).json({
         success: true,
         user_type: "admin",
-        name: user.name,
-        email: user.email,
+        name: admin.name,
+        email: admin.email,
+        img: admin.img,
       });
     }
   } catch (error) {
