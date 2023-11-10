@@ -1,10 +1,10 @@
-import express from "express";
-import isAuthenticated from "../middlewares/auth.js";
+// import express from "express";
+// import isAuthenticated from "../middlewares/auth.js";
 
-import { getChattedUsers } from "../controllers/chatController.js";
+// import { getChattedUsers } from "../controllers/chatController.js";
 
-const chatRouter = express.Router();
+// const chatRouter = express.Router();
 
-chatRouter.get("/getChattedUsers", isAuthenticated, getChattedUsers);
+// chatRouter.get("/getChattedUsers", isAuthenticated, getChattedUsers);
 
-export default chatRouter;
+// export default chatRouter;

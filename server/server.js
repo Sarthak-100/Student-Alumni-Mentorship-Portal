@@ -3,7 +3,7 @@ import connectDB from "./data/DatabaseConnection.js";
 import http from "http";
 import { Server } from "socket.io";
 
-// connectDB();
+connectDB();
 
 const server = http.createServer(app);
 
