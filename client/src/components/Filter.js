@@ -10,48 +10,28 @@ import {
   TextField,
   MenuItem,
 } from '@mui/material';
-import UserCard from './UserCard'; // Import the UserCard component
+import UserCard from './UserCard';
 
-const FilterMenu = ({ open, onClose }) => {
+const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
   const [selectedBatch, setSelectedBatch] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
-  // const [selectedCompany, setSelectedCompany] = useState('');
   const [selectedProfile, setSelectedProfile] = useState('');
   const [apiResponse, setApiResponse] = useState(null);
 
-  const applyFilters = () => {
-    const baseUrl = 'http://localhost:4000/api/v1/student/filter-alumni/search';
-
+  const handleApplyFilters = () => {
     const filters = {
       batch: selectedBatch,
       branch: selectedBranch,
       current_work: selectedProfile,
     };
 
-    Object.keys(filters).forEach((key) => {
-      if (filters[key] === '') {
-        delete filters[key];
-      }
-    });
-    
-    const filterParams = new URLSearchParams(filters).toString();
-    const apiUrl = `${baseUrl}?${filterParams}`;
-    console.log(apiUrl);
-    axios
-      .get(apiUrl, { params: filters })
-      .then((response) => {
-        setApiResponse(response.data);
-      })
-      .catch((error) => {
-        console.error('API Error:', error);
-      });
-
-    onClose();
+    applyFilters(filters);
   };
 
   return (
     <Popover
       open={open}
+      anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'left',
@@ -61,6 +41,11 @@ const FilterMenu = ({ open, onClose }) => {
         horizontal: 'left',
       }}
       onClose={onClose}
+      PaperProps={{
+        style: {
+          width: '300px', // Set your desired fixed width here
+        },
+      }}
     >
       <Box p={2}>
         <Typography variant="h6" gutterBottom>
@@ -79,7 +64,6 @@ const FilterMenu = ({ open, onClose }) => {
         >
           <MenuItem value="2020">2020</MenuItem>
           <MenuItem value="2021">2021</MenuItem>
-          {/* Add more batch options */}
         </TextField>
 
         <TextField
@@ -93,8 +77,6 @@ const FilterMenu = ({ open, onClose }) => {
         >
           <MenuItem value="csai">CSAI</MenuItem>
           <MenuItem value="cse">CSE</MenuItem>
-          <MenuItem value="csss">CSSS</MenuItem>
-          {/* Add more branch options */}
         </TextField>
 
         <TextField
@@ -108,10 +90,9 @@ const FilterMenu = ({ open, onClose }) => {
         >
           <MenuItem value="sde1">SDE 1</MenuItem>
           <MenuItem value="sde2">SDE 2</MenuItem>
-          {/* Add more profile options */}
         </TextField>
 
-        <Button variant="contained" fullWidth onClick={applyFilters}>
+        <Button variant="contained" fullWidth onClick={handleApplyFilters}>
           Apply Filters
         </Button>
 

@@ -17,9 +17,9 @@ const App = () => {
         <Route path="welcome" element={<ChatWelcome />} />
         <Route path="chatting" element={<Chatting />} />
       </Route>
-      {/* <Route path="/login" element={<SignInSide />} /> */}
     </Routes>
   );
 };
 
-export default App;
+export default App
+

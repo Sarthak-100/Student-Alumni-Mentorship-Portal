@@ -6,7 +6,11 @@ import {
   CardHeader,
   Avatar,
   Typography,
+  CardActions,
+  IconButton,
 } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const UserCard = ({ user }) => {
   return (
@@ -21,6 +25,14 @@ const UserCard = ({ user }) => {
         <Typography variant="body1">Branch: {user.branch}</Typography>
         <Typography variant="body1">Batch: {user.batch}</Typography>
       </CardContent>
+      <CardActions style={{ justifyContent: 'center' }}>
+        <IconButton color="primary" aria-label="Chat">
+          <ChatIcon />
+        </IconButton>
+        <IconButton color="primary" aria-label="Profile">
+          <AccountCircleIcon />
+        </IconButton>
+      </CardActions>
     </Card>
   );
 };
