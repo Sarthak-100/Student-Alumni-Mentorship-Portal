@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import userRouter from "./routes/userRoutes.js";
+import chatRouter from "./routes/chatRoutes.js";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.js";
 import filterRouter from "./routes/filterRouter.js";
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/chat", chatRouter);
 
 app.use(errorMiddleware);
 app.use("/api/v1/student/filter-alumni", filterRouter);
