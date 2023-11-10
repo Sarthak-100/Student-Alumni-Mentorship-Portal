@@ -1,3 +1,5 @@
+// ProfilePage.js
+
 import React from 'react';
 import { Container, Paper, Typography, Avatar, Button, Link } from '@mui/material';
 import { styled } from '@mui/system';
@@ -8,7 +10,7 @@ const CenteredContainer = styled(Container)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   height: '100vh',
-  backgroundColor: '#f0f0f0', // Set your desired background color here
+  backgroundColor: '#f0f0f0',
 }));
 
 const ProfileAvatar = styled(Avatar)(({ theme }) => ({

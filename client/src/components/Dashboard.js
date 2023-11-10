@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
+import {
+  styled,
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  Box,
+  AppBar as MuiAppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Container,
+  Input,
+  Badge,
+  Divider,
+  Grid,
+  Drawer as MuiDrawer, // Import MuiDrawer
+} from '@mui/material';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { Input } from '@mui/material';
-import ProfilePage from '../pages/ProfilePage';
-import FilterMenu from './Filter'; // Import the FilterMenu component
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Link } from 'react-router-dom';
 import { mainListItems, secondaryListItems } from './dashboard copy/listItems';
-import FilterIcon from '@mui/icons-material/Filter';
+import FilterMenu from './Filter';
+import UserCard from './UserCard';
 
 const drawerWidth = 240;
 
@@ -72,32 +76,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
+const Dashboard = () => {
   const [open, setOpen] = useState(true);
-  const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
-  const [showProfilePage, setShowProfilePage] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
+  const inputRef = useRef(null);
 
   const toggleDrawer = () => {
     setOpen(!open);
-  };
-
-  const handleProfileMenuOpen = (event) => {
-    setProfileMenuAnchor(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setProfileMenuAnchor(null);
-  };
-
-  const openProfilePage = () => {
-    // You can remove this function since we'll navigate through the "My Profile" icon.
-    // setShowProfilePage(true);
-    // handleProfileMenuClose();
-  };
-
-  const closeProfilePage = () => {
-    setShowProfilePage(false);
   };
 
   const openFilterMenu = () => {
@@ -108,16 +94,30 @@ export default function Dashboard() {
     setShowFilterMenu(false);
   };
 
+  const applyFilters = (filters) => {
+    const baseUrl = 'http://localhost:4000/api/v1/student/filter-alumni/search';
+
+    const filterParams = new URLSearchParams(filters).toString();
+    const apiUrl = `${baseUrl}?${filterParams}`;
+
+    axios
+      .get(apiUrl, { params: filters })
+      .then((response) => {
+        setApiResponse(response.data);
+      })
+      .catch((error) => {
+        console.error('API Error:', error);
+      });
+
+    closeFilterMenu();
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px',
-            }}
-          >
+          <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
@@ -140,11 +140,10 @@ export default function Dashboard() {
               Dashboard
             </Typography>
             <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <IconButton color="inherit" onClick={handleProfileMenuClose}>
+              <IconButton color="inherit">
                 <AccountCircleIcon />
               </IconButton>
             </Link>
-
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
@@ -153,24 +152,14 @@ export default function Dashboard() {
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
+          <Toolbar>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
+          {mainListItems}
           <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
+          {secondaryListItems}
         </Drawer>
         <Box
           component="main"
@@ -187,6 +176,7 @@ export default function Dashboard() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Input
+              ref={inputRef}
               placeholder="Search For Alumni"
               sx={{
                 width: '78%',
@@ -197,21 +187,28 @@ export default function Dashboard() {
               }}
             />
             <IconButton onClick={openFilterMenu} sx={{ marginLeft: '10px' }}>
-              <FilterIcon />
+              <FilterAltIcon />
             </IconButton>
-            <FilterMenu open={showFilterMenu} onClose={closeFilterMenu} />
+            {apiResponse && apiResponse.result.length > 0 && (
+              <Grid container spacing={3}>
+                {apiResponse.result.map((user, index) => (
+                  <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                    <UserCard user={user} />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
           </Container>
         </Box>
       </Box>
-      <Menu
-        anchorEl={profileMenuAnchor}
-        open={Boolean(profileMenuAnchor)}
-        onClose={handleProfileMenuClose}
-      >
-        {/* Remove the My Profile MenuItem */}
-        {/* <MenuItem onClick={openProfilePage}>My Profile</MenuItem> */}
-        <MenuItem onClick={handleProfileMenuClose}>Logout</MenuItem>
-      </Menu>
+      <FilterMenu
+        open={showFilterMenu}
+        onClose={closeFilterMenu}
+        applyFilters={applyFilters}
+        anchorEl={inputRef.current}
+      />
     </ThemeProvider>
   );
-}
+};
+
+export default Dashboard;
