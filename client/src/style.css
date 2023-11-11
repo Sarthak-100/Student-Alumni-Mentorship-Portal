@@ -171,7 +171,7 @@
             font-weight: 300;
             padding-left: 6px;
           }
-          /* &.owner{
+          &.owner{
             align-items: flex-end;
             
   
@@ -187,34 +187,10 @@
               color: white;
               border-radius: 10px 0px 10px 10px
             }
-          } */
-        }
-  
-        .owner{
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-  
-          .msg_text{
-            margin-bottom: 1.5px;
-            background-color: #5a7ef1;
-            padding: 10px;
-            color: white;
-            border-radius: 10px 0px 10px 10px;
-            max-width: max-content;
-          }
-  
-          .msg_time{
-            font-size: 10px;
-            color: gray;
-            font-weight: 300;
-            padding-left: 6px;
           }
         }
       }
-  
-  
-  
+      
       .sendMsg{
         height: 50px;
         background-color: white;

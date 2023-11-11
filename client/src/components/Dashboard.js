@@ -1,42 +1,32 @@
-import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
+import {
+  styled,
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  Box,
+  AppBar as MuiAppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Container,
+  Input,
+  Badge,
+  Divider,
+  Grid,
+  Drawer as MuiDrawer, // Import MuiDrawer
+} from '@mui/material';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { Link } from 'react-router-dom';
 import { mainListItems, secondaryListItems } from './dashboard copy/listItems';
-import { TextField } from '@mui/material';
-import { Input } from '@mui/material';
-// IMPORT 
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import FilterMenu from './Filter';
+import UserCard from './UserCard';
 
 const drawerWidth = 240;
 
@@ -84,13 +74,42 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
-  const [open, setOpen] = React.useState(true);
+const Dashboard = () => {
+  const [open, setOpen] = useState(true);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
+  const inputRef = useRef(null);
+
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const openFilterMenu = () => {
+    setShowFilterMenu(true);
+  };
+
+  const closeFilterMenu = () => {
+    setShowFilterMenu(false);
+  };
+
+  const applyFilters = (filters) => {
+    const baseUrl = 'http://localhost:4000/api/v1/student/filter-alumni/search';
+
+    const filterParams = new URLSearchParams(filters).toString();
+    const apiUrl = `${baseUrl}?${filterParams}`;
+
+    axios
+      .get(apiUrl, { params: filters })
+      .then((response) => {
+        setApiResponse(response.data);
+      })
+      .catch((error) => {
+        console.error('API Error:', error);
+      });
+
+    closeFilterMenu();
   };
 
   return (
@@ -98,11 +117,7 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
+          <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
@@ -124,6 +139,11 @@ export default function Dashboard() {
             >
               Dashboard
             </Typography>
+            <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <IconButton color="inherit">
+                <AccountCircleIcon />
+              </IconButton>
+            </Link>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
@@ -132,24 +152,14 @@ export default function Dashboard() {
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
+          <Toolbar>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
+          {mainListItems}
           <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
+          {secondaryListItems}
         </Drawer>
         <Box
           component="main"
@@ -165,13 +175,40 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {/* <TextField id="standard-basic" label="Search For Alumni" variant="standard" /> */}
-            <Input placeholder="Search For Alumni" sx={{ width: '78%', fontSize: '15px', fontWeight: '550', marginLeft: '5px', marginBottom: '-3px'}}/>
-        {/* <Button variant="contained" color="primary" sx={{ width: '18%', fontSize: '15px', fontWeight: '550', margin: '4px 5% -13px 5%', maxWidth: '200px'}}>Send</Button> */}
-            <Copyright sx={{ pt: 4 }} />
+            <Input
+              ref={inputRef}
+              placeholder="Search For Alumni"
+              sx={{
+                width: '78%',
+                fontSize: '15px',
+                fontWeight: '550',
+                marginLeft: '5px',
+                marginBottom: '-3px',
+              }}
+            />
+            <IconButton onClick={openFilterMenu} sx={{ marginLeft: '10px' }}>
+              <FilterAltIcon />
+            </IconButton>
+            {apiResponse && apiResponse.result.length > 0 && (
+              <Grid container spacing={3}>
+                {apiResponse.result.map((user, index) => (
+                  <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                    <UserCard user={user} />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
           </Container>
         </Box>
       </Box>
+      <FilterMenu
+        open={showFilterMenu}
+        onClose={closeFilterMenu}
+        applyFilters={applyFilters}
+        anchorEl={inputRef.current}
+      />
     </ThemeProvider>
   );
-}
+};
+
+export default Dashboard;
