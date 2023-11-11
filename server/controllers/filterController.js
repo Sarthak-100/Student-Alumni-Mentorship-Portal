@@ -8,11 +8,23 @@ const values = async (req, res) => {
         const batches = await alumni.distinct('batch');
         const currentWorks = await alumni.distinct('currentWork');
 
+        const result = { branches, batches, currentWorks };
+        console.log(result);
+        res.status(200).json(result);
+        return result;
+    
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while filtering the profiles.' });
+    }
+};
+
+const prefix = async (req, res) => {
+    try {
         //filter alumni based on userName's prefix
         console.log(req.query.prefix);
         const alumniPrefix = await alumni.find({ userName: { $regex: '^' + req.query.prefix, $options: 'i' } });
-        
-        const result = { branches, batches, currentWorks, alumniPrefix };
+
+        const result = { alumniPrefix };
         console.log(result);
         res.status(200).json(result);
         return result;
@@ -47,4 +59,4 @@ const filter = async (req, res) => {
     }
 };
 
-export { values, filter };
+export { values, filter, prefix };

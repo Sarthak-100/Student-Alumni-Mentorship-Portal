@@ -1,5 +1,5 @@
 import express from 'express';
-import {filter, values} from '../controllers/filterController.js';
+import {filter, values, prefix} from '../controllers/filterController.js';
 
 const filterRouter = express.Router();
 
@@ -7,5 +7,6 @@ const filterRouter = express.Router();
 
 filterRouter.get('/search', filter);
 filterRouter.get('/values', values);
+filterRouter.get('/alumniPrefix', prefix);
 
 export default filterRouter;
