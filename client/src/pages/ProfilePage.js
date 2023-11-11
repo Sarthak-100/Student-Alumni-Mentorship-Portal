@@ -1,5 +1,5 @@
 // ProfilePage.js
-
+import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 import { Container, Paper, Typography, Avatar, Button, Link } from '@mui/material';
 import { styled } from '@mui/system';
@@ -19,16 +19,16 @@ const ProfileAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const ProfilePage = () => {
+  const { user, isAuthenticated } = useAuth0();
   return (
     <CenteredContainer>
       <Paper sx={{ p: 2, textAlign: 'center', backgroundColor: 'white', boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.2)' }}>
-        <ProfileAvatar src="your-profile-image-url.jpg" />
+        {/* <ProfileAvatar src="your-profile-image-url.jpg" /> */}
+        {user?.picture && <img src={user.picture} alt={user?.name} />}
         <Typography variant="h5" component="div">
-          John Doe
+          {user?.name}
         </Typography>
-        <Typography color="textSecondary">
-          Student
-        </Typography>
+          Username : {user.nickname}
         <Typography variant="h6" component="div">
           Specialization:
         </Typography>
@@ -66,11 +66,11 @@ const ProfilePage = () => {
           Contact Information
         </Typography>
         <Typography>
-          Email: john.doe@example.com
+          Email : {user.email}
         </Typography>
-        <Typography>
+        {/* <Typography>
           LinkedIn: <Link href="https://www.linkedin.com/in/johndoe">https://www.linkedin.com/in/johndoe</Link>
-        </Typography>
+        </Typography> */}
       </Paper>
     </CenteredContainer>
   );
