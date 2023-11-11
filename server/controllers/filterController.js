@@ -51,6 +51,7 @@ const filter = async (req, res) => {
         }
         //find profiles matching the filters in the database
         const result = await alumni.find(filters);
+        console.log(result);
         res.status(200).json({ result });
         return result;
     
