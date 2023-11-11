@@ -134,3 +134,10 @@ export const getMyProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getMyToken = async (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    token: req.cookies.token,
+  });
+};
