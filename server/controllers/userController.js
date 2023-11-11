@@ -25,6 +25,7 @@ export const register = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const urecord = await Student.findOne({ email: email });
+    console.log(urecord, mail, password);
     if (!urecord)
       return next(
         new ErrorHandler("User not available in the organization", 404)
