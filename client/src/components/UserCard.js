@@ -16,12 +16,12 @@ const UserCard = ({ user }) => {
   return (
     <Card>
       <CardHeader
-        avatar={<Avatar>{user.user_name.charAt(0)}</Avatar>}
-        title={user.user_name}
+        avatar={<Avatar>{user.userName.charAt(0)}</Avatar>}
+        title={user.userName}
         subheader={user.email}
       />
       <CardContent>
-        <Typography variant="body1">Current Work: {user.current_work}</Typography>
+        <Typography variant="body1">Current Work: {user.currentWork}</Typography>
         <Typography variant="body1">Branch: {user.branch}</Typography>
         <Typography variant="body1">Batch: {user.batch}</Typography>
       </CardContent>
