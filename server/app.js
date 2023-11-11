@@ -3,8 +3,10 @@ import { config } from "dotenv";
 import userRouter from "./routes/userRoutes.js";
 // import chatRouter from "./routes/chatRoutes.js";
 import cookieParser from "cookie-parser";
+import bodyParser from 'body-parser';
 import errorMiddleware from "./middlewares/error.js";
 import filterRouter from "./routes/filterRouter.js";
+import meetingRouter from "./routes/meetingRouter.js";
 import cors from "cors";
 
 const app = express();
@@ -17,6 +19,7 @@ config({
 //adding middlewares
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:5000");
@@ -24,6 +27,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
+
 app.use("/api/v1/users", userRouter);
 // app.use("/api/v1/chat", chatRouter);
 
@@ -39,5 +43,7 @@ app.get("/", (req, res) => {
 app.get("/api/data", (req, res) => {
   res.status(200).json({ message: "This is a sample response" });
 });
+
+app.post('/create-meeting', meetingRouter);
 
 export default app;
