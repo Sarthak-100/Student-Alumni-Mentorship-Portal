@@ -22,11 +22,10 @@ const prefix = async (req, res) => {
     try {
         //filter alumni based on userName's prefix
         console.log(req.query.prefix);
-        const alumniPrefix = await alumni.find({ userName: { $regex: '^' + req.query.prefix, $options: 'i' } });
+        const result = await alumni.find({ userName: { $regex: '^' + req.query.prefix, $options: 'i' } });
 
-        const result = { alumniPrefix };
         console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({result});
         return result;
     
     } catch (error) {
