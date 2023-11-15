@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-// import SendMessage from "./SendMessage";
-// import Messages from "./Messages";
+import React, { useEffect, useState, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,44 +7,21 @@ import Typography from "@mui/material/Typography";
 import { Avatar, Input, Button } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
-import socketIo from "socket.io-client";
 import Message from "./Message";
-import MessageOwner from "./MessageOwner";
 import ReactScrollToBottom from "react-scroll-to-bottom";
-// import { set } from "mongoose";
+import { useConversationContext } from "../context/ConversationContext";
+import { useUserContext } from "../context/UserContext";
+import { useSocketContext } from "../context/SocketContext";
+import axios from "axios";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
-  // alignItems: 'flex-start',
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(1.3),
-  // Override media queries injected by theme.mixins.toolbar
   "@media all": {
     minHeight: 35,
   },
 }));
-
-function getCurrentTime() {
-  const currentDate = new Date();
-
-  let hours = currentDate.getHours();
-  let minutes = currentDate.getMinutes();
-  let seconds = currentDate.getSeconds();
-  let meridiem = "AM";
-
-  // Convert hours to 12-hour format
-  if (hours > 12) {
-    hours -= 12;
-    meridiem = "PM";
-  }
-
-  // Add leading zero for single digit minutes and seconds
-  minutes = (minutes < 10 ? "0" : "") + minutes;
-  seconds = (seconds < 10 ? "0" : "") + seconds;
-
-  const formattedTime = hours + ":" + minutes + ":" + seconds + " " + meridiem;
-  return formattedTime;
-}
 
 function makeid(length) {
   let result = "";
@@ -61,56 +36,102 @@ function makeid(length) {
   return result;
 }
 
-let socket;
-
-const ENDPOINT = "http://localhost:4000";
-
-const user = makeid(5);
-
 const Chatting = () => {
   const [id, setid] = useState("");
-  const [messages, setMessages] = useState([]);
-  console.log(messages);
 
-  const sendMeesageBtController = () => {
-    const message = document.getElementById("chatInput").value;
-    socket.emit("message", { message, id });
-    document.getElementById("chatInput").value = "";
-  };
+  const [messages, setMessages] = useState([]);
+
+  const [newMessage, setNewMessage] = useState("");
+
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  const { conversation } = useConversationContext();
+
+  const { user } = useUserContext();
+
+  const { socket } = useSocketContext();
+
+  const scrollRef = useRef();
 
   useEffect(() => {
-    socket = socketIo(ENDPOINT, { transports: ["websocket"] });
-
-    socket.on("connect", () => {
-      alert("connected");
-      setid(socket.id);
+    socket?.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
     });
-
-    socket.emit("joined", { user });
-
-    socket.on("userJoined", (data) => {
-      console.log(data.user, data.message);
-    });
-
-    socket.on("welcome", (data) => {
-      console.log(data.user, data.message);
-    });
-
-    return () => {
-      socket.disconnect();
-      socket.off();
-    };
   }, []);
 
   useEffect(() => {
-    socket.on("sendMessage", (data) => {
-      setMessages([...messages, { ...data, time_stamp: getCurrentTime() }]);
-      console.log(data.user, data.message, data.id);
+    arrivalMessage &&
+      conversation?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, conversation]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        console.log("2");
+        await axios
+          .get(
+            `http://localhost:4000/api/v1/messages/getMessages?conversationId=${conversation?._id}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            setMessages(response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMessages();
+  }, [conversation?._id]);
+
+  const sendMeesageBtController = async (e) => {
+    e.preventDefault();
+    const message = {
+      sender: user._id,
+      text: newMessage,
+      conversationId: conversation._id,
+    };
+
+    const receiverId = conversation.members.find(
+      (member) => member !== user._id
+    );
+
+    socket?.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId: receiverId,
+      text: newMessage,
     });
 
-    return () => {
-      socket.off();
-    };
+    try {
+      await axios
+        .post(`http://localhost:4000/api/v1/messages/newMessage`, message, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          console.log(response);
+          setMessages([...messages, response.data]);
+          setNewMessage("");
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
@@ -154,23 +175,21 @@ const Chatting = () => {
       </AppBar>
       {/* <Messages /> */}
       <ReactScrollToBottom className="messages">
-        {messages.map((item, i) => (
-          <Message
-            class_type={item.id === id ? "message owner" : "message"}
-            value={item.message}
-            time={item.time_stamp}
-          />
+        {messages.map((m) => (
+          <Message owner={m.sender === user._id} message={m} />
         ))}
       </ReactScrollToBottom>
       {/* <SendMessage /> */}
       <div className="sendMsg">
         <Input
-          onKeyPress={(event) =>
-            event.key === "Enter" ? sendMeesageBtController() : null
-          }
+          // onKeyPress={(event) =>
+          //   event.key === "Enter" ? sendMeesageBtController() : null
+          // }
           placeholder="Type a message"
           className="input"
           id="chatInput"
+          onChange={(e) => setNewMessage(e.target.value)}
+          value={newMessage}
         />
         <Button
           variant="contained"

@@ -5,8 +5,11 @@ const sendCookie = (user, res, statusCode = 200, message) => {
 
   res
     .status(statusCode)
+    .header("Referrer-Policy", "no-referrer-when-downgrade")
     .cookie("token", token, {
-      httpOnly: true,
+      sameSite: "None",
+      // httpOnly: true,
+      secure: true,
       maxAge: 15 * 60 * 1000,
     })
     .json({

@@ -1,7 +1,8 @@
 import express from "express";
 import { config } from "dotenv";
 import userRouter from "./routes/userRoutes.js";
-// import chatRouter from "./routes/chatRoutes.js";
+import conversationRouter from "./routes/conversationRoutes.js";
+import messageRouter from "./routes/messageRoutes.js";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.js";
 import filterRouter from "./routes/filterRouter.js";
@@ -20,11 +21,15 @@ app.use(cookieParser());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:5000");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Expose-Headers", "set-cookie");
   next();
 });
+// app.use(cors());
 app.use("/api/v1/users", userRouter);
-// app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/conversations", conversationRouter);
+app.use("/api/v1/messages", messageRouter);
 
 app.use(errorMiddleware);
 app.use("/api/v1/student/filter-alumni", filterRouter);

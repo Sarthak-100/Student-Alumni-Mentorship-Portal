@@ -5,6 +5,7 @@ import {
   register,
   login,
   getMyProfile,
+  getUserProfile,
   getMyToken,
 } from "../controllers/userController.js";
 
@@ -19,6 +20,8 @@ userRouter.post("/registerAlumni", registerAlumni);
 userRouter.get("/login", login);
 
 userRouter.get("/myProfile", isAuthenticated, getMyProfile);
+
+userRouter.get("/getUserProfile", isAuthenticated, getUserProfile);
 
 userRouter.get("/myToken", isAuthenticated, getMyToken);
 

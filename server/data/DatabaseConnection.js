@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  mongoose
+  await mongoose
     .connect(process.env.MONGO_URI, {
       dbName: "mentorship_portal",
     })

@@ -1,11 +1,13 @@
 import React from "react";
+import { format } from "timeago.js";
 
 const Message = (props) => {
+  console.log(props);
   return (
-    <div className={`msg_content ${props.class_type}`}>
-      <p className="msg_text">{props.value}</p>
+    <div className={props.owner ? "msg_content owner" : "msg_content"}>
+      <p className="msg_text">{props.message.text}</p>
       {/* <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" className='msg_img'/> */}
-      <span className="msg_time">{props.time}</span>
+      <span className="msg_time">{format(props.message.createdAt)}</span>
     </div>
   );
 };

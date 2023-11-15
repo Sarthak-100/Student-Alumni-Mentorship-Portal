@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import { StudentRegistered, Admin, Alumni } from "../models/userModel.js";
 
 const isAuthenticated = async (req, res, next) => {
-  const { token } = req.cookies;
+  const token = req.cookies.token;
+  // console.log(token);
+  console.log("auth 1");
 
   if (!token) {
     return res.status(404).json({
@@ -10,6 +12,8 @@ const isAuthenticated = async (req, res, next) => {
       message: "You are not logged in",
     });
   }
+
+  console.log("auth 2");
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
