@@ -56,6 +56,7 @@ const UserCard = ({ cardUser }) => {
       />
       <CardContent>
         <Typography variant="body1">Current Work: {user.work.role}</Typography>
+
         <Typography variant="body1">Branch: {user.branch}</Typography>
         <Typography variant="body1">Batch: {user.batch}</Typography>
       </CardContent>

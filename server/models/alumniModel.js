@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 
+//defining the schema for alumni
+
 const alumniSchema = mongoose.Schema({
-    user_name: {
+    userName: {
         type: String,
         required: true,
     },
@@ -28,7 +30,7 @@ const alumniSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    current_work: {
+    currentWork: {
       //company_name: "xyz", designation: "abc", timeperiod: "2 years"}
         type: Object,
         required: true,
