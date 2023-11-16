@@ -13,6 +13,7 @@ import { useConversationContext } from "../context/ConversationContext";
 import { useUserContext } from "../context/UserContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useChattedUsersContext } from "../context/ChattedUsers";
+import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import axios from "axios";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -46,13 +47,15 @@ const Chatting = () => {
 
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
-  const { conversation } = useConversationContext();
+  const { conversation, setConversationValue } = useConversationContext();
 
   const { user } = useUserContext();
 
   const { socket } = useSocketContext();
 
   const { chattedUsers } = useChattedUsersContext();
+
+  const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
   const scrollRef = useRef();
 
@@ -93,25 +96,52 @@ const Chatting = () => {
       } catch (error) {
         console.log(error);
       }
+      // } else {
+      // }
     };
     getMessages();
+    // }, []);
   }, [conversation?._id]);
 
   const sendMeesageBtController = async (e) => {
     e.preventDefault();
+
+    const receiverIdTemp = conversation?.members.find(
+      (member) => member !== user._id
+    );
+
+    if (receiverIdTemp === receiverId) {
+      await axios
+        .post(
+          `http://localhost:4000/api/v1/conversations/newConversation`,
+          {
+            senderId: user._id,
+            receiverId: receiverIdTemp,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          // setConversationValue(response.data);
+          conversation._id = response.data._id;
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+        });
+      setReceiverIdValue(null);
+    }
+
     const message = {
       sender: user._id,
       text: newMessage,
       conversationId: conversation._id,
     };
 
-    const receiverId = conversation.members.find(
-      (member) => member !== user._id
-    );
-
     socket?.current.emit("sendMessage", {
       senderId: user._id,
-      receiverId: receiverId,
+      receiverId: receiverIdTemp,
       text: newMessage,
     });
 
@@ -153,7 +183,7 @@ const Chatting = () => {
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
             {
-              chattedUsers[conversation?.members.find((m) => m !== user._id)]
+              chattedUsers[conversation?.members.find((m) => m !== user?._id)]
                 ?.name
             }
           </Typography>

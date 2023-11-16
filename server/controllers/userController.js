@@ -7,6 +7,7 @@ import {
 import { ErrorHandler } from "../middlewares/error.js";
 import sendCookie from "../utils/features.js";
 import bcrypt, { hash } from "bcrypt";
+import mongoose from "mongoose";
 
 export const register = async (req, res, next) => {
   try {
@@ -160,7 +161,8 @@ export const getMyToken = async (req, res, next) => {
 
 export const getUserProfile = async (req, res, next) => {
   try {
-    const id = req.query.id;
+    const id = new mongoose.Types.ObjectId(req.query.id);
+    console.log("$$$$$$$$$$$$$$$$$$$$$USERcONTROLLER", id);
     let user;
     let user_type = "";
     let out = await StudentRegistered.findById(id);
@@ -177,20 +179,17 @@ export const getUserProfile = async (req, res, next) => {
     }
 
     if (user_type === "student") {
+      console.log("in ucontr", id);
       const std = await Student.findOne({ _id: user.more_info });
       res.status(200).json({
-        success: true,
         name: std.name,
         email: user.email,
         img: user.img,
       });
     } else {
-      res.status(200).json({
-        success: true,
-        name: user.name,
-        email: user.email,
-        img: user.img,
-      });
+      console.log("in else ucontr", id);
+      console.log(user);
+      res.status(200).json(user);
     }
   } catch (error) {
     next(error);

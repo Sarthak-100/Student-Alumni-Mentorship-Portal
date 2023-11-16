@@ -11,26 +11,29 @@ import { ConversationProvider } from "./context/ConversationContext";
 import { UserProvider } from "./context/UserContext";
 import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
+import { ReceiverIdProvider } from "./context/ReceiverIdContext";
 import "./style.css";
 
 const App = () => {
   return (
     <UserProvider>
-      <ConversationProvider>
-        <ChattedUsersProvider>
-          <SocketProvider>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/chat" element={<Chat />}>
-                {/* <Route path="/chat2" element={<Chat2 />}> */}
-                <Route path="welcome" element={<ChatWelcome />} />
-                <Route path="chatting" element={<Chatting />} />
-              </Route>
-            </Routes>
-          </SocketProvider>
-        </ChattedUsersProvider>
-      </ConversationProvider>
+      <ReceiverIdProvider>
+        <ConversationProvider>
+          <ChattedUsersProvider>
+            <SocketProvider>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/chat" element={<Chat />}>
+                  {/* <Route path="/chat2" element={<Chat2 />}> */}
+                  <Route path="welcome" element={<ChatWelcome />} />
+                  <Route path="chatting" element={<Chatting />} />
+                </Route>
+              </Routes>
+            </SocketProvider>
+          </ChattedUsersProvider>
+        </ConversationProvider>
+      </ReceiverIdProvider>
     </UserProvider>
   );
 };

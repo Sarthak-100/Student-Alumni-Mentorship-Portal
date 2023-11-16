@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import {
   styled,
@@ -27,6 +27,7 @@ import { Link } from "react-router-dom";
 import { mainListItems, secondaryListItems } from "./dashboard copy/listItems";
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
+import { useUserContext } from "../context/UserContext";
 
 const drawerWidth = 240;
 
@@ -76,11 +77,27 @@ const Drawer = styled(MuiDrawer, {
 
 const defaultTheme = createTheme();
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  // Generate a random number between min (inclusive) and max (exclusive)
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+const data = [
+  { email: "a11@iiitd.ac.in", password: "s1p", user_type: "student" },
+  { email: "a22@iiitd.ac.in", password: "s2p", user_type: "student" },
+  { email: "a33@iiitd.ac.in", password: "s3p", user_type: "student" },
+];
+
 const Dashboard = () => {
   const [open, setOpen] = useState(true);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const inputRef = useRef(null);
+
+  const { login } = useUserContext();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -93,6 +110,54 @@ const Dashboard = () => {
   const closeFilterMenu = () => {
     setShowFilterMenu(false);
   };
+
+  useEffect(() => {
+    const handleLogin = async () => {
+      try {
+        const jsonData = data[getRandomInt(0, 3)];
+        const queryParams = new URLSearchParams(jsonData).toString();
+        await axios
+          .get(`http://localhost:4000/api/v1/users/login?${queryParams}`, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log("user logged in");
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    };
+    handleLogin();
+
+    const getMyProfile = async () => {
+      try {
+        await axios
+          .get(`http://localhost:4000/api/v1/users/myProfile`, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log(response);
+            login(response.data);
+            console.log(
+              "############PrevChatUserProfile",
+              response.data?._id,
+              response.data
+            );
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error("fetch Profile failed:", error);
+      }
+    };
+
+    getMyProfile();
+  }, []);
 
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
