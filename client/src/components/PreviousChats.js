@@ -4,6 +4,9 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useUserContext } from "../context/UserContext";
 import { useSocketContext } from "../context/SocketContext";
+import { useConversationContext } from "../context/ConversationContext";
+import { useReceiverIdContext } from "../context/ReceiverIdContext";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 function getRandomInt(min, max) {
@@ -25,11 +28,15 @@ const PreviousChats = () => {
 
   const [user, setUser] = useState(null);
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
+  // const [currentChat, setCurrentChat] = useState(null);
 
   const socket = useRef();
 
   const { login } = useUserContext();
+
+  const { conversation, setConversationValue } = useConversationContext();
+
+  const { receiverId } = useReceiverIdContext();
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -96,7 +103,16 @@ const PreviousChats = () => {
           })
           .then((response) => {
             console.log(response);
-            setConversations(response.data);
+            if (receiverId) {
+              const isElementPresent = response.data.find((dict) =>
+                dict.members.includes(receiverId)
+              );
+              if (isElementPresent) {
+              } else {
+              }
+            } else {
+              setConversations(response.data);
+            }
           })
           .catch((error) => {
             console.error("API Error:", error);
@@ -110,12 +126,31 @@ const PreviousChats = () => {
 
   console.log(socket);
 
-  console.log(currentChat);
+  // console.log(currentChat);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (conversation) {
+      navigate("chatting");
+    }
+  }, [conversation]);
 
   return (
     <div className="previousChats">
+      {/* {
+        if(directedFromChatSection){
+          conversation.push({
+            "_id": null,
+            "members": [
+                "60e9c3c8f1a0f1f6d0e1f6a1",
+                "60e9c3c8f1a0f1f6d0e1f6a2"
+            ],
+          })
+        }
+      } */}
       {conversations.map((c) => (
-        <div onClick={() => setCurrentChat(c)}>
+        <div onClick={() => setConversationValue(c)}>
           <UserChats conversation={c} currentUser={user} />
         </div>
       ))}

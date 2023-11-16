@@ -23,3 +23,24 @@ export const getConversations = async (req, res, next) => {
     next(error);
   }
 };
+
+export const findConversation = async (req, res, next) => {
+  try {
+    const conversation = await Conversation.findOne({
+      members: { $all: [req.query.senderId, req.query.receiverId] },
+    });
+    if (conversation) {
+      res.status(200).json({
+        success: true,
+        message: "Conversation found",
+      });
+    } else {
+      res.status(200).json({
+        success: false,
+        message: "Conversation not found",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};

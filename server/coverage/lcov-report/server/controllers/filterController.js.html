@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">5.26% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>1/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">5.26% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>1/19</span>
             </div>
         
             
@@ -89,13 +89,36 @@
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -108,47 +131,60 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-import alumni from '../models/alumniModel.js';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// import alumni from "../models/alumniModel.js";
+import { Alumni } from "../models/userModel.js";
+import mongoose from "mongoose";
 &nbsp;
 const filter = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const { branch, batch, current_work } = <span class="cstat-no" title="statement not covered" >req.query;</span>
-        const filters = <span class="cstat-no" title="statement not covered" >{};</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const { batch, branch, current_role, current_organization } = <span class="cstat-no" title="statement not covered" >req.query;</span>
+    // const { batch, branch, current_role, current_organization } = req.params;
+<span class="cstat-no" title="statement not covered" >    console.log(batch, branch, current_role, current_organization);</span>
+<span class="cstat-no" title="statement not covered" >    console.log(req.params);</span>
+    const filters = <span class="cstat-no" title="statement not covered" >{};</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (branch) {</span>
-<span class="cstat-no" title="statement not covered" >            filters.branch = branch;</span>
-        }
-<span class="cstat-no" title="statement not covered" >        if (batch) {</span>
-<span class="cstat-no" title="statement not covered" >            filters.batch = parseInt(batch);</span>
-        }
-<span class="cstat-no" title="statement not covered" >        if (current_work) {</span>
-<span class="cstat-no" title="statement not covered" >            filters.current_work = current_work;</span>
-        }
-        const result = <span class="cstat-no" title="statement not covered" >await alumni.find(filters);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(200).json({ result });</span>
-<span class="cstat-no" title="statement not covered" >        return result;</span>
-    
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        res.status(500).json({ error: 'An error occurred while filtering the profiles.' });</span>
+<span class="cstat-no" title="statement not covered" >    if (branch) {</span>
+<span class="cstat-no" title="statement not covered" >      filters.branch = branch;</span>
     }
+<span class="cstat-no" title="statement not covered" >    if (batch) {</span>
+<span class="cstat-no" title="statement not covered" >      filters.batch = parseInt(batch);</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (current_role) {</span>
+<span class="cstat-no" title="statement not covered" >      filters["work.role"] = current_role;</span>
+    }
+<span class="cstat-no" title="statement not covered" >    if (current_organization) {</span>
+<span class="cstat-no" title="statement not covered" >      filters["work.organization"] = current_organization;</span>
+    }
+<span class="cstat-no" title="statement not covered" >    console.log(filters);</span>
+    const result = <span class="cstat-no" title="statement not covered" >await Alumni.find(filters);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    res.status(200).json({ result });</span>
+<span class="cstat-no" title="statement not covered" >    return result;</span>
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    res</span>
+      .status(500)
+      .json({ error: "An error occurred while filtering the profiles." });
+  }
 };
 &nbsp;
-export default filter;</pre></td></tr></table></pre>
+export default filter;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-06T06:51:02.566Z
+                at 2023-11-16T14:03:03.999Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

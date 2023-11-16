@@ -15,7 +15,7 @@ import {
   Badge,
   Divider,
   Grid,
-  Drawer as MuiDrawer, // Import MuiDrawer
+  Drawer as MuiDrawer,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -99,11 +99,11 @@ const Dashboard = () => {
 
     const filterParams = new URLSearchParams(filters).toString();
     const apiUrl = `${baseUrl}?${filterParams}`;
-
     axios
-      .get(apiUrl, { params: filters })
+      .get(apiUrl)
       .then((response) => {
         setApiResponse(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("API Error:", error);
@@ -194,9 +194,9 @@ const Dashboard = () => {
             </IconButton>
             {apiResponse && apiResponse.result.length > 0 && (
               <Grid container spacing={3}>
-                {apiResponse.result.map((user, index) => (
-                  <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                    <UserCard user={user} />
+                {apiResponse.result.map((user) => (
+                  <Grid item key={user._id} xs={12} sm={6} md={4} lg={3}>
+                    <UserCard cardUser={user} />
                   </Grid>
                 ))}
               </Grid>

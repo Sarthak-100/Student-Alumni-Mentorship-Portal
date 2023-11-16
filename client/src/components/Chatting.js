@@ -12,6 +12,7 @@ import ReactScrollToBottom from "react-scroll-to-bottom";
 import { useConversationContext } from "../context/ConversationContext";
 import { useUserContext } from "../context/UserContext";
 import { useSocketContext } from "../context/SocketContext";
+import { useChattedUsersContext } from "../context/ChattedUsers";
 import axios from "axios";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -50,6 +51,8 @@ const Chatting = () => {
   const { user } = useUserContext();
 
   const { socket } = useSocketContext();
+
+  const { chattedUsers } = useChattedUsersContext();
 
   const scrollRef = useRef();
 
@@ -146,14 +149,13 @@ const Chatting = () => {
             sx={{ mr: 0 }}
           >
             {/* <MenuIcon /> */}
-            <Avatar
-              alt="Remy Sharp"
-              src="https://images.pexels.com/photos/5483063/pexels-photo-5483063.jpeg?auto=compress&cs=tinysrgb&w=600"
-              sx={{ width: 24, height: 26 }}
-            />
+            <Avatar alt="Remy Sharp" src="" sx={{ width: 24, height: 26 }} />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
-            Rahul
+            {
+              chattedUsers[conversation?.members.find((m) => m !== user._id)]
+                ?.name
+            }
           </Typography>
           <IconButton
             size="large"
@@ -179,12 +181,11 @@ const Chatting = () => {
           <Message owner={m.sender === user._id} message={m} />
         ))}
       </ReactScrollToBottom>
-      {/* <SendMessage /> */}
       <div className="sendMsg">
         <Input
-          // onKeyPress={(event) =>
-          //   event.key === "Enter" ? sendMeesageBtController() : null
-          // }
+          onKeyPress={(event) =>
+            event.key === "Enter" ? sendMeesageBtController(event) : null
+          }
           placeholder="Type a message"
           className="input"
           id="chatInput"
