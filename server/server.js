@@ -2,41 +2,66 @@ import app from "./app.js";
 import connectDB from "./data/DatabaseConnection.js";
 import http from "http";
 import { Server } from "socket.io";
+// import io from "socket.io";
 
 connectDB();
 
-const server = http.createServer(app);
+// const server = http.createServer();
 
-const io = new Server(server);
+const io = new Server(8900, {
+  cors: {
+    origin: "http://localhost:5000",
+  },
+});
 
-const users = [{}];
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
 
 io.on("connection", (socket) => {
+  //when connect
   console.log("New client connected");
 
-  socket.on("joined", ({ user }) => {
-    users[socket.id] = user;
-    console.log(`${user} joined`);
-    socket.broadcast.emit("userJoined", {
-      user: "Admin",
-      message: `A new user:${users[socket.id]}  joined`,
+  socket.on("addUser", (userId) => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  });
+
+  // send and get message
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+    console.log(receiverId);
+    console.log(user);
+    console.log(users);
+    io.to(user?.socketId).emit("getMessage", {
+      senderId,
+      text,
     });
-    socket.emit("welcome", { user: "Admin", message: "Welcome to the chat" });
   });
 
-  socket.on("message", ({ message, id }) => {
-    io.emit("sendMessage", { user: users[id], message: message, id: id });
-  });
-
+  // when disconnect
   socket.on("disconnect", () => {
-    socket.broadcast.emit("leave", {
-      user: "Admin",
-      message: `${users[socket.id]} left`,
-    });
-    console.log("user left");
+    console.log("a user disconnected");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
   });
 });
 
-server.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
+try {
+  app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });
+} catch (error) {
+  console.error("Server Error:", error);
+}

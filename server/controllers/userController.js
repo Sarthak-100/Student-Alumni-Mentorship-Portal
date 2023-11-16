@@ -47,9 +47,14 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const { email, password, user_type } = req.body;
+    // console.log("1");
+    // const { email, password, user_type } = req.body;
+    const { email, password, user_type } = req.query;
+
+    // console.log("2");
 
     if (user_type === "student") {
+      // console.log("3");
       const user = await StudentRegistered.findOne({ email }).select(
         "+password"
       );
@@ -62,10 +67,12 @@ export const login = async (req, res, next) => {
       if (isMatch) {
         const std = await Student.findOne({ _id: user.more_info });
         sendCookie(user, res, 200, `Welcome back, ${std.name}`);
+        // console.log("4");
       } else {
         return next(new ErrorHandler("Invalid email or password", 404));
       }
     } else if (user_type === "alumni") {
+      // console.log("5");
       const user = await Alumni.findOne({ email }).select("+password");
 
       if (!user)
@@ -76,10 +83,12 @@ export const login = async (req, res, next) => {
 
       if (isMatch) {
         sendCookie(user, res, 200, `Welcome back, ${user.name}`);
+        // console.log("6");
       } else {
         return next(new ErrorHandler("Invalid email or password", 404));
       }
     } else {
+      // console.log("7");
       console.log(email);
       console.log(password);
       const user = await Admin.findOne({ email }).select("+password");
@@ -92,6 +101,7 @@ export const login = async (req, res, next) => {
 
       if (isMatch) {
         sendCookie(user, res, 200, `Welcome back, ${user.name}`);
+        // console.log("8");
       } else {
         return next(new ErrorHandler("Invalid email or password", 404));
       }
@@ -103,12 +113,16 @@ export const login = async (req, res, next) => {
 
 export const getMyProfile = async (req, res, next) => {
   try {
+    console.log("1");
+    console.log(req.user_type);
     if (req.user_type === "student") {
+      console.log("2");
       const user = req.user;
       const std = await Student.findOne({ _id: user.more_info });
       res.status(200).json({
         success: true,
         user_type: "student",
+        _id: user._id,
         name: std.name,
         email: user.email,
         batch: std.batch,
@@ -121,6 +135,7 @@ export const getMyProfile = async (req, res, next) => {
       res.status(200).json({
         success: true,
         user_type: "alumni",
+        _id: alumni._id,
         name: alumni.name,
         email: alumni.email,
         batch: alumni.batch,
@@ -133,9 +148,56 @@ export const getMyProfile = async (req, res, next) => {
       res.status(200).json({
         success: true,
         user_type: "admin",
+        _id: admin._id,
         name: admin.name,
         email: admin.email,
         img: admin.img,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyToken = async (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    token: req.cookies.token,
+  });
+};
+
+export const getUserProfile = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    let user;
+    let user_type = "";
+    let out = await StudentRegistered.findById(id);
+    if (out) {
+      user = out;
+      user_type = "student";
+    } else {
+      out = await Alumni.findById(id);
+      user = out;
+      if (out === null) {
+        out = await Admin.findById(id);
+        user = out;
+      }
+    }
+
+    if (user_type === "student") {
+      const std = await Student.findOne({ _id: user.more_info });
+      res.status(200).json({
+        success: true,
+        name: std.name,
+        email: user.email,
+        img: user.img,
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        name: user.name,
+        email: user.email,
+        img: user.img,
       });
     }
   } catch (error) {
