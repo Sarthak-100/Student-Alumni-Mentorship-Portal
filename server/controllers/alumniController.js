@@ -1,3 +1,4 @@
+
 // import Alumni from "../models/alumniModel.js";
 
 // const register = async (req, res) => {
@@ -23,3 +24,4 @@
 // };
 
 // export default register;
+

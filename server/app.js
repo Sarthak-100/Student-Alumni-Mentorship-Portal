@@ -10,11 +10,12 @@ import cors from "cors";
 
 const app = express();
 
+//PORT and database URI from config.env
 config({
   path: "./data/config.env",
 });
 
-//middlewares
+//adding middlewares
 app.use(express.json());
 app.use(cookieParser());
 
@@ -32,6 +33,8 @@ app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
 
 app.use(errorMiddleware);
+
+//API for filtering alumni profiles as per added filters
 app.use("/api/v1/student/filter-alumni", filterRouter);
 
 app.get("/", (req, res) => {

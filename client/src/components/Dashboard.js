@@ -95,6 +95,7 @@ const Dashboard = () => {
   const [open, setOpen] = useState(true);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
+  const [searchText, setSearchText] = useState('');
   const inputRef = useRef(null);
 
   const { login } = useUserContext();
@@ -177,6 +178,25 @@ const Dashboard = () => {
     closeFilterMenu();
   };
 
+  const handleSearchChange = (e) => {
+    const searchText = e.target.value;
+    setSearchText(searchText);
+
+    // Make API call to fetch filtered results based on searchText
+    const apiUrl = `http://localhost:4000/api/v1/student/filter-alumni/alumniPrefix?prefix=${searchText}`;
+    console.log(apiUrl);
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setApiResponse(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('API Error:', error);
+      });
+  };
+
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -253,19 +273,20 @@ const Dashboard = () => {
                 marginLeft: "5px",
                 marginBottom: "-3px",
               }}
+              onChange={handleSearchChange}
             />
             <IconButton onClick={openFilterMenu} sx={{ marginLeft: "10px" }}>
               <FilterAltIcon />
             </IconButton>
-            {apiResponse && apiResponse.result.length > 0 && (
-              <Grid container spacing={3}>
-                {apiResponse.result.map((user) => (
-                  <Grid item key={user._id} xs={12} sm={6} md={4} lg={3}>
-                    <UserCard cardUser={user} />
-                  </Grid>
-                ))}
-              </Grid>
-            )}
+            {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (
+        <Grid container spacing={3}>
+          {apiResponse.result.map((user, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+              <UserCard user={user} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
           </Container>
         </Box>
       </Box>

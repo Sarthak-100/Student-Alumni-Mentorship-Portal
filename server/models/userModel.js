@@ -61,6 +61,7 @@ const studentSchema = mongoose.Schema({
 });
 export const Student = mongoose.model("student", studentSchema);
 
+
 // const alumniSchema = mongoose.Schema({
 //   name: {
 //     type: String,
@@ -119,6 +120,8 @@ export const Student = mongoose.model("student", studentSchema);
 // });
 export const Alumni = mongoose.model("Alumni_Data", {});
 
+
+// export const Alumni = mongoose.model("alumni", alumniSchema);
 const adminSchema = mongoose.Schema({
   name: {
     type: String,
@@ -144,4 +147,5 @@ const adminSchema = mongoose.Schema({
     default: null,
   },
 });
+
 export const Admin = mongoose.model("admin", adminSchema);

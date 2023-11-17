@@ -56,11 +56,18 @@ const UserCard = (props) => {
         subheader={props.cardUser.email}
       />
       <CardContent>
+
         <Typography variant="body1">
           Current Work: {props.cardUser.work.role}
         </Typography>
         <Typography variant="body1">Branch: {props.cardUser.branch}</Typography>
         <Typography variant="body1">Batch: {props.cardUser.batch}</Typography>
+// =======
+//         <Typography variant="body1">Current Work: {user.work.role}</Typography>
+
+//         <Typography variant="body1">Branch: {user.branch}</Typography>
+//         <Typography variant="body1">Batch: {user.batch}</Typography>
+// >>>>>>> main
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
         <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
