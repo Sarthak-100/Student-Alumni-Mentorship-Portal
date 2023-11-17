@@ -3,27 +3,29 @@ import { Alumni } from "../models/userModel.js";
 import mongoose from "mongoose";
 
 const values = async (req, res) => {
-    try {
-        //find all distinct alumni branches, batches, roles, companies in the database
-        const branches = await alumni.distinct('branch');
-        const batches = await alumni.distinct('batch');
-        const currentWorks = await alumni.distinct('currentWork');
-
-        const result = { branches, batches, currentWorks };
-        console.log(result);
-        res.status(200).json(result);
-        return result;
-    
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while filtering the profiles.' });
-    }
+  try {
+      // Find all distinct alumni branches, batches, roles, companies, and countries in the database
+      const branches = await Alumni.distinct('branch');
+      const batches = await Alumni.distinct('batch');
+      const roles = await Alumni.distinct('work.role');
+      const companies = await Alumni.distinct('work.organization');
+      const countries = await Alumni.distinct('location.country');
+      
+      const result = { branches, batches, roles, companies, countries };
+      console.log(result);
+      res.status(200).json(result);
+      return result;
+  
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while filtering the profiles.' });
+  }
 };
 
 const prefix = async (req, res) => {
     try {
         //filter alumni based on userName's prefix
         console.log(req.query.prefix);
-        const result = await alumni.find({ userName: { $regex: '^' + req.query.prefix, $options: 'i' } });
+        const result = await Alumni.find({ name: { $regex: '^' + req.query.prefix, $options: 'i' } });
 
         console.log(result);
         res.status(200).json({result});
@@ -37,9 +39,9 @@ const prefix = async (req, res) => {
 const filter = async (req, res) => {
 
   try {
-    const { batch, branch, current_role, current_organization } = req.query;
+    const { batch, branch, current_role, current_organization ,current_location} = req.query;
     // const { batch, branch, current_role, current_organization } = req.params;
-    console.log(batch, branch, current_role, current_organization);
+    console.log(batch, branch, current_role, current_organization,current_location);
     console.log(req.params);
     const filters = {};
 
@@ -80,6 +82,10 @@ const filter = async (req, res) => {
 //         res.status(500).json({ error: 'An error occurred while filtering the profiles.' });
 
     }
+
+    if (current_location) {
+      filters["location.country"] = current_location;
+    }
     console.log(filters);
     const result = await Alumni.find(filters);
 
@@ -92,8 +98,5 @@ const filter = async (req, res) => {
   }
 };
 
-
-export default filter;
-
-// export { values, filter, prefix };
+export { values, filter, prefix };
 

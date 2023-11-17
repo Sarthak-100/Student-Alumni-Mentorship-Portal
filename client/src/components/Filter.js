@@ -1,4 +1,3 @@
-// FilterMenu.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -16,10 +15,11 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
   const [selectedBatch, setSelectedBatch] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedProfile, setSelectedProfile] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
   const [apiResponse, setApiResponse] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the API endpoint
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -32,13 +32,15 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
     };
 
     fetchData();
-  }, []); // Empty dependency array to ensure the effect runs only once
+  }, []);
 
   const handleApplyFilters = () => {
     const filters = {
       batch: selectedBatch,
       branch: selectedBranch,
       current_role: selectedProfile,
+      current_organization: selectedCompany,
+      current_location: selectedCountry,
     };
 
     applyFilters(filters);
@@ -78,18 +80,13 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
           value={selectedBatch}
           onChange={(e) => setSelectedBatch(e.target.value)}
         >
-
-          <MenuItem value="2012">2012</MenuItem>
-          <MenuItem value="2013">2013</MenuItem>
-          <MenuItem value="2014">2014</MenuItem>
-          <MenuItem value="2015">2015</MenuItem>
-          <MenuItem value="2016">2016</MenuItem>
-          <MenuItem value="2017">2017</MenuItem>
-          <MenuItem value="2018">2018</MenuItem>
-
-
-
-
+          {apiResponse &&
+            apiResponse.batches &&
+            apiResponse.batches.map((batch) => (
+              <MenuItem key={batch} value={batch}>
+                {batch}
+              </MenuItem>
+            ))}
         </TextField>
 
         <TextField
@@ -101,12 +98,13 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
           value={selectedBranch}
           onChange={(e) => setSelectedBranch(e.target.value)}
         >
-          <MenuItem value="ECE">ECE</MenuItem>
-          <MenuItem value="CSE">CSE</MenuItem>
-          <MenuItem value="CSAM">CSAM</MenuItem>
-
-
-
+          {apiResponse &&
+            apiResponse.branches &&
+            apiResponse.branches.map((branch) => (
+              <MenuItem key={branch} value={branch}>
+                {branch}
+              </MenuItem>
+            ))}
         </TextField>
 
         <TextField
@@ -118,25 +116,49 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
           value={selectedProfile}
           onChange={(e) => setSelectedProfile(e.target.value)}
         >
+          {apiResponse &&
+            apiResponse.roles &&
+            apiResponse.roles.map((role) => (
+              <MenuItem key={role} value={role}>
+                {role}
+              </MenuItem>
+            ))}
+        </TextField>
 
-          <MenuItem value="Applied Research Engineer">
-            Applied Research Engineer
-          </MenuItem>
-          <MenuItem value="Software Engineer">Software Engineer</MenuItem>
-          <MenuItem value="Program Manager">Program Manager</MenuItem>
-          <MenuItem value="PhD Mathematics">PhD Mathematics</MenuItem>
-          <MenuItem value="PhD Computer Science">PhD Computer Science</MenuItem>
-          <MenuItem value="Associate Consultant">Associate Consultant</MenuItem>
-          <MenuItem value="Senior Product Manager">
-            Senior Product Manager
-          </MenuItem>
-          <MenuItem value="Senior Software Engineer">
-            Senior Software Engineer
-          </MenuItem>
-          {/* Add other job profiles based on your API response */}
+        <TextField
+          select
+          label="Company"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+          value={selectedCompany}
+          onChange={(e) => setSelectedCompany(e.target.value)}
+        >
+          {apiResponse &&
+            apiResponse.companies &&
+            apiResponse.companies.map((company) => (
+              <MenuItem key={company} value={company}>
+                {company}
+              </MenuItem>
+            ))}
+        </TextField>
 
-
-
+        <TextField
+          select
+          label="Country"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+          value={selectedCountry}
+          onChange={(e) => setSelectedCountry(e.target.value)}
+        >
+          {apiResponse &&
+            apiResponse.countries &&
+            apiResponse.countries.map((country) => (
+              <MenuItem key={country} value={country}>
+                {country}
+              </MenuItem>
+            ))}
         </TextField>
 
         <Button variant="contained" fullWidth onClick={handleApplyFilters}>

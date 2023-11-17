@@ -165,6 +165,7 @@ const Dashboard = () => {
 
     const filterParams = new URLSearchParams(filters).toString();
     const apiUrl = `${baseUrl}?${filterParams}`;
+    console.log(apiUrl);
     axios
       .get(apiUrl)
       .then((response) => {
