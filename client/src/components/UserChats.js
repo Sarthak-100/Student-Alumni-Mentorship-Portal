@@ -11,11 +11,12 @@ const UserChats = (props) => {
   const { setChattedUsersValue } = useChattedUsersContext();
 
   useEffect(() => {
-    const friendId = props.conversation.members.find(
+    console.log("INSIDE USER CHATS:", props.conversation);
+    const friendId = props.conversation?.members.find(
       (m) => m !== props.currentUser?._id
     );
     const getUser = async () => {
-      // console.log();
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@", friendId);
       await axios
         .get(
           `http://localhost:4000/api/v1/users/getUserProfile?id=${friendId}`,
@@ -24,7 +25,7 @@ const UserChats = (props) => {
           }
         )
         .then((response) => {
-          console.log(response);
+          console.log("&&&&&&In User CHat", friendId, response);
           setUser(response.data);
           setChattedUsersValue(friendId, response.data);
         })
