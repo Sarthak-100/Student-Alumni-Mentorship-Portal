@@ -23,6 +23,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
 import { mainListItems, secondaryListItems } from "./dashboard copy/listItems";
 import FilterMenu from "./Filter";
@@ -229,6 +230,9 @@ const Dashboard = () => {
               to="/profile"
               style={{ textDecoration: "none", color: "inherit" }}
             >
+              <IconButton color="inherit">
+                <ChatIcon />
+              </IconButton>
               <IconButton color="inherit">
                 <AccountCircleIcon />
               </IconButton>
