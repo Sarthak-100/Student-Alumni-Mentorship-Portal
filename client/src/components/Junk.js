@@ -114,3 +114,45 @@ export default function Dashboard() {
     </ThemeProvider>
   );
 }
+// const App = () => {
+  // const { isLoading, error, isAuthenticated } = useAuth0();
+
+  // if (!isAuthenticated) {
+  //   return <LoginButton />;
+  // }
+  // {error && <div>Oops... {error.message}</div>}
+  // {!error && isLoading && <div>Loading...</div>}
+
+//   return (
+//     <UserProvider>
+//       <ConversationProvider>
+//         <ChattedUsersProvider>
+//           <SocketProvider>
+//             <Routes>
+//               <Route path="/" element={<Dashboard />} />
+//               <Route path="/profile" element={<ProfilePage />} />
+//               <Route path="/chat" element={<Chat />}>
+//                 {/* <Route path="/chat2" element={<Chat2 />}> */}
+//                 <Route path="welcome" element={<ChatWelcome />} />
+//                 <Route path="chatting" element={<Chatting />} />
+//               </Route>
+//             </Routes>
+//           </SocketProvider>
+//         </ChattedUsersProvider>
+//       </ConversationProvider>
+//     </UserProvider>
+
+{/* <> */}
+{/* <LogoutButton /> */}
+{/* <Routes>
+  <Route path="/" element={<Dashboard />} />
+  <Route path="/profile" element={<ProfilePage />} />
+  <Route path="/chat" element={<Chat />}>
+    <Route path="welcome" element={<ChatWelcome />} />
+    <Route path="chatting" element={<Chatting />} />
+  </Route>
+</Routes>
+</> */}
+
+//   );
+// };

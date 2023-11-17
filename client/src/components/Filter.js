@@ -87,12 +87,8 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
           <MenuItem value="2017">2017</MenuItem>
           <MenuItem value="2018">2018</MenuItem>
 
-//           {apiResponse &&
-//             apiResponse.batches.map((batch) => (
-//               <MenuItem key={batch} value={batch}>
-//                 {batch}
-//               </MenuItem>
-//             ))}
+
+
 
         </TextField>
 
@@ -109,12 +105,7 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
           <MenuItem value="CSE">CSE</MenuItem>
           <MenuItem value="CSAM">CSAM</MenuItem>
 
-//           {apiResponse &&
-//             apiResponse.branches.map((branch) => (
-//               <MenuItem key={branch} value={branch}>
-//                 {branch}
-//               </MenuItem>
-//             ))}
+
 
         </TextField>
 
@@ -144,12 +135,7 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
           </MenuItem>
           {/* Add other job profiles based on your API response */}
 
-//           {apiResponse &&
-//             apiResponse.currentWorks.map((profile) => (
-//               <MenuItem key={profile} value={profile}>
-//                 {profile}
-//               </MenuItem>
-//             ))}
+
 
         </TextField>
 

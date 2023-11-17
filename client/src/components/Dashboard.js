@@ -282,7 +282,7 @@ const Dashboard = () => {
         <Grid container spacing={3}>
           {apiResponse.result.map((user, index) => (
             <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-              <UserCard user={user} />
+              <UserCard cardUser={user} />
             </Grid>
           ))}
         </Grid>
