@@ -226,13 +226,13 @@ const Dashboard = () => {
             >
               Dashboard
             </Typography>
+            <IconButton color="inherit">
+              <ChatIcon />
+            </IconButton>
             <Link
               to="/profile"
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <IconButton color="inherit">
-                <ChatIcon />
-              </IconButton>
               <IconButton color="inherit">
                 <AccountCircleIcon />
               </IconButton>
