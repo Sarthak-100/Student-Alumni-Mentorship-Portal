@@ -18,6 +18,7 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [apiResponse, setApiResponse] = useState(null);
+  const [applyClicked, setApplyClicked] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,11 +45,29 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
     };
 
     applyFilters(filters);
+    setApplyClicked(false);
+    // onClose(); // Close the popover after applying filters
+  };
+
+  const handleClearFilters = () => {
+    setSelectedBatch("");
+    setSelectedBranch("");
+    setSelectedProfile("");
+    setSelectedCompany("");
+    setSelectedCountry("");
+    applyFilters({
+      batch: "",
+      branch: "",
+      current_role: "",
+      current_organization: "",
+      current_location: "",
+    });
+    setApplyClicked(true);
   };
 
   return (
     <Popover
-      open={open}
+      open={open || applyClicked} // Open when parent open or apply is clicked
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "bottom",
@@ -58,7 +77,7 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
         vertical: "top",
         horizontal: "left",
       }}
-      onClose={onClose}
+      onClose={onClose} // Close the popover if clicking outside the popover
       PaperProps={{
         style: {
           width: "300px",
@@ -161,9 +180,15 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
             ))}
         </TextField>
 
-        <Button variant="contained" fullWidth onClick={handleApplyFilters}>
-          Apply Filters
-        </Button>
+        <Box p={2} display="flex" justifyContent="flex-end">
+          <Button variant="contained" style={{ marginRight: '8px' }} onClick={handleApplyFilters}>
+            Apply Filters
+          </Button>
+
+          <Button variant="outlined" size="small" onClick={handleClearFilters}>
+            Clear Filters
+          </Button>
+        </Box>
 
         {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (
           <div>
