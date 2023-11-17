@@ -44,6 +44,6 @@ app.get("/api/data", (req, res) => {
   res.status(200).json({ message: "This is a sample response" });
 });
 
-app.post('/create-meeting', meetingRouter);
+app.get('/zoomauth', meetingRouter);
 
 export default app;

@@ -66,20 +66,49 @@ dotenv.config();
 // Zoom API credentials
 const apiKey = process.env.ZOOM_API_KEY;
 const apiSecret = process.env.ZOOM_API_SECRET;
+const url = process.env.ZOOM_REDIRECT_URL;
 
 // Create a Zoom meeting
 const createMeeting = async (req, res) => {
+  // try {
+  //   const response = await axios.post(
+  //     'https://api.zoom.us/v2/users/me/meetings',
+  //     {
+  //       topic: req.body.topic,
+  //       type: 2,
+  //     },
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${generateZoomToken(apiKey, apiSecret)}`,
+  //       },
+  //     }
+  //   );
+
+  //   res.json(response.data);
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ error: 'Internal Server Error' });
+  // }
+  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + apiKey + '&redirect_uri=' + url);
+}
+
+// Redirect URL for Zoom OAuth
+const redirect = async (req, res) => {
+  const code = req.query.code;
+
   try {
     const response = await axios.post(
-      'https://api.zoom.us/v2/users/me/meetings',
-      {
-        topic: req.body.topic,
-        type: 2,
-      },
+      'https://zoom.us/oauth/token?grant_type=authorization_code&code=' +
+      code +
+      '&redirect_uri=' +
+      url,
+      {},
       {
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${generateZoomToken(apiKey, apiSecret)}`,
+          Authorization:
+            'Basic ' +
+            Buffer.from(apiKey + ':' + apiSecret).toString('base64'),
         },
       }
     );
