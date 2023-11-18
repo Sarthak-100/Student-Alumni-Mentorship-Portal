@@ -7,7 +7,7 @@ import { useSocketContext } from "../context/SocketContext";
 import { useConversationContext } from "../context/ConversationContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
 // function getRandomInt(min, max) {
 //   min = Math.ceil(min);
@@ -24,12 +24,8 @@ import { io } from "socket.io-client";
 // ];
 
 const PreviousChats = () => {
-  const { setSocketValue } = useSocketContext();
-
   const [conversations, setConversations] = useState([]);
   // const [currentChat, setCurrentChat] = useState(null);
-
-  const socket = useRef();
 
   const { user } = useUserContext();
 
@@ -37,77 +33,28 @@ const PreviousChats = () => {
 
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
-  console.log("in Welcome", "000000000000000000000000", receiverId);
+  // console.log("in Welcome", "000000000000000000000000", receiverId);
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900");
-    setSocketValue(socket);
-  }, []);
+  const { socket } = useSocketContext();
 
   // useEffect(() => {
-  //   const handleLogin = async () => {
-  //     try {
-  //       const jsonData = data[getRandomInt(0, 3)];
-  //       const queryParams = new URLSearchParams(jsonData).toString();
-  //       await axios
-  //         .get(`http://localhost:4000/api/v1/users/login?${queryParams}`, {
-  //           withCredentials: true,
-  //         })
-  //         .then((response) => {
-  //           console.log("user logged in");
-  //           console.log(response);
-  //         })
-  //         .catch((error) => {
-  //           console.error("API Error:", error);
-  //         });
-  //     } catch (error) {
-  //       console.error("Login failed:", error);
-  //     }
-  //   };
-  //   handleLogin();
-
-  //   const getMyProfile = async () => {
-  //     try {
-  //       await axios
-  //         .get(`http://localhost:4000/api/v1/users/myProfile`, {
-  //           withCredentials: true,
-  //         })
-  //         .then((response) => {
-  //           console.log(response);
-  //           settMainUser(response.data);
-  //           login(response.data);
-  //           console.log(
-  //             "############PrevChatUserProfile",
-  //             response.data?._id,
-  //             response.data
-  //           );
-  //         })
-  //         .catch((error) => {
-  //           console.error("API Error:", error);
-  //         });
-  //     } catch (error) {
-  //       console.error("fetch Profile failed:", error);
-  //     }
-  //   };
-
-  //   getMyProfile();
-  // }, []);
-
-  useEffect(() => {
-    socket.current.emit("addUser", user?._id);
-    socket.current.on("getUsers", (users) => {
-      console.log(users);
-    });
-  }, [user]);
+  //   socket.current.emit("addUser", user?._id);
+  //   socket.current.on("getUsers", (users) => {
+  //     console.log(users);
+  //   });
+  // }, [user]);
 
   useEffect(() => {
     const getConversations = async () => {
       try {
         console.log("!!!!!!!!!!!!!!inside getConversations", user);
         await axios
-          .get("http://localhost:4000/api/v1/conversations/getConversations", {
-            withCredentials: true,
-          })
+          .get(
+            `http://localhost:4000/api/v1/conversations/getConversations?user_id=${user._id}`,
+            {
+              withCredentials: true,
+            }
+          )
           .then((response) => {
             console.log(response);
             if (receiverId) {
@@ -139,7 +86,7 @@ const PreviousChats = () => {
       }
     };
     getConversations();
-  }, [user?._id]);
+  }, []);
 
   console.log(socket);
 

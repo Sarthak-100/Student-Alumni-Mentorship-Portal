@@ -17,12 +17,21 @@ const UserCard = (props) => {
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  const handleChat = () => {
+    setReceiverIdValue(props.cardUser._id);
+    navigate("/chat/welcome");
+  };
+
+  // Destructure the nested location object
+  const { city, state, country } = props.cardUser.location || {};
+
   const handleProfile = () => {
     setSelectedUser(props.cardUser); // Store the selected user data
     setOpenProfile(true); // Open the profile dialog
   };
 
   const { city, state, country } = props.cardUser?.location || {};
+
 
   const cardStyle = {
     maxWidth: 300,
@@ -51,6 +60,7 @@ const UserCard = (props) => {
   return (
     <Card style={cardStyle}>
       <CardHeader
+
         avatar={<Avatar>{props.cardUser?.name.charAt(0)}</Avatar>}
         title={
           <Typography variant="h6" style={titleStyle}>
@@ -64,7 +74,6 @@ const UserCard = (props) => {
         }
       />
       <CardContent>
-        {/* Render details */}
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="body1" style={contentStyle}>
@@ -93,6 +102,7 @@ const UserCard = (props) => {
             </Typography>
           </Grid>
         </Grid>
+
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
         <IconButton color="primary" aria-label="Chat">

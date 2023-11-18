@@ -1,4 +1,4 @@
-import React from "react";
+import { React } from "react";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import LoginButton from "./components/LoginButton";
@@ -14,44 +14,47 @@ import { UserProvider } from "./context/UserContext";
 import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
 import { ReceiverIdProvider } from "./context/ReceiverIdContext";
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+
 import "./style.css";
 
 const App = () => {
-
   const { isLoading, error, isAuthenticated } = useAuth0();
 
   if (!isAuthenticated) {
-      return <LoginButton />;
+    return <LoginButton />;
   }
-  {error && <div>Oops... {error.message}</div>}
-  {!error && isLoading && <div>Loading...</div>}
+  {
+    error && <div>Oops... {error.message}</div>;
+  }
+  {
+    !error && isLoading && <div>Loading...</div>;
+  }
 
   return (
     <>
-    <UserProvider>
-      <ReceiverIdProvider>
-        <ConversationProvider>
-          <ChattedUsersProvider>
-            <SocketProvider>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/chat" element={<Chat />}>
-                  {/* <Route path="/chat2" element={<Chat2 />}> */}
-                  <Route path="welcome" element={<ChatWelcome />} />
-                  <Route path="chatting" element={<Chatting />} />
-                </Route>
-              </Routes>
-            </SocketProvider>
-          </ChattedUsersProvider>
-        </ConversationProvider>
-      </ReceiverIdProvider>
-    </UserProvider>
-    </>)};
-
+      <UserProvider>
+        <ReceiverIdProvider>
+          <ConversationProvider>
+            <ChattedUsersProvider>
+              <SocketProvider>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/chat" element={<Chat />}>
+                    {/* <Route path="/chat2" element={<Chat2 />}> */}
+                    <Route path="welcome" element={<ChatWelcome />} />
+                    <Route path="chatting" element={<Chatting />} />
+                  </Route>
+                </Routes>
+              </SocketProvider>
+            </ChattedUsersProvider>
+          </ConversationProvider>
+        </ReceiverIdProvider>
+      </UserProvider>
+    </>
+  );
+};
 
 export default App;
-
-
-

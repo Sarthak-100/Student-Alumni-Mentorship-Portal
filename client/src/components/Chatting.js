@@ -60,14 +60,17 @@ const Chatting = () => {
   const scrollRef = useRef();
 
   useEffect(() => {
-    socket?.current.on("getMessage", (data) => {
+    console.log("^^^^^^^^^ ABOVE GETMESSAGES ^^^^^^^^^^");
+    console.log(socket);
+    socket.on("getMessage", (data) => {
+      console.log("^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^");
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       });
     });
-  }, []);
+  });
 
   useEffect(() => {
     arrivalMessage &&
@@ -87,7 +90,8 @@ const Chatting = () => {
             }
           )
           .then((response) => {
-            console.log(response);
+            // console.log(response);
+            // console.log(response.data);
             setMessages(response.data);
           })
           .catch((error) => {
@@ -139,7 +143,7 @@ const Chatting = () => {
       conversationId: conversation._id,
     };
 
-    socket?.current.emit("sendMessage", {
+    socket.emit("sendMessage", {
       senderId: user._id,
       receiverId: receiverIdTemp,
       text: newMessage,

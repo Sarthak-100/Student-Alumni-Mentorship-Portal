@@ -1,68 +1,31 @@
 import mongoose from "mongoose";
 
-const stdRegisteredSchema = mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false,
-  },
-  more_info: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-  },
-  img: {
-    type: String,
-    default:
-      "https://images.pexels.com/photos/5483063/pexels-photo-5483063.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  chat_model: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-    required: true,
-  },
-});
-export const StudentRegistered = mongoose.model(
-  "sudentRegistered",
-  stdRegisteredSchema
-);
+// const stdRegisteredSchema = mongoose.Schema({
+//   email: {
+//     type: String,
+//     required: true,
+//     unique: true,
+//   },
+//   more_info: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     default: null,
+//   },
+//   img: {
+//     type: String,
+//     default: "",
+//   },
+// });
+// export const StudentRegistered = mongoose.model(
+//   "sudentRegistered",
+//   stdRegisteredSchema
+// );
 
-const studentSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  roll_no: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
-  batch: {
-    type: Number,
-    required: true,
-  },
-  branch: {
-    type: String,
-    required: true,
-  },
-});
-export const Student = mongoose.model("student", studentSchema);
+export const Student = mongoose.model("student", {});
 
+export const Alumni = mongoose.model("Alumni_Data", {});
 
-// const alumniSchema = mongoose.Schema({
+// export const Alumni = mongoose.model("alumni", alumniSchema);
+// const adminSchema = mongoose.Schema({
 //   name: {
 //     type: String,
 //     required: true,
@@ -70,82 +33,22 @@ export const Student = mongoose.model("student", studentSchema);
 //   email: {
 //     type: String,
 //     required: true,
+//     unique: true,
 //   },
-//   branch: {
+//   password: {
 //     type: String,
 //     required: true,
+//     select: false,
 //   },
-//   batch: {
-//     type: Number,
-//     required: true,
+//   img: {
+//     type: String,
+//     default:
+//       "https://images.pexels.com/photos/5483063/pexels-photo-5483063.jpeg?auto=compress&cs=tinysrgb&w=600",
 //   },
-//   work: {
-//     role: {
-//       type: String,
-//       required: true,
-//     },
-//     organization: {
-//       type: String,
-//       required: true,
-//     },
+//   chat_model: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     default: null,
 //   },
-//   location: {
-//     city: {
-//       type: String,
-//       required: true,
-//     },
-//     state: {
-//       type: String,
-//       required: true,
-//     },
-//     country: {
-//       type: String,
-//       required: true,
-//     },
-//   },
-// password: {
-//   type: String,
-//   required: true,
-//   select: false,
-// },
-// img: {
-//   type: String,
-//   default:
-//     "https://images.pexels.com/photos/5483063/pexels-photo-5483063.jpeg?auto=compress&cs=tinysrgb&w=600",
-// },
-// chat_model: {
-//   type: mongoose.Schema.Types.ObjectId,
-//   default: null,
-// },
 // });
-export const Alumni = mongoose.model("Alumni_Data", {});
 
-
-// export const Alumni = mongoose.model("alumni", alumniSchema);
-const adminSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false,
-  },
-  img: {
-    type: String,
-    default:
-      "https://images.pexels.com/photos/5483063/pexels-photo-5483063.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  chat_model: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-  },
-});
-
-export const Admin = mongoose.model("admin", adminSchema);
+export const Admin = mongoose.model("admin", {});
