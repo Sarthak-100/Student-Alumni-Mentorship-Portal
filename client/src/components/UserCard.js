@@ -30,9 +30,6 @@ const UserCard = (props) => {
     setOpenProfile(true); // Open the profile dialog
   };
 
-  const { city, state, country } = props.cardUser?.location || {};
-
-
   const cardStyle = {
     maxWidth: 300,
     margin: "20px auto",
