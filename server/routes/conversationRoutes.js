@@ -4,14 +4,14 @@ import {
   getConversations,
   findConversation,
 } from "../controllers/conversationController.js";
-import isAuthenticated from "../middlewares/auth.js";
+// import isAuthenticated from "../middlewares/auth.js";
 
 const conversationRouter = router.Router();
 
-conversationRouter.post("/newConversation", isAuthenticated, newConversation);
+conversationRouter.post("/newConversation", newConversation);
 
-conversationRouter.get("/getConversations", isAuthenticated, getConversations);
+conversationRouter.get("/getConversations", getConversations);
 
-conversationRouter.get("/findConversation", isAuthenticated, findConversation);
+conversationRouter.get("/findConversation", findConversation);
 
 export default conversationRouter;
