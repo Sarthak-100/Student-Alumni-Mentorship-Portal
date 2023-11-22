@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import ApiCalendar from 'react-google-calendar-api';
+import {googleCalendarClientID, googleCalendarAPIKey, googleCalendarScope} from '../Config.js';
 import axios from "axios";
 import {
   styled,
@@ -23,6 +25,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import TodayIcon from '@mui/icons-material/Today';
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
 import { mainListItems, secondaryListItems } from "./dashboard copy/listItems";
@@ -89,6 +92,7 @@ const Dashboard = () => {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [showCalendar, setShowCalendar] = useState(false);
   const inputRef = useRef(null);
 
   const userContext = useUserContext();
@@ -198,6 +202,10 @@ const Dashboard = () => {
       });
   };
 
+  const handleCalendarClick = () => {
+    navigate("/calendar");
+  };
+
   const handleChat = () => {
     navigate("/chat/welcome");
   };
@@ -229,6 +237,9 @@ const Dashboard = () => {
             >
               Dashboard
             </Typography>
+            <IconButton color="inherit" onClick={handleCalendarClick}>
+              <TodayIcon /> {/* Calendar icon */}
+            </IconButton>
             <IconButton color="inherit" onClick={handleChat}>
               <ChatIcon />
             </IconButton>
