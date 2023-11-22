@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -18,10 +18,14 @@ import { useNavigate } from "react-router-dom";
 const UserCard = (props) => {
   const navigate = useNavigate();
   const { user } = useUserContext();
-  const { setReceiverIdValue } = useReceiverIdContext();
+  const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
-  const handleChat = () => {
-    setReceiverIdValue(props.cardUser._id);
+  const handleChat = async () => {
+    console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
+    await setReceiverIdValue(props.cardUser._id);
+    // useEffect(() => {
+    //   console.log("USER CARD inside handleChat", receiverId);
+    // }, [receiverId]);
     navigate("/chat/welcome");
   };
 

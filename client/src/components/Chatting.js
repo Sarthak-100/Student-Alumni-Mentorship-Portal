@@ -186,10 +186,9 @@ const Chatting = () => {
             <Avatar alt="Remy Sharp" src="" sx={{ width: 24, height: 26 }} />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
-            {
+            {true &&
               chattedUsers[conversation?.members.find((m) => m !== user?._id)]
-                ?.name
-            }
+                ?.name}
           </Typography>
           <IconButton
             size="large"

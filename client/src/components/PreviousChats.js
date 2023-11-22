@@ -7,21 +7,6 @@ import { useSocketContext } from "../context/SocketContext";
 import { useConversationContext } from "../context/ConversationContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
-// import { io } from "socket.io-client";
-
-// function getRandomInt(min, max) {
-//   min = Math.ceil(min);
-//   max = Math.floor(max);
-
-//   // Generate a random number between min (inclusive) and max (exclusive)
-//   return Math.floor(Math.random() * (max - min)) + min;
-// }
-
-// const data = [
-//   { email: "a11@iiitd.ac.in", password: "s1p", user_type: "student" },
-//   { email: "a22@iiitd.ac.in", password: "s2p", user_type: "student" },
-//   { email: "a33@iiitd.ac.in", password: "s3p", user_type: "student" },
-// ];
 
 const PreviousChats = () => {
   const [conversations, setConversations] = useState([]);
@@ -44,6 +29,10 @@ const PreviousChats = () => {
   //   });
   // }, [user]);
 
+  // const tempSetConversationValue = async (c) => {
+  //   setConversationValue(c);
+  // };
+
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -62,8 +51,11 @@ const PreviousChats = () => {
                 dict?.members.includes(receiverId)
               );
               let conv;
+              console.log("dictionaryWithElement", dictionaryWithElement);
+              console.log("receiverId", receiverId);
               if (dictionaryWithElement) {
                 setConversations(response.data);
+                // await setConversationValue(dictionaryWithElement);
                 setReceiverIdValue(null);
               } else {
                 conv = {
@@ -71,6 +63,11 @@ const PreviousChats = () => {
                   members: [user?._id, receiverId],
                 };
                 setConversations([conv, ...response.data]);
+                // setConversationValue(conv);
+                // setConversations((prevConversations) => [
+                //   conv,
+                //   ...res,
+                // ]);
               }
               // console.log("------------+++++++++", conv);
               // setConversationValue(conv);
@@ -96,6 +93,7 @@ const PreviousChats = () => {
 
   useEffect(() => {
     console.log("in useEffect for prev chat click");
+    console.log("CONVERSATION", conversation);
     if (conversation) {
       navigate("chatting");
     }
