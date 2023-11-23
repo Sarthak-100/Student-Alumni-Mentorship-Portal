@@ -58,29 +58,6 @@ const filter = async (req, res) => {
     if (current_organization) {
       filters["work.organization"] = current_organization;
 
-//     try {
-//         const { branch, batch, currentWork } = req.query;
-//         const filters = {};
-
-//         //adding filters to query on database
-//         if (branch) {
-//             filters.branch = branch;
-//         }
-//         if (batch) {
-//             filters.batch = parseInt(batch);
-//         }
-//         if (currentWork) {
-//             filters.current_work = currentWork;
-//         }
-//         //find profiles matching the filters in the database
-//         const result = await alumni.find(filters);
-//         console.log(result);
-//         res.status(200).json({ result });
-//         return result;
-    
-//     } catch (error) {
-//         res.status(500).json({ error: 'An error occurred while filtering the profiles.' });
-
     }
 
     if (current_location) {
