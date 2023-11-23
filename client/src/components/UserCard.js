@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { React, useEffect } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,11 +15,18 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 
 const UserCard = (props) => {
+  const navigate = useNavigate();
+  const { user } = useUserContext();
+  const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleChat = () => {
-    setReceiverIdValue(props.cardUser._id);
+  const handleChat = async () => {
+    console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
+    await setReceiverIdValue(props.cardUser._id);
+    // useEffect(() => {
+    //   console.log("USER CARD inside handleChat", receiverId);
+    // }, [receiverId]);
     navigate("/chat/welcome");
   };
 

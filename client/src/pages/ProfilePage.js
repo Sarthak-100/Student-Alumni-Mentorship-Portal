@@ -27,9 +27,10 @@ const ProfileAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const ProfilePage = () => {
-  const user = useAuth0();
-  // const {user} = useUserContext();
-  const zyx = useUserContext();
+  const { user } = useAuth0();
+  const userContext = useUserContext();
+
+  console.log("^^^^UserContext:^^^", userContext.user);
 
   return (
     <CenteredContainer>
@@ -46,7 +47,7 @@ const ProfilePage = () => {
         <Typography variant="h5" component="div">
           {user?.name}
         </Typography>
-        Username : {user.nickname}
+        {/* Username : {user.nickname} */}
         <Typography variant="h6" component="div">
           Specialization:
         </Typography>

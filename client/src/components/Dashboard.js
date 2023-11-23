@@ -95,6 +95,8 @@ const Dashboard = () => {
 
   const { user, logout } = useAuth0();
 
+  console.log("@@@@@@AuthOuser", user);
+
   const { setSocketValue } = useSocketContext();
 
   const navigate = useNavigate();
@@ -124,7 +126,12 @@ const Dashboard = () => {
           )
           .then((response) => {
             if (response.data.success) {
-              userContext.login(response.data.user);
+              // console.log("INSIDE PROFILE API", response.data);
+              let tempUser = response.data.user;
+              let user_type = response.data.user_type;
+              tempUser.user_type = user_type;
+              // console.log("INSIDE PROFILE API 2", tempUser);
+              userContext.login(tempUser);
               setSocketValue(socket);
             } else {
               console.log("Login Failed");
@@ -142,24 +149,6 @@ const Dashboard = () => {
 
     getMyProfile();
   }, []);
-
-  // const socket = useRef();
-
-  // socket.current = io("ws://localhost:8900");
-  // socket.current.emit("addUser", userContext.user?._id);
-  // socket.current.on("getUsers", (users) => {
-  //   console.log(users);
-  // });
-  // setSocketValue(socket);
-
-  // useEffect(() => {
-  //   socket.current = io("ws://localhost:8900");
-  //   socket.current.emit("addUser", userContext.user?._id);
-  //   socket.current.on("getUsers", (users) => {
-  //     console.log(users);
-  //   });
-  //   setSocketValue(socket);
-  // }, []);
 
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";

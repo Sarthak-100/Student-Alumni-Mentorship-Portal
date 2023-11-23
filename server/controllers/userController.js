@@ -115,9 +115,6 @@ import { json } from "express";
 
 export const getMyProfile = async (req, res, next) => {
   try {
-    // console.log("1");
-    // console.log(req.user_type);
-
     const email = req.query.email;
     let user;
     let user_type;
@@ -146,10 +143,18 @@ export const getMyProfile = async (req, res, next) => {
       }
     }
 
-    user.user_type = user_type;
+    console.log(user.name);
+    // user.user_type = user_type;
+    user["user_type"] = user_type;
+
+    console.log(typeof user);
+
+    console.log("^^^user in getMy Profile", user);
+    console.log("^^", out);
 
     res.status(200).json({
       success: true,
+      user_type: user_type,
       user: user,
     });
 

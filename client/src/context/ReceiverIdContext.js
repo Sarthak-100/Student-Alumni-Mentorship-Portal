@@ -6,7 +6,7 @@ export const ReceiverIdProvider = ({ children }) => {
   const [receiverId, setReceiverId] = useState(null);
 
   const setReceiverIdValue = (value) => {
-    setReceiverId(value);
+    setReceiverId((prevReceiverId) => value);
   };
 
   return (
