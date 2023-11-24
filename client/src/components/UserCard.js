@@ -113,7 +113,7 @@ const UserCard = (props) => {
 
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
-        <IconButton color="primary" aria-label="Chat">
+        <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
           <ChatIcon />
         </IconButton>
         {/* Trigger ProfileDisplay dialog */}
