@@ -14,6 +14,7 @@ import { useUserContext } from "../context/UserContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useChattedUsersContext } from "../context/ChattedUsers";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
+// import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -25,19 +26,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-function makeid(length) {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
-
 const Chatting = () => {
   const [id, setid] = useState("");
 
@@ -48,6 +36,8 @@ const Chatting = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const { conversation, setConversationValue } = useConversationContext();
+
+  // const { setLoadConversationsValue } = useLoadConversationsContext();
 
   const { user } = useUserContext();
 
@@ -63,6 +53,7 @@ const Chatting = () => {
     console.log("^^^^^^^^^ ABOVE GETMESSAGES ^^^^^^^^^^");
     console.log(socket);
     socket.on("getMessage", (data) => {
+      // setLoadConversationsValue(1);
       console.log("^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^");
       setArrivalMessage({
         sender: data.senderId,
@@ -104,7 +95,6 @@ const Chatting = () => {
       // }
     };
     getMessages();
-    // }, []);
   }, [conversation?._id]);
 
   const sendMeesageBtController = async (e) => {
@@ -134,7 +124,6 @@ const Chatting = () => {
         .catch((error) => {
           console.error("API Error:", error);
         });
-      setReceiverIdValue(null);
     }
 
     const message = {
@@ -143,12 +132,20 @@ const Chatting = () => {
       conversationId: conversation._id,
     };
 
-    socket.emit("sendMessage", {
-      senderId: user._id,
-      receiverId: receiverIdTemp,
-      text: newMessage,
-    });
-
+    if (receiverIdTemp === receiverId) {
+      socket.emit("newConversation&Message", {
+        senderId: user._id,
+        receiverId: receiverIdTemp,
+        text: newMessage,
+      });
+      setReceiverIdValue(null);
+    } else {
+      socket.emit("sendMessage", {
+        senderId: user._id,
+        receiverId: receiverIdTemp,
+        text: newMessage,
+      });
+    }
     try {
       await axios
         .post(`http://localhost:4000/api/v1/messages/newMessage`, message, {

@@ -7,10 +7,13 @@ import { useSocketContext } from "../context/SocketContext";
 import { useConversationContext } from "../context/ConversationContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
+// import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 
 const PreviousChats = () => {
   const [conversations, setConversations] = useState([]);
-  // const [currentChat, setCurrentChat] = useState(null);
+  // const { loadConversations } = useLoadConversationsContext();
+
+  const [loadConversations, setLoadConversations] = useState(null);
 
   const { user } = useUserContext();
 
@@ -21,13 +24,6 @@ const PreviousChats = () => {
   // console.log("in Welcome", "000000000000000000000000", receiverId);
 
   const { socket } = useSocketContext();
-
-  // useEffect(() => {
-  //   socket.current.emit("addUser", user?._id);
-  //   socket.current.on("getUsers", (users) => {
-  //     console.log(users);
-  //   });
-  // }, [user]);
 
   // const tempSetConversationValue = async (c) => {
   //   setConversationValue(c);
@@ -55,6 +51,7 @@ const PreviousChats = () => {
               console.log("receiverId", receiverId);
               if (dictionaryWithElement) {
                 setConversations(response.data);
+                // setConversationsTemp(response.data);
                 // await setConversationValue(dictionaryWithElement);
                 setReceiverIdValue(null);
               } else {
@@ -63,6 +60,7 @@ const PreviousChats = () => {
                   members: [user?._id, receiverId],
                 };
                 setConversations([conv, ...response.data]);
+                // setConversationsTemp([conv, ...response.data]);
                 // setConversationValue(conv);
                 // setConversations((prevConversations) => [
                 //   conv,
@@ -73,6 +71,7 @@ const PreviousChats = () => {
               // setConversationValue(conv);
             } else {
               setConversations(response.data);
+              // setConversationsTemp(response.data);
             }
           })
           .catch((error) => {
@@ -83,9 +82,18 @@ const PreviousChats = () => {
       }
     };
     getConversations();
-  }, []);
+  }, [loadConversations]);
 
   console.log(socket);
+
+  useEffect(() => {
+    socket.on("receiveNewConversation&Message", (data) => {
+      // console.log("in receiveNewConversation&Message");
+      setLoadConversations(
+        (prevLoadConversations) => prevLoadConversations + 1
+      );
+    });
+  });
 
   // console.log(currentChat);
 
@@ -101,17 +109,6 @@ const PreviousChats = () => {
 
   return (
     <div className="previousChats">
-      {/* {
-        if(directedFromChatSection){
-          conversation.push({
-            "_id": null,
-            "members": [
-                "60e9c3c8f1a0f1f6d0e1f6a1",
-                "60e9c3c8f1a0f1f6d0e1f6a2"
-            ],
-          })
-        }
-      } */}
       {conversations.map((c) => (
         <div onClick={() => setConversationValue(c)}>
           <UserChats conversation={c} currentUser={user} />

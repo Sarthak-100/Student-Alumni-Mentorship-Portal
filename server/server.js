@@ -51,6 +51,17 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("newConversation&Message", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+    console.log(receiverId);
+    console.log(user);
+    console.log(users);
+    io.to(user?.socketId).emit("receiveNewConversation&Message", {
+      senderId,
+      text,
+    });
+  });
+
   // when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected");

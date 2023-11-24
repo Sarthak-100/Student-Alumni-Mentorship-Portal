@@ -10,6 +10,7 @@ import Chat2 from "./pages/Chat2";
 import ChatWelcome from "./components/ChatWelcome";
 import Chatting from "./components/Chatting";
 import { ConversationProvider } from "./context/ConversationContext";
+import { LoadConversationsProvider } from "./context/LoadConversationsContext";
 import { UserProvider } from "./context/UserContext";
 import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
@@ -36,21 +37,23 @@ const App = () => {
     <>
       <UserProvider>
         <ReceiverIdProvider>
-          <ConversationProvider>
-            <ChattedUsersProvider>
-              <SocketProvider>
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/chat" element={<Chat />}>
-                    {/* <Route path="/chat2" element={<Chat2 />}> */}
-                    <Route path="welcome" element={<ChatWelcome />} />
-                    <Route path="chatting" element={<Chatting />} />
-                  </Route>
-                </Routes>
-              </SocketProvider>
-            </ChattedUsersProvider>
-          </ConversationProvider>
+          <LoadConversationsProvider>
+            <ConversationProvider>
+              <ChattedUsersProvider>
+                <SocketProvider>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/chat" element={<Chat />}>
+                      {/* <Route path="/chat2" element={<Chat2 />}> */}
+                      <Route path="welcome" element={<ChatWelcome />} />
+                      <Route path="chatting" element={<Chatting />} />
+                    </Route>
+                  </Routes>
+                </SocketProvider>
+              </ChattedUsersProvider>
+            </ConversationProvider>
+          </LoadConversationsProvider>
         </ReceiverIdProvider>
       </UserProvider>
     </>
