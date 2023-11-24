@@ -51,14 +51,16 @@ const ProfilePage = () => {
         <Typography variant="h6" component="div">
           Specialization:
         </Typography>
-        <Typography>Computer Science</Typography>
+        <Typography>{userContext.user.branch}</Typography>
         <Typography variant="h6" component="div">
           Batch:
         </Typography>
-        <Typography>2022</Typography>
-        <Button variant="contained" color="primary">
-          Connect
+        <Typography>{userContext.user.batch}</Typography>
+        
+        <Button variant="contained" color="primary" style={{ display: userContext.user.user_type === "alumni" ? 'block' : 'none' }}>
+          Edit Profile
         </Button>
+      
       </Paper>
       <Paper
         sx={{

@@ -26,6 +26,7 @@ const App = () => {
   if (!isAuthenticated) {
     return <LoginButton />;
   }
+  
   {
     error && <div>Oops... {error.message}</div>;
   }
