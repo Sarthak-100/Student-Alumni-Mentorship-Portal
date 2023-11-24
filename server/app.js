@@ -31,12 +31,31 @@ const scopes = [
   // 'https://www.googleapis.com/auth/calendar.events'
 ];
 
+const allowedOrigins = [
+  'http://localhost:5000',
+  'http://localhost:4000/google',
+  'http://localhost:4000/google/redirect',
+  'https://accounts.google.com/o/oauth2/v2/auth',
+  'https://accounts.google.com',
+  'http://www.google.com/support/accounts/bin/answer.py?hl=en&answer=151657 for more info.',
+  'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect',
+];
+
+
 //adding middlewares
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+  // res.header("Access-Control-Allow-Origin", ["http://localhost:5000", "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect"]);
+  const origin = req.headers.origin;
+  console.log("origin", origin);
+  if (allowedOrigins.includes(origin)) {
+    // Set the Access-Control-Allow-Origin header to the request's origin
+    console.log("hello");
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", true);
@@ -68,27 +87,27 @@ app.get("/google", (req, res) => {
     access_type: "offline",
     scope: scopes,
   });
-  // console.log(url);
+  console.log(url);
   res.redirect(url);
 });
 
-// app.get('/google/redirect', (req, res) => {
-//   const code = req.query.code;
+app.get('/google/redirect', (req, res) => {
+  const code = req.query.code;
+  oauth2Client.getToken(code)
+  .then(({ tokens }) => {
+    console.log("hello token", tokens);
+    oauth2Client.setCredentials(tokens);
+    res.send({
+      msg: 'Successfully logged in',
+    });
+  })
+  .catch(error => {
+    // Handle error appropriately
+    console.error('Error getting tokens:', error);
+    res.status(500).send({ error: 'Failed to get tokens' });
+  });
 
-//   oauth2Client.getToken(code)
-//   .then(({ tokens }) => {
-//     oauth2Client.setCredentials(tokens);
-//     res.send({
-//       msg: 'Successfully logged in',
-//     });
-//   })
-//   .catch(error => {
-//     // Handle error appropriately
-//     console.error('Error getting tokens:', error);
-//     res.status(500).send({ error: 'Failed to get tokens' });
-//   });
-
-// });
+});
 
 // app.get('/schedule_event', async (req, res) => {
 //   try {
@@ -133,24 +152,40 @@ app.get("/google", (req, res) => {
 //   return oauth2Client;
 // }
 
-app.get('/schedule_event', async (req, res) => {
+// app.get('/schedule_event', async (req, res) => {
   
-  const token = req.headers.authorization; // Get the token from the request headers
-  console.log("hello");
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: Missing token' });
-  }
+//   const token = req.headers.authorization; // Get the token from the request headers
+//   console.log("hello");
+//   if (!token) {
+//     return res.status(401).json({ message: 'Unauthorized: Missing token' });
+//   }
+app.get('/schedule_event', async (req, res) => {
+  // const token = req.headers.authorization;
 
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URL
-  );
+  // if (!token) {
+  //   return res.status(401).json({ message: 'Unauthorized: Missing token' });
+  // }
 
-  oauth2Client.setCredentials({ access_token: token.split(' ')[1] }); // Extract and set the access token
+  // Access the user data from the request body
+  // const { token, user } = req.body;
+  // console.log("schedule event good", user, token);
 
-  console.log("schedule_event", oauth2Client);
+  // if (!token) {
+  //   return res.status(401).json({ message: 'Unauthorized: Missing token' });
+  // }
+  // const oauth2Client = new google.auth.OAuth2(
+  //   process.env.GOOGLE_CLIENT_ID,
+  //   process.env.GOOGLE_CLIENT_SECRET,
+  //   process.env.GOOGLE_REDIRECT_URL
+  // );
+
+  // oauth2Client.setCredentials({ access_token: token.split(' ')[1] }); // Extract and set the access token
+
+  // console.log("schedule_event", oauth2Client);
   try {
+    // console.log("hello 767", token)
+    // oauth2Client.setCredentials({ access_token: token }); // Assuming 'tokens' contain the necessary access token
+
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
     const event = await calendar.events.insert({
