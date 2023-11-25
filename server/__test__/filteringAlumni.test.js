@@ -1,9 +1,8 @@
 import request from "supertest";
-// const app = require('../your-express-app'); // Make sure to import your Express app
 import app from "../app.js";
 import mongoose from "mongoose";
 
-describe("GET /api/data", () => {
+describe("Suite 2: Filtering Alumni", () => {
   beforeAll(async () => {
     // Connect to a test database before running tests
     await mongoose
@@ -73,4 +72,4 @@ describe("GET /api/data", () => {
     });
     });
 
-});
+  });

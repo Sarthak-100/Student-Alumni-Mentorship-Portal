@@ -12,7 +12,6 @@ const values = async (req, res) => {
       const countries = await Alumni.distinct('location.country');
       
       const result = { branches, batches, roles, companies, countries };
-      console.log(result);
       res.status(200).json(result);
       return result;
   
@@ -24,10 +23,8 @@ const values = async (req, res) => {
 const prefix = async (req, res) => {
     try {
         //filter alumni based on userName's prefix
-        console.log(req.query.prefix);
         const result = await Alumni.find({ name: { $regex: '^' + req.query.prefix, $options: 'i' } });
 
-        console.log(result);
         res.status(200).json({result});
         return result;
     
@@ -41,8 +38,6 @@ const filter = async (req, res) => {
   try {
     const { batch, branch, current_role, current_organization ,current_location} = req.query;
     // const { batch, branch, current_role, current_organization } = req.params;
-    console.log(batch, branch, current_role, current_organization,current_location);
-    console.log(req.params);
     const filters = {};
 
     if (branch) {
@@ -63,7 +58,6 @@ const filter = async (req, res) => {
     if (current_location) {
       filters["location.country"] = current_location;
     }
-    console.log(filters);
     const result = await Alumni.find(filters);
 
     res.status(200).json({ result });

@@ -1,3 +1,4 @@
+// Import necessary dependencies from React and external libraries
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import {
@@ -18,6 +19,7 @@ import {
   Drawer as MuiDrawer,
 } from "@mui/material";
 
+// Import icons and components
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -25,7 +27,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
-import { mainListItems, secondaryListItems } from "./dashboard copy/listItems";
+import { mainListItems, secondaryListItems } from "./ListItems";
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";
@@ -36,9 +38,12 @@ import { useSocketContext } from "../context/SocketContext";
 import { io } from "socket.io-client";
 import socket from "../chatSocket.js";
 
+// Set the width of the drawer
 const drawerWidth = 240;
 
+// Styled components for AppBar and Drawer
 const AppBar = styled(MuiAppBar, {
+  // Styling configurations for the AppBar
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -57,6 +62,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const Drawer = styled(MuiDrawer, {
+  // Styling configurations for the Drawer
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
@@ -82,29 +88,31 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
+// Create a default theme using MUI's createTheme
 const defaultTheme = createTheme();
 
+// Dashboard component
 const Dashboard = () => {
+  // State variables and hooks initialization
   const [open, setOpen] = useState(true);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [searchText, setSearchText] = useState("");
   const inputRef = useRef(null);
 
+  // Context and authentication hooks
   const userContext = useUserContext();
-
   const { user, logout } = useAuth0();
-
   console.log("@@@@@@AuthOuser", user);
-
   const { setSocketValue } = useSocketContext();
-
   const navigate = useNavigate();
 
+  // Function to toggle the drawer
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  // Function to open and close the filter menu
   const openFilterMenu = () => {
     setShowFilterMenu(true);
   };
@@ -113,6 +121,7 @@ const Dashboard = () => {
     setShowFilterMenu(false);
   };
 
+  // Function to fetch the user profile
   useEffect(() => {
     const getMyProfile = async () => {
       console.log("$%$#$#$#$#$#", user);
@@ -150,6 +159,7 @@ const Dashboard = () => {
     getMyProfile();
   }, []);
 
+  // Function to fetch the filtered results
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
 
@@ -169,6 +179,7 @@ const Dashboard = () => {
     closeFilterMenu();
   };
 
+  // Function to handle search text change
   const handleSearchChange = (e) => {
     const searchText = e.target.value;
     setSearchText(searchText);
@@ -187,6 +198,7 @@ const Dashboard = () => {
       });
   };
 
+  // Function to handle chat button click
   const handleChat = () => {
     navigate("/chat/welcome");
   };

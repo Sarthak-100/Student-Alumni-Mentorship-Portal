@@ -143,14 +143,14 @@ export const getMyProfile = async (req, res, next) => {
       }
     }
 
-    console.log(user.name);
+    // console.log(user.name);
     // user.user_type = user_type;
     user["user_type"] = user_type;
 
-    console.log(typeof user);
+    // console.log(typeof user);
 
-    console.log("^^^user in getMy Profile", user);
-    console.log("^^", out);
+    // console.log("^^^user in getMy Profile", user);
+    // console.log("^^", out);
 
     res.status(200).json({
       success: true,
