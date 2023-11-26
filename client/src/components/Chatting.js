@@ -14,6 +14,7 @@ import { useUserContext } from "../context/UserContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useChattedUsersContext } from "../context/ChattedUsers";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
+import BlockingPrompt from "./BlockingPrompt";
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
 
@@ -47,6 +48,13 @@ const Chatting = () => {
 
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
+  const [blocked, setBlockedValue] = useState(conversation?.blocked);
+
+  console.log("#@#@# blocked #@#@#@", blocked, conversation);
+
+  const [showBlockingPrompt, setShowBlockingPrompt] = useState(false);
+  const [updateBlockingPrompt, setUpdateBlockingPrompt] = useState(false);
+
   const scrollRef = useRef();
 
   useEffect(() => {
@@ -60,6 +68,14 @@ const Chatting = () => {
         text: data.text,
         createdAt: Date.now(),
       });
+    });
+  });
+
+  useEffect(() => {
+    socket.on("updateBlockedStatus", () => {
+      setBlockedValue(!blocked);
+      conversation.blocked = !blocked;
+      setUpdateBlockingPrompt(true);
     });
   });
 
@@ -91,26 +107,105 @@ const Chatting = () => {
       } catch (error) {
         console.log(error);
       }
-      // } else {
-      // }
     };
     getMessages();
   }, [conversation?._id]);
 
   const sendMeesageBtController = async (e) => {
-    e.preventDefault();
+    if (!blocked) {
+      e.preventDefault();
 
-    const receiverIdTemp = conversation?.members.find(
-      (member) => member !== user._id
-    );
+      const receiverIdTemp = conversation?.members.find(
+        (member) => member !== user._id
+      );
 
-    if (receiverIdTemp === receiverId) {
+      try {
+        if (receiverIdTemp === receiverId) {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/conversations/newConversation`,
+              {
+                senderId: user._id,
+                receiverId: receiverIdTemp,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              // setConversationValue(response.data);
+              conversation._id = response.data._id;
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      const message = {
+        sender: user._id,
+        text: newMessage,
+        conversationId: conversation._id,
+      };
+
+      const receiverName = chattedUsers[receiverIdTemp]?.name;
+
+      if (receiverIdTemp === receiverId) {
+        socket.emit("newConversation&Message", {
+          senderId: user._id,
+          senderName: user.name,
+          receiverId: receiverIdTemp,
+          text: newMessage,
+        });
+        setReceiverIdValue(null);
+      } else {
+        socket.emit("sendMessage", {
+          senderId: user._id,
+          senderName: user.name,
+          receiverId: receiverIdTemp,
+          text: newMessage,
+        });
+      }
+      try {
+        await axios
+          .post(`http://localhost:4000/api/v1/messages/newMessage`, message, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log(response);
+            setMessages([...messages, response.data]);
+            setNewMessage("");
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setShowBlockingPrompt(true);
+    }
+  };
+
+  const handleCloseBlockingPrompt = () => {
+    setShowBlockingPrompt(false);
+  };
+
+  const handleCloseOfUpdateBlockingPrompt = () => {
+    setUpdateBlockingPrompt(false);
+  };
+
+  const blockBtController = async (e) => {
+    const status = !blocked;
+    try {
       await axios
-        .post(
-          `http://localhost:4000/api/v1/conversations/newConversation`,
+        .put(
+          `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${conversation?._id}`,
           {
-            senderId: user._id,
-            receiverId: receiverIdTemp,
+            blocked: status,
           },
           {
             withCredentials: true,
@@ -118,47 +213,21 @@ const Chatting = () => {
         )
         .then((response) => {
           console.log(response);
-          // setConversationValue(response.data);
-          conversation._id = response.data._id;
+          setBlockedValue(!blocked);
         })
         .catch((error) => {
           console.error("API Error:", error);
         });
-    }
 
-    const message = {
-      sender: user._id,
-      text: newMessage,
-      conversationId: conversation._id,
-    };
+      receiverId = conversation?.members.find((member) => member !== user._id);
 
-    if (receiverIdTemp === receiverId) {
-      socket.emit("newConversation&Message", {
+      socket.emit("changeBlockedStatus", {
         senderId: user._id,
-        receiverId: receiverIdTemp,
-        text: newMessage,
+        senderName: user.name,
+        receiverId: receiverId,
+        blocked: status,
       });
-      setReceiverIdValue(null);
-    } else {
-      socket.emit("sendMessage", {
-        senderId: user._id,
-        receiverId: receiverIdTemp,
-        text: newMessage,
-      });
-    }
-    try {
-      await axios
-        .post(`http://localhost:4000/api/v1/messages/newMessage`, message, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          console.log(response);
-          setMessages([...messages, response.data]);
-          setNewMessage("");
-        })
-        .catch((error) => {
-          console.error("API Error:", error);
-        });
+      conversation.blocked = status;
     } catch (error) {
       console.log(error);
     }
@@ -183,10 +252,21 @@ const Chatting = () => {
             <Avatar alt="Remy Sharp" src="" sx={{ width: 24, height: 26 }} />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
-            {true &&
+            {
               chattedUsers[conversation?.members.find((m) => m !== user?._id)]
-                ?.name}
+                ?.name
+            }
           </Typography>
+          {user.user_type !== "student" ? (
+            <Button
+              variant="contained"
+              color="primary"
+              className="button"
+              onClick={blockBtController}
+            >
+              {blocked ? "Unblock" : "Block"}
+            </Button>
+          ) : null}
           <IconButton
             size="large"
             aria-label="display more actions"
@@ -231,6 +311,31 @@ const Chatting = () => {
           Send
         </Button>
       </div>
+      <BlockingPrompt
+        open={showBlockingPrompt}
+        onClose={handleCloseBlockingPrompt}
+        message={
+          user.user_type === "student"
+            ? `You have been blocked by ${
+                true &&
+                chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+                  ?.name
+              }.`
+            : `You have blocked ${
+                true &&
+                chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+                  ?.name
+              }. Please unblock to send messages.`
+        }
+      />
+      <BlockingPrompt
+        open={updateBlockingPrompt}
+        onClose={handleCloseOfUpdateBlockingPrompt}
+        message={`You have been ${blocked ? "Blocked" : "Unblocked"} by ${
+          true &&
+          chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.name
+        }.`}
+      />
     </div>
   );
 };

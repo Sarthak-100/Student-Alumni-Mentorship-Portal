@@ -191,6 +191,10 @@ const Dashboard = () => {
     navigate("/chat/welcome");
   };
 
+  const handleNotification = () => {
+    navigate("/notifications");
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -230,8 +234,8 @@ const Dashboard = () => {
               </IconButton>
             </Link>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
+              <Badge badgeContent="" color="secondary">
+                <NotificationsIcon onClick={handleNotification} />
               </Badge>
             </IconButton>
           </Toolbar>

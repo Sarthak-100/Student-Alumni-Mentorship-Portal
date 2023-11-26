@@ -6,6 +6,7 @@ import messageRouter from "./routes/messageRoutes.js";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.js";
 import filterRouter from "./routes/filterRouter.js";
+import notificationRouter from "./routes/notificationsRoutes.js";
 import cors from "cors";
 
 const app = express();
@@ -31,7 +32,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
-
+app.use("/api/v1/notifications", notificationRouter);
 
 app.use(errorMiddleware);
 

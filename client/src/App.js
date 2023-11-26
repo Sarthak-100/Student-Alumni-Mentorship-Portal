@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import LoginButton from "./components/LoginButton";
 import LogoutButton from "./components/LogoutButton";
 import ProfilePage from "./pages/ProfilePage";
+import Notifications from "./pages/Notifications";
 import SignInSide from "./components/SignIn";
 import Chat from "./pages/Chat";
 import Chat2 from "./pages/Chat2";
@@ -26,7 +27,7 @@ const App = () => {
   if (!isAuthenticated) {
     return <LoginButton />;
   }
-  
+
   {
     error && <div>Oops... {error.message}</div>;
   }
@@ -45,6 +46,7 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/notifications" element={<Notifications />} />
                     <Route path="/chat" element={<Chat />}>
                       {/* <Route path="/chat2" element={<Chat2 />}> */}
                       <Route path="welcome" element={<ChatWelcome />} />
