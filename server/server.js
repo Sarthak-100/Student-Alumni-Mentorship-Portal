@@ -51,6 +51,7 @@ io.on("connection", (socket) => {
       if (user) {
         io.to(user?.socketId).emit("getMessage", {
           senderId,
+          senderName,
           text,
         });
       } else {
@@ -82,6 +83,7 @@ io.on("connection", (socket) => {
       if (user) {
         io.to(user?.socketId).emit("receiveNewConversation&Message", {
           senderId,
+          senderName,
           text,
         });
       } else {
@@ -108,7 +110,11 @@ io.on("connection", (socket) => {
     async ({ senderId, senderName, receiverId, blocked }) => {
       const user = getUser(receiverId);
       if (user) {
-        io.to(user?.socketId).emit("updateBlockedStatus");
+        io.to(user?.socketId).emit("updateBlockedStatus", {
+          senderId,
+          senderName,
+          blocked,
+        });
       } else {
         const newNotification = new Notification({
           receiverId,
