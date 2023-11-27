@@ -16,6 +16,7 @@ import { UserProvider } from "./context/UserContext";
 import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
 import { ReceiverIdProvider } from "./context/ReceiverIdContext";
+import { NotificationsNoProvider } from "./context/NotificationsNoContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
@@ -38,26 +39,31 @@ const App = () => {
   return (
     <>
       <UserProvider>
-        <ReceiverIdProvider>
-          <LoadConversationsProvider>
-            <ConversationProvider>
-              <ChattedUsersProvider>
-                <SocketProvider>
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/notifications" element={<Notifications />} />
-                    <Route path="/chat" element={<Chat />}>
-                      {/* <Route path="/chat2" element={<Chat2 />}> */}
-                      <Route path="welcome" element={<ChatWelcome />} />
-                      <Route path="chatting" element={<Chatting />} />
-                    </Route>
-                  </Routes>
-                </SocketProvider>
-              </ChattedUsersProvider>
-            </ConversationProvider>
-          </LoadConversationsProvider>
-        </ReceiverIdProvider>
+        <NotificationsNoProvider>
+          <ReceiverIdProvider>
+            <LoadConversationsProvider>
+              <ConversationProvider>
+                <ChattedUsersProvider>
+                  <SocketProvider>
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/profile" element={<ProfilePage />} />
+                      <Route
+                        path="/notifications"
+                        element={<Notifications />}
+                      />
+                      <Route path="/chat" element={<Chat />}>
+                        {/* <Route path="/chat2" element={<Chat2 />}> */}
+                        <Route path="welcome" element={<ChatWelcome />} />
+                        <Route path="chatting" element={<Chatting />} />
+                      </Route>
+                    </Routes>
+                  </SocketProvider>
+                </ChattedUsersProvider>
+              </ConversationProvider>
+            </LoadConversationsProvider>
+          </ReceiverIdProvider>
+        </NotificationsNoProvider>
       </UserProvider>
     </>
   );

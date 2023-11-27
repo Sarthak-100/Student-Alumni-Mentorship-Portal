@@ -33,6 +33,7 @@ import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/SocketContext";
+import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
 import { io } from "socket.io-client";
 import socket from "../chatSocket.js";
 
@@ -99,6 +100,9 @@ const Dashboard = () => {
 
   const { setSocketValue } = useSocketContext();
 
+  const { notificationsNo, setNotificationsNoValue, increment } =
+    useNotificationsNoContext();
+
   const navigate = useNavigate();
 
   const toggleDrawer = () => {
@@ -150,6 +154,30 @@ const Dashboard = () => {
     getMyProfile();
   }, []);
 
+  useEffect(() => {
+    const getNotificationsNo = async () => {
+      try {
+        await axios
+          .get(
+            `http://localhost:4000/api/v1/notifications/countNotifications?userId=${userContext.user?._id}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            setNotificationsNoValue(response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getNotificationsNo();
+  });
+
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
 
@@ -195,6 +223,93 @@ const Dashboard = () => {
     navigate("/notifications");
   };
 
+  useEffect(() => {
+    console.log(socket);
+    socket.on("getMessage", async (data) => {
+      try {
+        await axios
+          .post(
+            `http://localhost:4000/api/v1/notifications/newNotification`,
+            {
+              receiverId: userContext.user._id,
+              senderId: data.senderId,
+              senderName: data.senderName,
+              messageType: "message",
+              message: data.text,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log("CREATED NOTIFICATION");
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+        increment();
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    socket.on("receiveNewConversation&Message", async (data) => {
+      try {
+        await axios
+          .post(
+            `http://localhost:4000/api/v1/notifications/newNotification`,
+            {
+              receiverId: userContext.user._id,
+              senderId: data.senderId,
+              senderName: data.senderName,
+              messageType: "message",
+              message: data.text,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log("CREATED NOTIFICATION");
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+        increment();
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    socket.on("updateBlockedStatus", async (data) => {
+      try {
+        await axios
+          .post(
+            `http://localhost:4000/api/v1/notifications/newNotification`,
+            {
+              receiverId: userContext.user._id,
+              senderId: data.senderId,
+              senderName: data.senderName,
+              messageType: "blockingUpdate",
+              message: `You have been ${
+                data.blocked ? "blocked" : "unblocked"
+              }.}`,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log("CREATED NOTIFICATION");
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+        increment();
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  });
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -234,7 +349,7 @@ const Dashboard = () => {
               </IconButton>
             </Link>
             <IconButton color="inherit">
-              <Badge badgeContent="" color="secondary">
+              <Badge badgeContent={notificationsNo} color="secondary">
                 <NotificationsIcon onClick={handleNotification} />
               </Badge>
             </IconButton>
