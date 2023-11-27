@@ -87,6 +87,7 @@ const PreviousChats = () => {
   console.log(socket);
 
   useEffect(() => {
+    console.log(socket);
     socket.on("receiveNewConversation&Message", (data) => {
       // console.log("in receiveNewConversation&Message");
       setLoadConversations(

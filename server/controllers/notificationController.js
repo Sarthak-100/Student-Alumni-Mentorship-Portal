@@ -22,3 +22,15 @@ export const getNotifications = async (req, res, next) => {
     next(error);
   }
 };
+
+export const countNotifications = async (req, res, next) => {
+  try {
+    const count = await Notification.countDocuments({
+      receiverId: req.query.userId,
+    });
+
+    res.status(200).json(count);
+  } catch (error) {
+    next(error);
+  }
+};
