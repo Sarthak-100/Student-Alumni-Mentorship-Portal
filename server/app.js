@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import userRouter from "./routes/userRoutes.js";
 import conversationRouter from "./routes/conversationRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
+import eventRouter from "./routes/eventRouter.js";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.js";
 import filterRouter from "./routes/filterRouter.js";
@@ -20,11 +21,11 @@ config({
   path: "./data/config.env",
 });
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URL
-);
+// const oauth2Client = new google.auth.OAuth2(
+//   process.env.GOOGLE_CLIENT_ID,
+//   process.env.GOOGLE_CLIENT_SECRET,
+//   process.env.GOOGLE_REDIRECT_URL
+// );
 
 const scopes = [
   'https://www.googleapis.com/auth/calendar',
@@ -49,7 +50,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  // res.header("Access-Control-Allow-Origin", ["http://localhost:5000", "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect"]);
+  res.header("Access-Control-Allow-Origin", ["http://localhost:5000", "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect"]);
   const origin = req.headers.origin;
   // console.log("origin", origin);
   if (allowedOrigins.includes(origin)) {
@@ -115,6 +116,9 @@ app.get('/google/redirect', (req, res) => {
   });
   res.redirect("/schedule_event");
 });
+
+app.use('/api/v1/saveEvent', eventRouter);
+app.use('/api/v1/fetchSlots', eventRouter);
 
 // app.get('/schedule_event', async (req, res) => {
 //   try {

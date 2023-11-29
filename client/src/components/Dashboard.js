@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import ApiCalendar from 'react-google-calendar-api';
-import {googleCalendarClientID, googleCalendarAPIKey, googleCalendarScope} from '../Config.js';
 import axios from "axios";
 import {
   styled,
@@ -101,6 +99,14 @@ const Dashboard = () => {
 
   const { setSocketValue } = useSocketContext();
 
+  // const session = useSession(); // tokens, when session exists we have a user
+  // const supabase = useSupabaseClient(); // talk to supabase!
+  // const { isLoading } = useSessionContext();
+  
+  // if(isLoading) {
+  //   return <></>
+  // }
+
   const navigate = useNavigate();
 
   const toggleDrawer = () => {
@@ -146,24 +152,6 @@ const Dashboard = () => {
 
     getMyProfile();
   }, []);
-
-  // const socket = useRef();
-
-  // socket.current = io("ws://localhost:8900");
-  // socket.current.emit("addUser", userContext.user?._id);
-  // socket.current.on("getUsers", (users) => {
-  //   console.log(users);
-  // });
-  // setSocketValue(socket);
-
-  // useEffect(() => {
-  //   socket.current = io("ws://localhost:8900");
-  //   socket.current.emit("addUser", userContext.user?._id);
-  //   socket.current.on("getUsers", (users) => {
-  //     console.log(users);
-  //   });
-  //   setSocketValue(socket);
-  // }, []);
 
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
