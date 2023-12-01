@@ -84,10 +84,10 @@ const Calendar = () => {
           dateTime: endDate.toISOString(),
           timeZone: 'Asia/Kolkata',
         },
-        // attendees: [
-        //   { email: 'abhit20421@iiitd.ac.in' },
-        //   { email: 'sarthak20576@iiitd.ac.in' }
-        // ],
+        attendees: [
+          { email: 'abhit20421@iiitd.ac.in' },
+          { email: 'sarthak20576@iiitd.ac.in' }
+        ],
     }
     //schedule an event using the above details
 

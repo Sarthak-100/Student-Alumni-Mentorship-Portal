@@ -7,7 +7,7 @@ import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
 import { ReceiverIdProvider } from "./context/ReceiverIdContext";
 import { NotificationsNoProvider } from "./context/NotificationsNoContext";
-import axios from "axios";
+import Calendar from "./components/Calendar";
 import { Route, Routes } from "react-router-dom";
 import FilterAlumni from "./components/FilterAlumni.js";
 import Notifications from "./pages/Notifications";
@@ -54,10 +54,10 @@ const App = () => {
                   <SocketProvider>
                     <Routes>
                       <Route path="/" element={<Layout />}>
-                        <Route path="/calendar" element={<Calendar />} />
                         <Route index element={<Hello />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="filterAlumni" element={<FilterAlumni />} />
+                        <Route path="/calendar" element={<Calendar />} />
                       </Route>
                       <Route
                         path="/notifications"

@@ -27,7 +27,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import ProfilePage from "./../pages/ProfilePage";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
-
+import TodayIcon from "@mui/icons-material/Today";
 import { useUserContext } from "../context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +43,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
+import Calendar from "./Calendar.js";
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -106,6 +107,8 @@ const Layout = () => {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+
 
   // Context and authentication hooks
   const userContext = useUserContext();
@@ -177,6 +180,11 @@ const Layout = () => {
     };
     getNotificationsNo();
   });
+
+  const handleCalendarClick = () => {
+    console.log("calendar clicked");
+    navigate("/calendar");
+  };
 
   // Function to handle chat button click
   const handleChat = () => {
@@ -339,6 +347,9 @@ const Layout = () => {
             >
               Dashboard
             </Typography>
+            <IconButton color="inherit" onClick={handleCalendarClick}>
+              <TodayIcon /> {/* Calendar icon */}
+            </IconButton>
             <IconButton color="inherit" onClick={handleChat}>
               <ChatIcon />
             </IconButton>
@@ -422,6 +433,7 @@ const Layout = () => {
               <Route index element={<Hello />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/filterAlumni" element={<FilterAlumni />} />
+              <Route path="/calendar" element={<Calendar />} />
             </Routes>
           </Container>
         </Box>
