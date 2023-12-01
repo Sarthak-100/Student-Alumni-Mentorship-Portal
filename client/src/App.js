@@ -7,7 +7,7 @@ import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
 import { ReceiverIdProvider } from "./context/ReceiverIdContext";
 import { NotificationsNoProvider } from "./context/NotificationsNoContext";
-import Calendar from "./components/Calendar";
+// import Calendar from "./components/Calendar";
 import { Route, Routes } from "react-router-dom";
 import FilterAlumni from "./components/FilterAlumni.js";
 import Notifications from "./pages/Notifications";
@@ -18,10 +18,10 @@ import LoginButton from "./components/LoginButton";
 import Chatting from "./components/Chatting";
 import Layout from "./components/Layout";
 import Hello from "./components/Hello";
+import Calendar from "./components/Calendar";
 import "./style.css";
 
 const App = () => {
-
   const { isLoading, error, isAuthenticated } = useAuth0();
 
   // Rendering based on authentication and loading/error states
@@ -36,8 +36,12 @@ const App = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  {error && <div>Oops... {error.message}</div>}
-  {!error && isLoading && <div>Loading...</div>}
+  {
+    error && <div>Oops... {error.message}</div>;
+  }
+  {
+    !error && isLoading && <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -50,11 +54,11 @@ const App = () => {
                   <SocketProvider>
                     <Routes>
                       <Route path="/" element={<Layout />}>
-                      <Route index element={<Hello />} />
-                      <Route path="profile" element={<ProfilePage />} />
-                      <Route path="filterAlumni" element={<FilterAlumni />} />
-                      <Route path="/calendar" element={<Calendar />} />
-                  </Route>
+                        <Route index element={<Hello />} />
+                        <Route path="profile" element={<ProfilePage />} />
+                        <Route path="filterAlumni" element={<FilterAlumni />} />
+                        <Route path="/calendar" element={<Calendar />} />
+                      </Route>
                       <Route
                         path="/notifications"
                         element={<Notifications />}

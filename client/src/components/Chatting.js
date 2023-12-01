@@ -183,9 +183,7 @@ const Chatting = () => {
       }
       try {
         await axios
-          .post(`http://localhost:4000/api/v1/messages/newMessage`, message, {
-            withCredentials: true,
-          })
+          .post(`http://localhost:4000/api/v1/messages/newMessage`, message)
           .then((response) => {
             console.log(response);
             setMessages([...messages, response.data]);
