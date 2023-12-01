@@ -5,6 +5,7 @@ import conversationRouter from "./routes/conversationRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import cookieParser from "cookie-parser";
 import filterRouter from "./routes/filterRouter.js";
+import notificationRouter from "./routes/notificationsRoutes.js";
 import cors from "cors";
 
 const app = express();
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
-
+app.use("/api/v1/notifications", notificationRouter);
 
 //API for filtering alumni profiles as per added filters
 app.use("/api/v1/student/filter-alumni", filterRouter);

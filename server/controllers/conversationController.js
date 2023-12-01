@@ -1,4 +1,5 @@
 import { Conversation } from "../models/conversationModel.js";
+import mongoose from "mongoose";
 
 export const newConversation = async (req, res, next) => {
   const newConversation = new Conversation({
@@ -15,10 +16,31 @@ export const newConversation = async (req, res, next) => {
 
 export const getConversations = async (req, res, next) => {
   try {
-    const conversation = await Conversation.find({
+    const conversations = await Conversation.find({
       members: { $in: [req.query.user_id.toString()] },
     });
-    res.status(200).json(conversation);
+    res.status(200).json(conversations);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+export const updateConversation = async (req, res, next) => {
+  try {
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      new mongoose.Types.ObjectId(req.query.conversationId),
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+
+    if (!updatedConversation) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+    res.json(updatedConversation);
   } catch (error) {
     next(error);
   }
@@ -44,3 +66,4 @@ export const getConversations = async (req, res, next) => {
 //     next(error);
 //   }
 // };
+

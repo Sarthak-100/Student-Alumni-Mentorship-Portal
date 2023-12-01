@@ -35,6 +35,7 @@ import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/SocketContext";
+import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
 import { io } from "socket.io-client";
 import socket from "../chatSocket.js";
 
@@ -103,8 +104,15 @@ const Dashboard = () => {
   // Context and authentication hooks
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
-  console.log("@@@@@@AuthOuser", user);
+
+
+  // console.log("@@@@@@AuthOuser", user);
+
   const { setSocketValue } = useSocketContext();
+
+  const { notificationsNo, setNotificationsNoValue, increment } =
+    useNotificationsNoContext();
+
   const navigate = useNavigate();
 
   // Function to toggle the drawer
@@ -159,6 +167,32 @@ const Dashboard = () => {
     getMyProfile();
   }, []);
 
+
+  useEffect(() => {
+    const getNotificationsNo = async () => {
+      try {
+        await axios
+          .get(
+            `http://localhost:4000/api/v1/notifications/countNotifications?userId=${userContext.user?._id}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            setNotificationsNoValue(response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getNotificationsNo();
+  });
+
+
   // Function to fetch the filtered results
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
@@ -203,6 +237,135 @@ const Dashboard = () => {
     navigate("/chat/welcome");
   };
 
+  const handleNotification = () => {
+    navigate("/notifications");
+  };
+
+  useEffect(() => {
+    console.log("socket#$#$#$#$#$#$#$#$#$#$#", socket, socket.id);
+    socket.emit("addUser", userContext.user?._id);
+    // socket.emit("addUser", user.email);
+    socket.on("getUsers", (users) => {
+      console.log(users);
+    });
+
+    return () => {
+      // Cleanup function to remove the event listener when the component unmounts
+      socket.off("getUsers");
+    };
+  }, [userContext.user?._id]);
+
+  useEffect(() => {
+    console.log(
+      "INSIDE NOTIFICATION DASHBOARD",
+      socket,
+      window.location.pathname
+    );
+    socket.on("getMessageNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user?._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "message",
+                message: data.text,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    socket.on("receiveNewConversation&MessageNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "message",
+                message: data.text,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    socket.on("updateBlockedStatusNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "blockingUpdate",
+                message: `You have been ${
+                  data.blocked ? "blocked" : "unblocked"
+                }.`,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    return () => {
+      socket.off("getMessageNotification");
+      socket.off("receiveNewConversation&MessageNotification");
+      socket.off("updateBlockedStatusNotification");
+    };
+  });
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -242,8 +405,8 @@ const Dashboard = () => {
               </IconButton>
             </Link>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
+              <Badge badgeContent={notificationsNo} color="secondary">
+                <NotificationsIcon onClick={handleNotification} />
               </Badge>
             </IconButton>
           </Toolbar>
