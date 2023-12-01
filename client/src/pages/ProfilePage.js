@@ -33,7 +33,7 @@ const ProfilePage = () => {
 
   console.log("^^^^UserContext:^^^", userContext.user);
 
-  const editProfile = async () => {
+  const editAlumniProfile = async () => {
     /*
 
     let input parameters be of format from the form: 
