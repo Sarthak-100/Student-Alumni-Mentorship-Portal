@@ -25,6 +25,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import TodayIcon from '@mui/icons-material/Today';
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
 import { mainListItems} from "./ListItems";
@@ -99,6 +100,7 @@ const Dashboard = () => {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [showCalendar, setShowCalendar] = useState(false);
   const inputRef = useRef(null);
 
   // Context and authentication hooks
@@ -167,7 +169,6 @@ const Dashboard = () => {
     getMyProfile();
   }, []);
 
-
   useEffect(() => {
     const getNotificationsNo = async () => {
       try {
@@ -230,6 +231,10 @@ const Dashboard = () => {
       .catch((error) => {
         console.error("API Error:", error);
       });
+  };
+
+  const handleCalendarClick = () => {
+    navigate("/calendar");
   };
 
   // Function to handle chat button click
@@ -393,6 +398,9 @@ const Dashboard = () => {
             >
               Dashboard
             </Typography>
+            <IconButton color="inherit" onClick={handleCalendarClick}>
+              <TodayIcon /> {/* Calendar icon */}
+            </IconButton>
             <IconButton color="inherit" onClick={handleChat}>
               <ChatIcon />
             </IconButton>

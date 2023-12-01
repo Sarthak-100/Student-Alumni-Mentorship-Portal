@@ -35,6 +35,7 @@ const alumniSchema = mongoose.Schema({
         type: Object,
         required: true,
     },
+    events: [eventSchema],
   });
 
   const Alumni = mongoose.model("alumniSchema", alumniSchema);
