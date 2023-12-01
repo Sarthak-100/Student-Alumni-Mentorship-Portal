@@ -96,7 +96,7 @@ const Dashboard = () => {
 
   const { user, logout } = useAuth0();
 
-  console.log("@@@@@@AuthOuser", user);
+  // console.log("@@@@@@AuthOuser", user);
 
   const { setSocketValue } = useSocketContext();
 
@@ -224,90 +224,128 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log(socket);
-    socket.on("getMessage", async (data) => {
-      try {
-        await axios
-          .post(
-            `http://localhost:4000/api/v1/notifications/newNotification`,
-            {
-              receiverId: userContext.user._id,
-              senderId: data.senderId,
-              senderName: data.senderName,
-              messageType: "message",
-              message: data.text,
-            },
-            {
-              withCredentials: true,
-            }
-          )
-          .then((response) => {
-            console.log("CREATED NOTIFICATION");
-          })
-          .catch((error) => {
-            console.error("API Error:", error);
-          });
-        increment();
-      } catch (error) {
-        console.log(error);
+    console.log("socket#$#$#$#$#$#$#$#$#$#$#", socket, socket.id);
+    socket.emit("addUser", userContext.user?._id);
+    // socket.emit("addUser", user.email);
+    socket.on("getUsers", (users) => {
+      console.log(users);
+    });
+
+    return () => {
+      // Cleanup function to remove the event listener when the component unmounts
+      socket.off("getUsers");
+    };
+  }, [userContext.user?._id]);
+
+  useEffect(() => {
+    console.log(
+      "INSIDE NOTIFICATION DASHBOARD",
+      socket,
+      window.location.pathname
+    );
+    socket.on("getMessageNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user?._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "message",
+                message: data.text,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
-    socket.on("receiveNewConversation&Message", async (data) => {
-      try {
-        await axios
-          .post(
-            `http://localhost:4000/api/v1/notifications/newNotification`,
-            {
-              receiverId: userContext.user._id,
-              senderId: data.senderId,
-              senderName: data.senderName,
-              messageType: "message",
-              message: data.text,
-            },
-            {
-              withCredentials: true,
-            }
-          )
-          .then((response) => {
-            console.log("CREATED NOTIFICATION");
-          })
-          .catch((error) => {
-            console.error("API Error:", error);
-          });
-        increment();
-      } catch (error) {
-        console.log(error);
+    socket.on("receiveNewConversation&MessageNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "message",
+                message: data.text,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
-    socket.on("updateBlockedStatus", async (data) => {
-      try {
-        await axios
-          .post(
-            `http://localhost:4000/api/v1/notifications/newNotification`,
-            {
-              receiverId: userContext.user._id,
-              senderId: data.senderId,
-              senderName: data.senderName,
-              messageType: "blockingUpdate",
-              message: `You have been ${
-                data.blocked ? "blocked" : "unblocked"
-              }.}`,
-            },
-            {
-              withCredentials: true,
-            }
-          )
-          .then((response) => {
-            console.log("CREATED NOTIFICATION");
-          })
-          .catch((error) => {
-            console.error("API Error:", error);
-          });
-        increment();
-      } catch (error) {
-        console.log(error);
+    socket.on("updateBlockedStatusNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "blockingUpdate",
+                message: `You have been ${
+                  data.blocked ? "blocked" : "unblocked"
+                }.`,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
+    return () => {
+      socket.off("getMessageNotification");
+      socket.off("receiveNewConversation&MessageNotification");
+      socket.off("updateBlockedStatusNotification");
+    };
   });
 
   return (

@@ -223,6 +223,20 @@
           gap: 10px;
         }
       }
+
+      .BlockedContainer{
+        height: 50px;
+        background-color: white;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        .bText{
+          color: red;
+          font-size: large;
+          font-weight: bold;
+        }
+      }
   
       .messages::-webkit-scrollbar {
         display: none;

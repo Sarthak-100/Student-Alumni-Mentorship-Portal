@@ -18,8 +18,10 @@ const io = new Server(8900, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+  return (
+    !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId })
+  );
 };
 
 const removeUser = (socketId) => {
@@ -35,9 +37,12 @@ io.on("connection", (socket) => {
   console.log("a user connected.");
 
   socket.on("addUser", (userId) => {
-    console.log("New client Added->", "user", userId, "socketId", socket.id);
-    addUser(userId, socket.id);
-    io.emit("getUsers", users);
+    if (userId === null) {
+    } else {
+      console.log("New client Added->", "user", userId, "socketId", socket.id);
+      console.log(addUser(userId, socket.id));
+      io.emit("getUsers", users);
+    }
   });
 
   // send and get message
@@ -46,10 +51,16 @@ io.on("connection", (socket) => {
     async ({ senderId, senderName, receiverId, text }) => {
       const user = getUser(receiverId);
       // console.log(receiverId);
-      // console.log(user);
-      // console.log(users);
+      console.log(user);
+      console.log("$$$$");
+      console.log(users);
       if (user) {
         io.to(user?.socketId).emit("getMessage", {
+          senderId,
+          senderName,
+          text,
+        });
+        io.to(user?.socketId).emit("getMessageNotification", {
           senderId,
           senderName,
           text,
@@ -86,6 +97,14 @@ io.on("connection", (socket) => {
           senderName,
           text,
         });
+        io.to(user?.socketId).emit(
+          "receiveNewConversation&MessageNotification",
+          {
+            senderId,
+            senderName,
+            text,
+          }
+        );
       } else {
         const newNotification = new Notification({
           receiverId,
@@ -107,21 +126,26 @@ io.on("connection", (socket) => {
 
   socket.on(
     "changeBlockedStatus",
-    async ({ senderId, senderName, receiverId, blocked }) => {
-      const user = getUser(receiverId);
+    async ({ senderId, senderName, receiverIdArg, blockedStatus }) => {
+      const user = getUser(receiverIdArg);
       if (user) {
         io.to(user?.socketId).emit("updateBlockedStatus", {
           senderId,
           senderName,
-          blocked,
+          blockedStatus,
+        });
+        io.to(user?.socketId).emit("updateBlockedStatusNotification", {
+          senderId,
+          senderName,
+          blockedStatus,
         });
       } else {
         const newNotification = new Notification({
-          receiverId,
+          receiverIdArg,
           senderId,
           senderName,
           messageType: "blockingUpdate",
-          message: `You have been ${blocked ? "blocked" : "unblocked"}.}`,
+          message: `You have been ${blockedStatus ? "blocked" : "unblocked"}.}`,
         });
 
         try {

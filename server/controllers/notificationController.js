@@ -34,3 +34,18 @@ export const countNotifications = async (req, res, next) => {
     next(error);
   }
 };
+
+export const clearNotifications = async (req, res, next) => {
+  try {
+    // Use deleteMany to remove all documents from the collection
+    const result = await Notification.deleteMany({
+      receiverId: req.query.userId,
+    });
+    console.log(
+      `Deleted ${result.deletedCount} documents from the collection.`
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};

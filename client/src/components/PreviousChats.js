@@ -94,6 +94,9 @@ const PreviousChats = () => {
         (prevLoadConversations) => prevLoadConversations + 1
       );
     });
+    return () => {
+      socket.off("receiveNewConversation&Message");
+    };
   });
 
   // console.log(currentChat);

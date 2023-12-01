@@ -63,12 +63,19 @@ const Chatting = () => {
     socket.on("getMessage", (data) => {
       // setLoadConversationsValue(1);
       console.log("^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^");
+      console.log(
+        "^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^",
+        window.location.pathname
+      );
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       });
     });
+    return () => {
+      socket.off("getMessage");
+    };
   });
 
   useEffect(() => {
@@ -77,6 +84,9 @@ const Chatting = () => {
       conversation.blocked = !blocked;
       setUpdateBlockingPrompt(true);
     });
+    // return () => {
+    //   socket.off("updateBlockedStatus");
+    // };
   });
 
   useEffect(() => {
@@ -156,6 +166,7 @@ const Chatting = () => {
       if (receiverIdTemp === receiverId) {
         socket.emit("newConversation&Message", {
           senderId: user._id,
+          // senderId: user.email,
           senderName: user.name,
           receiverId: receiverIdTemp,
           text: newMessage,
@@ -163,6 +174,7 @@ const Chatting = () => {
         setReceiverIdValue(null);
       } else {
         socket.emit("sendMessage", {
+          // senderId: user.email,
           senderId: user._id,
           senderName: user.name,
           receiverId: receiverIdTemp,
@@ -219,13 +231,14 @@ const Chatting = () => {
           console.error("API Error:", error);
         });
 
-      receiverId = conversation?.members.find((member) => member !== user._id);
+      const receiverIdTemp = conversation?.members.find(
+        (member) => member !== user._id
+      );
 
       socket.emit("changeBlockedStatus", {
         senderId: user._id,
         senderName: user.name,
-        receiverId: receiverId,
-        blocked: status,
+        receiverIdArg: receiverIdTemp,
       });
       conversation.blocked = status;
     } catch (error) {
@@ -291,25 +304,33 @@ const Chatting = () => {
           <Message owner={m.sender === user._id} message={m} />
         ))}
       </ReactScrollToBottom>
-      <div className="sendMsg">
-        <Input
-          onKeyPress={(event) =>
-            event.key === "Enter" ? sendMeesageBtController(event) : null
-          }
-          placeholder="Type a message"
-          className="input"
-          id="chatInput"
-          onChange={(e) => setNewMessage(e.target.value)}
-          value={newMessage}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          className="button"
-          onClick={sendMeesageBtController}
-        >
-          Send
-        </Button>
+      <div>
+        {!conversation.blocked || user.user_type !== "student" ? (
+          <div className="sendMsg">
+            <Input
+              onKeyPress={(event) =>
+                event.key === "Enter" ? sendMeesageBtController(event) : null
+              }
+              placeholder="Type a message"
+              className="input"
+              id="chatInput"
+              onChange={(e) => setNewMessage(e.target.value)}
+              value={newMessage}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              className="button"
+              onClick={sendMeesageBtController}
+            >
+              Send
+            </Button>
+          </div>
+        ) : (
+          <div className="BlockedContainer">
+            <p className="bText">You are Blocked</p>
+          </div>
+        )}
       </div>
       <BlockingPrompt
         open={showBlockingPrompt}
