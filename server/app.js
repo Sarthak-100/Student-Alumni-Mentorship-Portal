@@ -31,32 +31,13 @@ const scopes = [
   // 'https://www.googleapis.com/auth/calendar.events'
 ];
 
-const allowedOrigins = [
-  'http://localhost:5000',
-  'http://localhost:4000',
-  'http://localhost:4000/schedule_event',
-  'http://localhost:4000/google/redirect',
-  'https://accounts.google.com/o/oauth2/v2/auth',
-  'https://accounts.google.com',
-  'http://www.google.com/support/accounts/bin/answer.py?hl=en&answer=151657',
-  'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect',
-];
-
-
 //adding middlewares
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", ["http://localhost:5000", "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect"]);
-  const origin = req.headers.origin;
-  // console.log("origin", origin);
-  if (allowedOrigins.includes(origin)) {
-    // Set the Access-Control-Allow-Origin header to the request's origin
-    // console.log("hello");
-    res.header('Access-Control-Allow-Origin', origin);
-  }
+  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", true);
