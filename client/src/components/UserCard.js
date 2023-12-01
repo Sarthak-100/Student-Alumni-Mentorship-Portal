@@ -17,25 +17,25 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
-import { useNavigate } from "react-router-dom";
-import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import axios from "axios";
 import Calendar from "react-calendar";
 
 const UserCard = (props) => {
+
   const navigate = useNavigate();
+
   const { user } = useUserContext();
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [slots, setSlots] = useState([]);
 
-  const navigate = useNavigate();
 
   // const handleChat = () => {
   //   useReceiverIdContext(props.cardUser._id);
   //   navigate("/chat/welcome");
   // };
+  
   const handleChat = async () => {
     console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
     await setReceiverIdValue(props.cardUser._id);

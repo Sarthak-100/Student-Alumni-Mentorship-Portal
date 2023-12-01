@@ -28,7 +28,6 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TodayIcon from '@mui/icons-material/Today';
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
-import { mainListItems} from "./ListItems";
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";

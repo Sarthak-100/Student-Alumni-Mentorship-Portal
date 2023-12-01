@@ -27,7 +27,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import ProfilePage from "./../pages/ProfilePage";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
-
+import TodayIcon from "@mui/icons-material/Today";
 import { useUserContext } from "../context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
@@ -150,6 +150,10 @@ const Layout = () => {
     getMyProfile();
   }, []);
 
+  const handleCalendarClick = () => {
+    navigate("/calendar");
+  };
+
   // Function to handle chat button click
   const handleChat = () => {
     navigate("/chat/welcome");
@@ -183,6 +187,9 @@ const Layout = () => {
             >
               Dashboard
             </Typography>
+            <IconButton color="inherit" onClick={handleCalendarClick}>
+              <TodayIcon /> {/* Calendar icon */}
+            </IconButton>
             <IconButton color="inherit" onClick={handleChat}>
               <ChatIcon />
             </IconButton>
