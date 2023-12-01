@@ -8,14 +8,16 @@ import { useConversationContext } from "../context/ConversationContext";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const { setConversationValue } = useConversationContext();
+  const { conversation, setConversationValue } = useConversationContext();
 
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
   const handleBack = () => {
     // setConversationValue(null);
-    if (receiverId) {
+    if (receiverId && conversation?._id === null) {
       setConversationValue(null);
+      setReceiverIdValue(null);
+    } else {
       setReceiverIdValue(null);
     }
     navigate("/");

@@ -5,6 +5,10 @@ const conversationSchema = mongoose.Schema(
     members: {
       type: Array,
     },
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
