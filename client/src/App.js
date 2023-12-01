@@ -10,7 +10,6 @@ import { NotificationsNoProvider } from "./context/NotificationsNoContext";
 import axios from "axios";
 import { Route, Routes } from "react-router-dom";
 import FilterAlumni from "./components/FilterAlumni.js";
-
 import Notifications from "./pages/Notifications";
 import Chat from "./pages/Chat";
 import ChatWelcome from "./components/ChatWelcome";
@@ -22,6 +21,7 @@ import Hello from "./components/Hello";
 import "./style.css";
 
 const App = () => {
+
   const { isLoading, error, isAuthenticated } = useAuth0();
 
   // Rendering based on authentication and loading/error states
@@ -36,6 +36,8 @@ const App = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+  {error && <div>Oops... {error.message}</div>}
+  {!error && isLoading && <div>Loading...</div>}
 
   return (
     <>
@@ -47,10 +49,11 @@ const App = () => {
                 <ChattedUsersProvider>
                   <SocketProvider>
                     <Routes>
-                  <Route path="/" element={<Layout />}>
-                  <Route index element={<Hello />} />
-                  <Route path="profile" element={<ProfilePage />} />
-                  <Route path="filterAlumni" element={<FilterAlumni />} />
+                      <Route path="/" element={<Layout />}>
+                      <Route path="/calendar" element={<Calendar />} />
+                      <Route index element={<Hello />} />
+                      <Route path="profile" element={<ProfilePage />} />
+                      <Route path="filterAlumni" element={<FilterAlumni />} />
                   </Route>
                       <Route
                         path="/notifications"
