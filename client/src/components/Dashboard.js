@@ -1,3 +1,4 @@
+// Import necessary dependencies from React and external libraries
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import {
@@ -18,6 +19,7 @@ import {
   Drawer as MuiDrawer,
 } from "@mui/material";
 
+// Import icons and components
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -26,7 +28,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TodayIcon from '@mui/icons-material/Today';
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
-import { mainListItems, secondaryListItems } from "./dashboard copy/listItems";
+import { mainListItems} from "./ListItems";
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";
@@ -34,12 +36,16 @@ import LoginButton from "./LoginButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/SocketContext";
+import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
 import { io } from "socket.io-client";
 import socket from "../chatSocket.js";
 
+// Set the width of the drawer
 const drawerWidth = 240;
 
+// Styled components for AppBar and Drawer
 const AppBar = styled(MuiAppBar, {
+  // Styling configurations for the AppBar
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -58,6 +64,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const Drawer = styled(MuiDrawer, {
+  // Styling configurations for the Drawer
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
@@ -83,9 +90,12 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
+// Create a default theme using MUI's createTheme
 const defaultTheme = createTheme();
 
+// Dashboard component
 const Dashboard = () => {
+  // State variables and hooks initialization
   const [open, setOpen] = useState(true);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
@@ -93,26 +103,26 @@ const Dashboard = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const inputRef = useRef(null);
 
+  // Context and authentication hooks
   const userContext = useUserContext();
-
   const { user, logout } = useAuth0();
+
+
+  // console.log("@@@@@@AuthOuser", user);
 
   const { setSocketValue } = useSocketContext();
 
-  // const session = useSession(); // tokens, when session exists we have a user
-  // const supabase = useSupabaseClient(); // talk to supabase!
-  // const { isLoading } = useSessionContext();
-  
-  // if(isLoading) {
-  //   return <></>
-  // }
+  const { notificationsNo, setNotificationsNoValue, increment } =
+    useNotificationsNoContext();
 
   const navigate = useNavigate();
 
+  // Function to toggle the drawer
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  // Function to open and close the filter menu
   const openFilterMenu = () => {
     setShowFilterMenu(true);
   };
@@ -121,6 +131,7 @@ const Dashboard = () => {
     setShowFilterMenu(false);
   };
 
+  // Function to fetch the user profile
   useEffect(() => {
     const getMyProfile = async () => {
       console.log("$%$#$#$#$#$#", user);
@@ -134,7 +145,12 @@ const Dashboard = () => {
           )
           .then((response) => {
             if (response.data.success) {
-              userContext.login(response.data.user);
+              // console.log("INSIDE PROFILE API", response.data);
+              let tempUser = response.data.user;
+              let user_type = response.data.user_type;
+              tempUser.user_type = user_type;
+              // console.log("INSIDE PROFILE API 2", tempUser);
+              userContext.login(tempUser);
               setSocketValue(socket);
             } else {
               console.log("Login Failed");
@@ -153,6 +169,32 @@ const Dashboard = () => {
     getMyProfile();
   }, []);
 
+  useEffect(() => {
+    const getNotificationsNo = async () => {
+      try {
+        await axios
+          .get(
+            `http://localhost:4000/api/v1/notifications/countNotifications?userId=${userContext.user?._id}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            setNotificationsNoValue(response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getNotificationsNo();
+  });
+
+
+  // Function to fetch the filtered results
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
 
@@ -172,6 +214,7 @@ const Dashboard = () => {
     closeFilterMenu();
   };
 
+  // Function to handle search text change
   const handleSearchChange = (e) => {
     const searchText = e.target.value;
     setSearchText(searchText);
@@ -194,9 +237,139 @@ const Dashboard = () => {
     navigate("/calendar");
   };
 
+  // Function to handle chat button click
   const handleChat = () => {
     navigate("/chat/welcome");
   };
+
+  const handleNotification = () => {
+    navigate("/notifications");
+  };
+
+  useEffect(() => {
+    console.log("socket#$#$#$#$#$#$#$#$#$#$#", socket, socket.id);
+    socket.emit("addUser", userContext.user?._id);
+    // socket.emit("addUser", user.email);
+    socket.on("getUsers", (users) => {
+      console.log(users);
+    });
+
+    return () => {
+      // Cleanup function to remove the event listener when the component unmounts
+      socket.off("getUsers");
+    };
+  }, [userContext.user?._id]);
+
+  useEffect(() => {
+    console.log(
+      "INSIDE NOTIFICATION DASHBOARD",
+      socket,
+      window.location.pathname
+    );
+    socket.on("getMessageNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user?._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "message",
+                message: data.text,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    socket.on("receiveNewConversation&MessageNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "message",
+                message: data.text,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    socket.on("updateBlockedStatusNotification", async (data) => {
+      if (
+        window.location.pathname !== "/chat/welcome" &&
+        window.location.pathname !== "/chat/chatting"
+      ) {
+        try {
+          await axios
+            .post(
+              `http://localhost:4000/api/v1/notifications/newNotification`,
+              {
+                receiverId: userContext.user._id,
+                senderId: data.senderId,
+                senderName: data.senderName,
+                messageType: "blockingUpdate",
+                message: `You have been ${
+                  data.blocked ? "blocked" : "unblocked"
+                }.`,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log("CREATED NOTIFICATION");
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+          increment();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    return () => {
+      socket.off("getMessageNotification");
+      socket.off("receiveNewConversation&MessageNotification");
+      socket.off("updateBlockedStatusNotification");
+    };
+  });
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -240,8 +413,8 @@ const Dashboard = () => {
               </IconButton>
             </Link>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
+              <Badge badgeContent={notificationsNo} color="secondary">
+                <NotificationsIcon onClick={handleNotification} />
               </Badge>
             </IconButton>
           </Toolbar>
@@ -254,7 +427,6 @@ const Dashboard = () => {
           </Toolbar>
           {mainListItems}
           <Divider />
-          {secondaryListItems}
         </Drawer>
         <Box
           component="main"

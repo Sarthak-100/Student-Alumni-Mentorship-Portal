@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { React, useEffect } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +13,9 @@ import {
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import TodayIcon from '@mui/icons-material/Today';
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/UserContext";
+import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import { useNavigate } from "react-router-dom";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
@@ -19,6 +23,9 @@ import axios from "axios";
 import Calendar from "react-calendar";
 
 const UserCard = (props) => {
+  const navigate = useNavigate();
+  const { user } = useUserContext();
+  const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [slots, setSlots] = useState([]);
@@ -29,6 +36,11 @@ const UserCard = (props) => {
   //   useReceiverIdContext(props.cardUser._id);
   //   navigate("/chat/welcome");
   // };
+  const handleChat = async () => {
+    console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
+    await setReceiverIdValue(props.cardUser._id);
+    navigate("/chat/welcome");
+  };
 
   // Destructure the nested location object
   const { city, state, country } = props.cardUser.location || {};
@@ -109,6 +121,7 @@ const UserCard = (props) => {
       />
       <CardContent>
         <Grid container spacing={1}>
+          {/* Display user information */}
           <Grid item xs={12}>
             <Typography variant="body1" style={contentStyle}>
               <strong>Current Work:</strong> {props.cardUser?.work.role}
@@ -139,10 +152,11 @@ const UserCard = (props) => {
 
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
-        <IconButton color="primary" aria-label="Chat">
+        {/* Button to start a chat */}
+        <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
           <ChatIcon />
         </IconButton>
-        {/* Trigger ProfileDisplay dialog */}
+        {/* Button to view user profile */}
         <IconButton
           color="primary"
           aria-label="Profile"
@@ -173,6 +187,7 @@ const UserCard = (props) => {
         </div>
       )}
       {/* Display the profile dialog */}
+      {/* Display the user's profile */}
       {selectedUser && (
         <ProfileDisplay
           open={openProfile}

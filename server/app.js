@@ -5,10 +5,9 @@ import conversationRouter from "./routes/conversationRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import eventRouter from "./routes/eventRouter.js";
 import cookieParser from "cookie-parser";
-import errorMiddleware from "./middlewares/error.js";
 import filterRouter from "./routes/filterRouter.js";
 import { useAuth0 } from '@auth0/auth0-react';
-
+import notificationRouter from "./routes/notificationsRoutes.js";
 import cors from "cors";
 import { google } from 'googleapis'
 import dayjs from 'dayjs'
@@ -68,20 +67,18 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
-
-app.use(errorMiddleware);
+app.use("/api/v1/notifications", notificationRouter);
 
 //API for filtering alumni profiles as per added filters
 app.use("/api/v1/student/filter-alumni", filterRouter);
 
-app.get("/", (req, res) => {
-  res.send("Nice Working");
-  // console.log(oauth2Client._clientId, oauth2Client._clientSecret, oauth2Client._redirectUri);
-});
+// app.get("/", (req, res) => {
+//   res.send("Nice Working");
+// });
 
-app.get("/api/data", (req, res) => {
-  res.status(200).json({ message: "This is a sample response" });
-});
+// app.get("/api/data", (req, res) => {
+//   res.status(200).json({ message: "This is a sample response" });
+// });
 
 app.post("/calendar", (req, res) => {
   console.log("hello");

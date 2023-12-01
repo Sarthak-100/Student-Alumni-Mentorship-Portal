@@ -2,6 +2,7 @@ import app from "./app.js";
 import connectDB from "./data/DatabaseConnection.js";
 import http from "http";
 import { Server } from "socket.io";
+import { Notification } from "./models/notificationModel.js";
 // import io from "socket.io";
 
 connectDB();
@@ -17,8 +18,10 @@ const io = new Server(8900, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+  return (
+    !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId })
+  );
 };
 
 const removeUser = (socketId) => {
@@ -34,22 +37,126 @@ io.on("connection", (socket) => {
   console.log("a user connected.");
 
   socket.on("addUser", (userId) => {
-    console.log("New client Added->", "user", userId, "socketId", socket.id);
-    addUser(userId, socket.id);
-    io.emit("getUsers", users);
+    if (userId === null) {
+    } else {
+      console.log("New client Added->", "user", userId, "socketId", socket.id);
+      console.log(addUser(userId, socket.id));
+      io.emit("getUsers", users);
+    }
   });
 
   // send and get message
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-    const user = getUser(receiverId);
-    console.log(receiverId);
-    console.log(user);
-    console.log(users);
-    io.to(user?.socketId).emit("getMessage", {
-      senderId,
-      text,
-    });
-  });
+  socket.on(
+    "sendMessage",
+    async ({ senderId, senderName, receiverId, text }) => {
+      const user = getUser(receiverId);
+      // console.log(receiverId);
+      console.log(user);
+      console.log("$$$$");
+      console.log(users);
+      if (user) {
+        io.to(user?.socketId).emit("getMessage", {
+          senderId,
+          senderName,
+          text,
+        });
+        io.to(user?.socketId).emit("getMessageNotification", {
+          senderId,
+          senderName,
+          text,
+        });
+      } else {
+        const newNotification = new Notification({
+          receiverId,
+          senderId,
+          senderName,
+          messageType: "message",
+          message: text,
+        });
+
+        try {
+          const savedNotification = await newNotification.save();
+          console.log(savedNotification);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  );
+
+  socket.on(
+    "newConversation&Message",
+    async ({ senderId, senderName, receiverId, text }) => {
+      const user = getUser(receiverId);
+      // console.log(receiverId);
+      // console.log(user);
+      // console.log(users);
+      if (user) {
+        io.to(user?.socketId).emit("receiveNewConversation&Message", {
+          senderId,
+          senderName,
+          text,
+        });
+        io.to(user?.socketId).emit(
+          "receiveNewConversation&MessageNotification",
+          {
+            senderId,
+            senderName,
+            text,
+          }
+        );
+      } else {
+        const newNotification = new Notification({
+          receiverId,
+          senderId,
+          senderName,
+          messageType: "chatMessage",
+          message: text,
+        });
+
+        try {
+          const savedNotification = await newNotification.save();
+          console.log(savedNotification);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  );
+
+  socket.on(
+    "changeBlockedStatus",
+    async ({ senderId, senderName, receiverIdArg, blockedStatus }) => {
+      const user = getUser(receiverIdArg);
+      if (user) {
+        io.to(user?.socketId).emit("updateBlockedStatus", {
+          senderId,
+          senderName,
+          blockedStatus,
+        });
+        io.to(user?.socketId).emit("updateBlockedStatusNotification", {
+          senderId,
+          senderName,
+          blockedStatus,
+        });
+      } else {
+        const newNotification = new Notification({
+          receiverIdArg,
+          senderId,
+          senderName,
+          messageType: "blockingUpdate",
+          message: `You have been ${blockedStatus ? "blocked" : "unblocked"}.}`,
+        });
+
+        try {
+          const savedNotification = await newNotification.save();
+          console.log(savedNotification);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  );
 
   // when disconnect
   socket.on("disconnect", () => {

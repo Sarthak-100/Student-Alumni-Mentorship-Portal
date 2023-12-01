@@ -7,25 +7,13 @@ import { useSocketContext } from "../context/SocketContext";
 import { useConversationContext } from "../context/ConversationContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
-// import { io } from "socket.io-client";
-
-// function getRandomInt(min, max) {
-//   min = Math.ceil(min);
-//   max = Math.floor(max);
-
-//   // Generate a random number between min (inclusive) and max (exclusive)
-//   return Math.floor(Math.random() * (max - min)) + min;
-// }
-
-// const data = [
-//   { email: "a11@iiitd.ac.in", password: "s1p", user_type: "student" },
-//   { email: "a22@iiitd.ac.in", password: "s2p", user_type: "student" },
-//   { email: "a33@iiitd.ac.in", password: "s3p", user_type: "student" },
-// ];
+// import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 
 const PreviousChats = () => {
   const [conversations, setConversations] = useState([]);
-  // const [currentChat, setCurrentChat] = useState(null);
+  // const { loadConversations } = useLoadConversationsContext();
+
+  const [loadConversations, setLoadConversations] = useState(null);
 
   const { user } = useUserContext();
 
@@ -37,12 +25,9 @@ const PreviousChats = () => {
 
   const { socket } = useSocketContext();
 
-  // useEffect(() => {
-  //   socket.current.emit("addUser", user?._id);
-  //   socket.current.on("getUsers", (users) => {
-  //     console.log(users);
-  //   });
-  // }, [user]);
+  // const tempSetConversationValue = async (c) => {
+  //   setConversationValue(c);
+  // };
 
   useEffect(() => {
     const getConversations = async () => {
@@ -62,8 +47,12 @@ const PreviousChats = () => {
                 dict?.members.includes(receiverId)
               );
               let conv;
+              console.log("dictionaryWithElement", dictionaryWithElement);
+              console.log("receiverId", receiverId);
               if (dictionaryWithElement) {
                 setConversations(response.data);
+                // setConversationsTemp(response.data);
+                // await setConversationValue(dictionaryWithElement);
                 setReceiverIdValue(null);
               } else {
                 conv = {
@@ -71,11 +60,18 @@ const PreviousChats = () => {
                   members: [user?._id, receiverId],
                 };
                 setConversations([conv, ...response.data]);
+                // setConversationsTemp([conv, ...response.data]);
+                // setConversationValue(conv);
+                // setConversations((prevConversations) => [
+                //   conv,
+                //   ...res,
+                // ]);
               }
               // console.log("------------+++++++++", conv);
               // setConversationValue(conv);
             } else {
               setConversations(response.data);
+              // setConversationsTemp(response.data);
             }
           })
           .catch((error) => {
@@ -86,9 +82,22 @@ const PreviousChats = () => {
       }
     };
     getConversations();
-  }, []);
+  }, [loadConversations]);
 
   console.log(socket);
+
+  useEffect(() => {
+    console.log(socket);
+    socket.on("receiveNewConversation&Message", (data) => {
+      // console.log("in receiveNewConversation&Message");
+      setLoadConversations(
+        (prevLoadConversations) => prevLoadConversations + 1
+      );
+    });
+    return () => {
+      socket.off("receiveNewConversation&Message");
+    };
+  });
 
   // console.log(currentChat);
 
@@ -96,6 +105,7 @@ const PreviousChats = () => {
 
   useEffect(() => {
     console.log("in useEffect for prev chat click");
+    console.log("CONVERSATION", conversation);
     if (conversation) {
       navigate("chatting");
     }
@@ -103,17 +113,6 @@ const PreviousChats = () => {
 
   return (
     <div className="previousChats">
-      {/* {
-        if(directedFromChatSection){
-          conversation.push({
-            "_id": null,
-            "members": [
-                "60e9c3c8f1a0f1f6d0e1f6a1",
-                "60e9c3c8f1a0f1f6d0e1f6a2"
-            ],
-          })
-        }
-      } */}
       {conversations.map((c) => (
         <div onClick={() => setConversationValue(c)}>
           <UserChats conversation={c} currentUser={user} />
