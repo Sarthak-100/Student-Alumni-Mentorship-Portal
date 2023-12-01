@@ -31,17 +31,6 @@ const scopes = [
   // 'https://www.googleapis.com/auth/calendar.events'
 ];
 
-const allowedOrigins = [
-  "http://localhost:5000",
-  "http://localhost:4000",
-  "http://localhost:4000/schedule_event",
-  "http://localhost:4000/google/redirect",
-  "https://accounts.google.com/o/oauth2/v2/auth",
-  "https://accounts.google.com",
-  "http://www.google.com/support/accounts/bin/answer.py?hl=en&answer=151657",
-  "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect",
-];
-
 app.use(express.json());
 app.use(cookieParser());
 
