@@ -1,11 +1,9 @@
 import React from 'react'
 
-const Input = () => {
+export default function Hello() {
   return (
     <div>
-      
+      <h1>Hello</h1>
     </div>
   )
 }
-
-export default Input

@@ -27,9 +27,6 @@ const UserCard = (props) => {
   const handleChat = async () => {
     console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
     await setReceiverIdValue(props.cardUser._id);
-    // useEffect(() => {
-    //   console.log("USER CARD inside handleChat", receiverId);
-    // }, [receiverId]);
     navigate("/chat/welcome");
   };
 
@@ -83,6 +80,7 @@ const UserCard = (props) => {
       />
       <CardContent>
         <Grid container spacing={1}>
+          {/* Display user information */}
           <Grid item xs={12}>
             <Typography variant="body1" style={contentStyle}>
               <strong>Current Work:</strong> {props.cardUser?.work.role}
@@ -113,10 +111,11 @@ const UserCard = (props) => {
 
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
+        {/* Button to start a chat */}
         <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
           <ChatIcon />
         </IconButton>
-        {/* Trigger ProfileDisplay dialog */}
+        {/* Button to view user profile */}
         <IconButton
           color="primary"
           aria-label="Profile"
@@ -125,7 +124,7 @@ const UserCard = (props) => {
           <AccountCircleIcon />
         </IconButton>
       </CardActions>
-      {/* Display the profile dialog */}
+      {/* Display the user's profile */}
       {selectedUser && (
         <ProfileDisplay
           open={openProfile}
