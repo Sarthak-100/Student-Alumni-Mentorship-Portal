@@ -43,6 +43,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
+import Calendar from "./Calendar.js";
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -106,6 +107,8 @@ const Layout = () => {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+
 
   // Context and authentication hooks
   const userContext = useUserContext();
@@ -179,6 +182,7 @@ const Layout = () => {
   });
 
   const handleCalendarClick = () => {
+    console.log("calendar clicked");
     navigate("/calendar");
   };
 
@@ -429,6 +433,7 @@ const Layout = () => {
               <Route index element={<Hello />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/filterAlumni" element={<FilterAlumni />} />
+              <Route path="/calendar" element={<Calendar />} />
             </Routes>
           </Container>
         </Box>

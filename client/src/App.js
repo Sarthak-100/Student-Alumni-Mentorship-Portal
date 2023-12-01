@@ -50,10 +50,10 @@ const App = () => {
                   <SocketProvider>
                     <Routes>
                       <Route path="/" element={<Layout />}>
-                      <Route path="/calendar" element={<Calendar />} />
                       <Route index element={<Hello />} />
                       <Route path="profile" element={<ProfilePage />} />
                       <Route path="filterAlumni" element={<FilterAlumni />} />
+                      <Route path="/calendar" element={<Calendar />} />
                   </Route>
                       <Route
                         path="/notifications"
