@@ -12,18 +12,18 @@ import {
 } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import TodayIcon from '@mui/icons-material/Today';
+import TodayIcon from "@mui/icons-material/Today";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
-import { useNavigate } from "react-router-dom";
-import { useReceiverIdContext } from "../context/ReceiverIdContext";
+// import { useNavigate } from "react-router-dom";
+// import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import axios from "axios";
 import Calendar from "react-calendar";
 
 const UserCard = (props) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { user } = useUserContext();
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
@@ -58,26 +58,32 @@ const UserCard = (props) => {
       const apiUrl = `${baseUrl}?userId=${userId}`;
       console.log(apiUrl);
       axios
-      .get(apiUrl)
-      .then((response) => {
-        // console.log(response.data);
-        if (response.status == 200) {
-          console.log("Slots fetched successfully!");
-          //display the slots in a 
-          setSlots(response.data);
-        } else {
-          console.error('Failed to fetch slots details from the database:', response.status);
-          const errorData = response.json();
-          console.error('Error details:', errorData);
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to fetch slots details from the database:', error);
-      });
+        .get(apiUrl)
+        .then((response) => {
+          // console.log(response.data);
+          if (response.status == 200) {
+            console.log("Slots fetched successfully!");
+            //display the slots in a
+            setSlots(response.data);
+          } else {
+            console.error(
+              "Failed to fetch slots details from the database:",
+              response.status
+            );
+            const errorData = response.json();
+            console.error("Error details:", errorData);
+          }
+        })
+        .catch((error) => {
+          console.error(
+            "Failed to fetch slots details from the database:",
+            error
+          );
+        });
     } catch (error) {
-      console.error('Error details:', error);
+      console.error("Error details:", error);
     }
-  }
+  };
 
   const cardStyle = {
     maxWidth: 300,
@@ -106,7 +112,6 @@ const UserCard = (props) => {
   return (
     <Card style={cardStyle}>
       <CardHeader
-
         avatar={<Avatar>{props.cardUser?.name.charAt(0)}</Avatar>}
         title={
           <Typography variant="h6" style={titleStyle}>
@@ -139,8 +144,7 @@ const UserCard = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" style={contentStyle}>
-              <strong>Organization:</strong>{" "}
-              {props.cardUser?.work.organization}
+              <strong>Organization:</strong> {props.cardUser?.work.organization}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -149,7 +153,6 @@ const UserCard = (props) => {
             </Typography>
           </Grid>
         </Grid>
-
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
         {/* Button to start a chat */}
@@ -160,13 +163,15 @@ const UserCard = (props) => {
         <IconButton
           color="primary"
           aria-label="Profile"
-          onClick={handleProfile}>
+          onClick={handleProfile}
+        >
           <AccountCircleIcon />
         </IconButton>
         <IconButton
           color="primary"
           aria-label="Calendar"
-          onClick={showCalendar}>
+          onClick={showCalendar}
+        >
           <TodayIcon />
         </IconButton>
       </CardActions>

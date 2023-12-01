@@ -25,10 +25,10 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import TodayIcon from '@mui/icons-material/Today';
+import TodayIcon from "@mui/icons-material/Today";
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
-import { mainListItems} from "./ListItems";
+// import { mainListItems} from "./ListItems";
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";
@@ -106,7 +106,6 @@ const Dashboard = () => {
   // Context and authentication hooks
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
-
 
   // console.log("@@@@@@AuthOuser", user);
 
@@ -192,7 +191,6 @@ const Dashboard = () => {
     };
     getNotificationsNo();
   });
-
 
   // Function to fetch the filtered results
   const applyFilters = (filters) => {
