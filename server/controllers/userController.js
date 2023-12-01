@@ -90,3 +90,23 @@ export const getUserProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+const updateAlumniProfile = async (req, res, next) => {
+  try {
+    const id = new mongoose.Types.ObjectId(req.query.userId);
+
+    Alumni.updateOne({ _id: id }, { $set: req.body }, (err, result) => {
+      if (err) {
+        console.error("Error updating document:", err);
+      } else {
+        console.log("Document updated successfully:", result);
+        res.status(200).json({
+          success: true,
+          message: "Profile updated successfully",
+        });
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

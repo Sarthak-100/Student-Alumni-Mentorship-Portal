@@ -6,6 +6,7 @@ import {
   // login,
   getMyProfile,
   getUserProfile,
+  updateAlumniProfile,
   // getMyToken,
 } from "../controllers/userController.js";
 
@@ -26,6 +27,8 @@ const userRouter = express.Router();
 userRouter.get("/myProfile", getMyProfile);
 
 userRouter.get("/getUserProfile", getUserProfile);
+
+userRouter.update("/updateAlumniProfile", updateAlumniProfile);
 
 // userRouter.get("/myToken", getMyToken);
 

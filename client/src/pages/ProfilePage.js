@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useUserContext } from "../context/UserContext";
+import axios from "axios";
 
 const CenteredContainer = styled(Container)(({ theme }) => ({
   display: "flex",
@@ -31,6 +32,50 @@ const ProfilePage = () => {
   const userContext = useUserContext();
 
   console.log("^^^^UserContext:^^^", userContext.user);
+
+  const editProfile = async () => {
+    /*
+
+    let input parameters be of format from the form: 
+    Work
+    roleInp
+    orgInp
+
+    Location
+    cityInp
+    stateInp
+    countryInp
+
+    */
+    try {
+      await axios
+        .update(
+          `http://localhost:4000/api/v1/users/updateAlumniProfile?userId=${user._id}`,
+          {
+            /*
+              here just plugin the input parameters in the format below. LETS SAY role and city is changedso 
+                work: {
+                  role: roleInp,
+                  organization: orgInp,
+                },
+                location: {
+                  city: cityInp,
+                }
+
+                just send in the above format
+            */
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <CenteredContainer>
@@ -56,11 +101,16 @@ const ProfilePage = () => {
           Batch:
         </Typography>
         <Typography>{userContext.user.batch}</Typography>
-        
-        <Button variant="contained" color="primary" style={{ display: userContext.user.user_type === "alumni" ? 'block' : 'none' }}>
+
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            display: userContext.user.user_type === "alumni" ? "block" : "none",
+          }}
+        >
           Edit Profile
         </Button>
-      
       </Paper>
       <Paper
         sx={{
