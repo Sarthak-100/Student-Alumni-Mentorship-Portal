@@ -91,7 +91,7 @@ export const getUserProfile = async (req, res, next) => {
   }
 };
 
-const updateAlumniProfile = async (req, res, next) => {
+export const updateAlumniProfile = async (req, res, next) => {
   try {
     const id = new mongoose.Types.ObjectId(req.query.userId);
 

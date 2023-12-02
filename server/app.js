@@ -43,25 +43,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", [
-//     "http://localhost:5000",
-//     "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&response_type=code&client_id=205852059308-9052ffinaa09obcr0r23vibubi2963m5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fgoogle%2Fredirect",
-//   ]);
-//   const origin = req.headers.origin;
-//   // console.log("origin", origin);
-//   if (allowedOrigins.includes(origin)) {
-//     // Set the Access-Control-Allow-Origin header to the request's origin
-//     // console.log("hello");
-//     res.header("Access-Control-Allow-Origin", origin);
-//   }
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   res.header("Access-Control-Allow-Credentials", true);
-//   res.header("Access-Control-Expose-Headers", "set-cookie");
-//   next();
-// });
-// app.use(cors());
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
@@ -115,6 +96,8 @@ app.get("/google/redirect", (req, res) => {
 
 app.use("/api/v1/saveEvent", eventRouter);
 app.use("/api/v1/fetchSlots", eventRouter);
+app.use("/api/v1/updateEvent", eventRouter);
+app.use("/api/v1/getEvent", eventRouter);
 
 // app.get('/schedule_event', async (req, res) => {
 //   try {

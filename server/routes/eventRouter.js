@@ -1,5 +1,5 @@
 import express from 'express';
-import { setEventDetails, getEventDetails } from '../controllers/eventController.js';
+import { setEventDetails, getEventDetails, updateEventDetails } from '../controllers/eventController.js';
 
 const eventRouter = express.Router();
 
@@ -7,5 +7,6 @@ const eventRouter = express.Router();
 
 eventRouter.post('/details', setEventDetails);
 eventRouter.get('/details', getEventDetails);
+eventRouter.post('/update', updateEventDetails);
 
 export default eventRouter;

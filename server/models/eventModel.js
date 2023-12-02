@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const eventSchema = new mongoose.Schema({
     // Define the structure of each event
+    googleEventId: {
+        type: String,
+        required: true,
+    },
     alumni: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Alumni' // Reference to the Alumni model

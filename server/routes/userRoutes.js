@@ -28,7 +28,7 @@ userRouter.get("/myProfile", getMyProfile);
 
 userRouter.get("/getUserProfile", getUserProfile);
 
-userRouter.update("/updateAlumniProfile", updateAlumniProfile);
+userRouter.post("/updateAlumniProfile", updateAlumniProfile);
 
 // userRouter.get("/myToken", getMyToken);
 

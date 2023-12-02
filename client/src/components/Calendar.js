@@ -5,6 +5,7 @@ import { useSession, useSupabaseClient, useSessionContext } from '@supabase/auth
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../context/UserContext';
 
 const Calendar = () => {
 
@@ -15,18 +16,22 @@ const Calendar = () => {
   const [ eventName, setEventName ] = useState("");
   const [ eventDescription, setEventDescription ] = useState("");
   const [ setApiResponse ] = useState({});
+  const { user } = useUserContext();
+
+  useEffect(() => {
+    syncCalendar(); // Call the syncCalendar function on component mount
+  }, []);
 
   const session = useSession(); // tokens, when session exists we have a user
   const supabase = useSupabaseClient(); // talk to supabase!
   const { isLoading } = useSessionContext();
-  console.log("supabase", supabase);
+  // console.log("supabase", supabase);
 
   if(isLoading) {
     return <></>
   }
 
   function signIn() {
-    console.log("hello");
     const { error } = supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -60,8 +65,72 @@ const Calendar = () => {
   //   return data.calendar_url;
   // }
 
-
-
+  //write a function to sync calendar
+  async function syncCalendar() {
+    console.log("syncing calendar");
+    const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
+    const userId = user._id;
+    const apiUrl = `${baseUrl}?userId=${userId}`;
+    console.log(apiUrl);
+    axios.get(apiUrl).then((response) => {
+      if (response.status === 200) {
+        const events = response.data.events;
+        // console.log("events", events);
+        // Assuming you have retrieved events from the database
+        events.forEach(async (event) => {
+          const googleEventId = event.googleEventId; // Assuming you have a unique Google Event ID
+  
+          const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
+          const updatedEvent = {
+            summary: event.summary,
+            description: event.description,
+            start: {
+              dateTime: event.startDateTime,
+              timeZone: 'Asia/Kolkata', // Modify timezone as needed
+            },
+            end: {
+              dateTime: event.endDateTime,
+              timeZone: 'Asia/Kolkata', // Modify timezone as needed
+            },
+            attendees: event.attendees
+            // Other event details to update
+          };
+          console.log("abb h", updatedEvent);
+          try {
+            const patchResponse = await fetch(googleCalendarUrl, {
+              method: 'PATCH',
+              headers: {
+                'Authorization': 'Bearer ' + session.provider_token,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(updatedEvent),
+            });
+  
+            if (patchResponse.ok) {
+              console.log(`Event ${googleEventId} updated in Google Calendar`);
+              // Optionally handle success
+            } else {
+              console.error('Failed to update event in Google Calendar:', patchResponse.status);
+              // Handle error
+            }
+          } catch (error) {
+            console.error('Error updating event in Google Calendar:', error);
+            // Handle error
+          }
+        });
+  
+        console.log("All events synced with Google Calendar");
+        // Optionally, notify the user that events are synced
+      } else {
+        console.error('Failed to fetch events from the database:', response.status);
+        // Handle error
+      }
+    }).catch((error) => {
+      console.error('Failed to fetch events from the database:', error);
+      // Handle error
+    });
+}
+  
   async function createCalendarEvent() {
     console.log("Creating calendar event");
     const event = {
@@ -84,10 +153,7 @@ const Calendar = () => {
           dateTime: endDate.toISOString(),
           timeZone: 'Asia/Kolkata',
         },
-        attendees: [
-          { email: 'abhit20421@iiitd.ac.in' },
-          { email: 'sarthak20576@iiitd.ac.in' }
-        ],
+        attendees: [],
     }
     //schedule an event using the above details
 
@@ -102,14 +168,16 @@ const Calendar = () => {
       });
       
       if (response.ok) {
-        const eventData = response.json();
-        console.log('Event created and saved in MongoDB:', eventData, session.user.email);
+        const eventData = await response.json();
+        const googleEventId = eventData.id;
+        console.log('Event created and saved in MongoDB:', eventData, session.user.email, googleEventId);
         const apiUrl = "http://localhost:4000/api/v1/saveEvent/details";
         axios
         .post(apiUrl, {
           headers: {
             'Content-Type': 'application/json',
           },
+          googleEventId: googleEventId,
           userId: session.user.email,
           summary: eventName,
           description: eventDescription,

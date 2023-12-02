@@ -29,6 +29,7 @@ const UserCard = (props) => {
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [slots, setSlots] = useState([]);
+  const [events, setEvents] = useState([]);
 
   // const handleChat = () => {
   //   useReceiverIdContext(props.cardUser._id);
@@ -64,6 +65,8 @@ const UserCard = (props) => {
             console.log("Slots fetched successfully!");
             //display the slots in a
             setSlots(response.data);
+            const fetchedEvents = response.data.events; // Replace 'events' with the actual key containing events in your response
+            setEvents(fetchedEvents);
           } else {
             console.error(
               "Failed to fetch slots details from the database:",
@@ -84,6 +87,65 @@ const UserCard = (props) => {
     }
   };
 
+  const fixMeeting = async (event) => {
+    console.log("fixMeeting", event);
+    const updatedEvent = { ...event };
+  
+    // Assuming 'user' is the user object with necessary details
+    if (!updatedEvent.attendees) {
+      updatedEvent.attendees = [];
+    }
+    if (!updatedEvent.attendees.includes(user)) {
+      updatedEvent.attendees.push(user);
+    }
+    console.log("updatedEvent", updatedEvent);
+
+    //update event in google calendar of alumni
+    // try {
+    //   const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${updatedEvent.googleEventId}`, {
+    //     method: "PATCH",
+    //     headers: {
+    //       'Authorization': 'Bearer ' + session.provider_token,
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(updatedEvent)
+    //   });
+  
+    //   if (response.ok) {
+    //     const eventData = await response.json();
+    //     console.log('Event updated in Google Calendar:', eventData);
+  
+    //     // Update the event details in your database if required
+    //     // ...
+    //   } else {
+    //     console.error('Failed to update event in Google Calendar:', response.status);
+    //   }
+    // } catch (error) {
+    //   console.error('Error updating event in Google Calendar:', error);
+    // }
+
+    try {
+      const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+      const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
+
+      const response = await axios.post(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        event: updatedEvent,
+      });
+
+      if (response.status === 200) {
+        console.log("Event updated successfully in the database!");
+        // Update the event in the local state as well, if required
+        // setEvents([...events]); // Assuming events state exists
+      } else {
+        console.error("Failed to update event in the database:", response.status);
+      }
+    } catch (error) {
+      console.error("Error updating event in the database:", error);
+    }
+  }
   const cardStyle = {
     maxWidth: 300,
     margin: "20px auto",
@@ -174,20 +236,23 @@ const UserCard = (props) => {
           <TodayIcon />
         </IconButton>
       </CardActions>
-      {slots.length > 0 && (
+      {events.length > 0 && (
         <div style={{ margin: "20px auto", maxWidth: "300px" }}>
           <Typography variant="h6" style={{ textAlign: "center" }}>
-            Available Slots
+            Events
           </Typography>
-          <Calendar
-            value={new Date()} // You may want to manage the date value based on user selection
-            tileContent={({ date }) => {
-              const dateString = date.toISOString().split("T")[0];
-              return slots.includes(dateString) ? (
-                <p style={{ backgroundColor: "green" }}>Free</p>
-              ) : null;
-            }}
-          />
+          <ul>
+            {events.map((event, index) => (
+              <li key={index}>
+                <p>Date: {event.startDateTime}</p>
+                <p>Time: {event.endDateTime}</p>
+                <p>Summary: {event.summary}</p>
+                <p>Description: {event.description}</p>
+                {/* Add a button to fix a meeting for this slot */}
+                <button onClick={() => fixMeeting(event)}>Fix Meeting</button>
+            </li>
+            ))}
+          </ul>
         </div>
       )}
       {/* Display the profile dialog */}
