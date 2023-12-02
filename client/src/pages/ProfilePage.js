@@ -18,7 +18,7 @@ const CenteredContainer = styled(Container)(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  height: "100vh",
+  height: "70vh",
   backgroundColor: "#f0f0f0",
 }));
 
@@ -101,6 +101,10 @@ const ProfilePage = () => {
           Batch:
         </Typography>
         <Typography>{userContext.user.batch}</Typography>
+        <Typography variant="h5" component="div">
+          Contact Information
+        </Typography>
+        <Typography>Email : {user.email}</Typography>
 
         <Button
           variant="contained"
@@ -111,36 +115,6 @@ const ProfilePage = () => {
         >
           Edit Profile
         </Button>
-      </Paper>
-      <Paper
-        sx={{
-          p: 2,
-          textAlign: "center",
-          marginTop: 2,
-          backgroundColor: "white",
-          boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        <Typography variant="h5" component="div">
-          About Me
-        </Typography>
-        <Typography>
-          I'm a passionate student looking to connect with alumni for mentorship
-          opportunities.
-        </Typography>
-        <Typography variant="h5" component="div">
-          Skills
-        </Typography>
-        <Typography>
-          - Web Development - JavaScript - React - HTML/CSS - ...
-        </Typography>
-        <Typography variant="h5" component="div">
-          Contact Information
-        </Typography>
-        <Typography>Email : {user.email}</Typography>
-        {/* <Typography>
-          LinkedIn: <Link href="https://www.linkedin.com/in/johndoe">https://www.linkedin.com/in/johndoe</Link>
-        </Typography> */}
       </Paper>
     </CenteredContainer>
   );

@@ -61,9 +61,9 @@ const Notifications = () => {
 
   return (
     <div>
-      <Button variant="contained" onClick={handleBack}>
+      {/* <Button variant="contained" onClick={handleBack}>
         Back
-      </Button>
+      </Button> */}
       <h1>Notifications</h1>
       {notifications.map((notification) => (
         <Notification

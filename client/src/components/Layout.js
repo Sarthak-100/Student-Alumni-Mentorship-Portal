@@ -25,6 +25,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ChatIcon from "@mui/icons-material/Chat";
 import ProfilePage from "./../pages/ProfilePage";
+import Notifications from "./../pages/Notifications";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
 import TodayIcon from "@mui/icons-material/Today";
@@ -434,6 +435,7 @@ const Layout = () => {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/filterAlumni" element={<FilterAlumni />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/notifications" element={<Notifications />} />
             </Routes>
           </Container>
         </Box>
