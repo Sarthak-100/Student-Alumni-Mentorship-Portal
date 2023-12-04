@@ -57,12 +57,9 @@ const App = () => {
                         <Route index element={<Hello />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="filterAlumni" element={<FilterAlumni />} />
-                        <Route path="/calendar" element={<Calendar />} />
+                        <Route path="calendar" element={<Calendar />} />
+                        <Route path="notifications" element={<Notifications />} />
                       </Route>
-                      <Route
-                        path="/notifications"
-                        element={<Notifications />}
-                      />
                       <Route path="/chat" element={<Chat />}>
                         {/* <Route path="/chat2" element={<Chat2 />}> */}
                         <Route path="welcome" element={<ChatWelcome />} />
@@ -81,3 +78,5 @@ const App = () => {
 };
 
 export default App;
+
+
