@@ -7,7 +7,7 @@ import {
   getMyProfile,
   getUserProfile,
   updateAlumniProfile,
-  updateProfile,
+  insertAvatar,
   // getMyToken,
 } from "../controllers/userController.js";
 
@@ -31,7 +31,7 @@ userRouter.get("/getUserProfile", getUserProfile);
 
 userRouter.put("/updateAlumniProfile", updateAlumniProfile);
 
-userRouter.post("/updateAvatar", updateProfile);
+userRouter.post("/updateAvatar", insertAvatar);
 
 // userRouter.get("/myToken", getMyToken);
 

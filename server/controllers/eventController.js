@@ -54,6 +54,7 @@ export const getEventDetails = async (req, res) => {
 export const updateEventDetails = async (req, res) => {
     try {
         const updatedEvent = req.body.event;
+        updatedEvent.description = "okay nice";
         console.log("eventId", updatedEvent, updatedEvent._id);
         const event = await Event.findOne({ "_id": updatedEvent._id });
         console.log("event", event);

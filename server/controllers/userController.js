@@ -1,13 +1,14 @@
+// import {Alumni} from "../models/alumniModel.js";
 import {
-  // StudentRegistered,
-  Alumni,
   Student,
+  Alumni,
   Admin,
 } from "../models/userModel.js";
 import bcrypt, { hash } from "bcrypt";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import { json } from "express";
+import fs from "fs";
 
 export const getMyProfile = async (req, res, next) => {
   try {
@@ -93,97 +94,94 @@ export const getUserProfile = async (req, res, next) => {
 };
 
 export const updateAlumniProfile = async (req, res, next) => {
+  
+  //code for inserting alumni data into database
+
+  // const data = JSON.parse(fs.readFileSync('mentorship_portal.alumni_datas.json', 'utf8'));
+
+  // // Extract the records and insert them into the database
+  // data.forEach(item => {
+  //   const { _id, __v, ...dataWithoutIdAndV } = item; // Exclude _id and __v fields
+  //   console.log(dataWithoutIdAndV);
+  //   const document = new Alumni(dataWithoutIdAndV);
+  //   document.save()
+  //     .then(doc => {
+  //       console.log('Document inserted:', doc);
+  //     })
+  //     .catch(err => {
+  //       console.error('Error inserting document:', err);
+  //     });
+// });
+
+  // const data = JSON.parse(fs.readFileSync('mentorship_portal.students.json', 'utf8'));
+
+  // // Extract the records and insert them into the database
+  // data.forEach(item => {
+  //   const { _id, __v, ...dataWithoutIdAndV } = item; // Exclude _id and __v fields
+  //   console.log(dataWithoutIdAndV);
+  //   const document = new Student(dataWithoutIdAndV);
+  //   document.save()
+  //     .then(doc => {
+  //       console.log('Document inserted:', doc);
+  //     })
+  //     .catch(err => {
+  //       console.error('Error inserting document:', err);
+  //     });
+  // });
+
   try {
     const userId = new mongoose.Types.ObjectId(req.query.userId);
-    const updateData = req.body;
-    const filter = { _id: userId };
-    const update = {
-      $set: {
-        "work.role": updateData.work.role,
-        "work.organization": updateData.work.organization,
-        "location.city": updateData.location.city,
-        "location.state": updateData.location.state,
-        "location.country": updateData.location.country,
-      },
-    };
+    const { work, location } = req.body;
+    console.log(work, location);
 
-    const result = await Alumni.updateOne(filter, update);
-
-    if (result.nModified === 0) {
+    const alumni = await Alumni.findOne({ _id: userId });
+    const updated = {...alumni};
+    
+    updated.work = work;
+    updated.location = location;
+    
+    if (!alumni) {
       return res.status(404).json({
         success: false,
-        message: "Could not find the user or no changes were made",
+        message: "Could not find the alumni",
+      });
+    }else {
+      await Alumni.updateOne({ _id: userId }, { $set: {work: work, location: location} });
+      res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
       });
     }
-
-    console.log("Document updated successfully");
-
-    res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-    });
-    // const userId = new mongoose.Types.ObjectId(req.query.userId);
-    // const updateData = req.body;
-
-    // const alum = await Alumni.findOne({ _id: userId });
-
-    // if (!alum) {
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "Could not find the user",
-    //   });
-    // }
-
-    // const alum2 = alum.toJSON();
-
-    // alum2.work.role = updateData.work.role;
-    // alum2.work.organization = updateData.work.organization;
-
-    // alum2.location.city = updateData.location.city;
-    // alum2.location.state = updateData.location.state;
-    // alum2.location.country = updateData.location.country;
-
-    // console.log(alum2);
-
-    // await Alumni.updateOne({ _id: userId }, { $set: alum2 });
-
-    // // console.log("Document updated successfully:", updatedAlumni);
-
-    // res.status(200).json({
-    //   success: true,
-    //   message: "Profile updated successfully",
-    // });
   } catch (error) {
     next(error);
   }
 };
 
-export const updateProfile = async (req, res, next) => {
-  //store the sent image in the database
+export const insertAvatar = async (req, res, next) => {
   try {
     const id = new mongoose.Types.ObjectId(req.query.userId);
-    const image = req.body.image;
+    const image = req.body.avatar;
 
     let user;
     let user_type;
     let model;
 
-    let out = await Student.find({ _id: id });
+    let out = await Student.findOne({ _id: id }).lean();
 
-    if (out.length !== 0) {
-      user = out[0];
+    if (out !== null) {
+      user = out;
       user_type = "student";
       model = Student;
     } else {
-      out = await Alumni.find({ _id: id });
-      if (out.length !== 0) {
-        user = out[0];
+      out = await Alumni.findOne({ _id: id }).lean();
+      if (out !== null) {
+        user = out;
         user_type = "alumni";
         model = Alumni;
       } else {
-        out = await Admin.find({ _id: id });
-        if (out.length !== 0) {
-          user = out[0];
+        out = await Admin.findOne({ _id: id }).lean();
+        if (out !== null) {
+          user = out;
           user_type = "admin";
           model = Admin;
         } else {
@@ -195,18 +193,10 @@ export const updateProfile = async (req, res, next) => {
       }
     }
 
-    user.user_type = user_type;
-    console.log("model", model, id, image);
-    model.updateOne({ _id: id }, { $set: { image: image } }, (err, result) => {
-      if (err) {
-        console.error("Error updating document:", err);
-      } else {
-        console.log("Document updated successfully:", result);
-        res.status(200).json({
-          success: true,
-          message: "Profile updated successfully",
-        });
-      }
+    await model.updateOne({ _id: id }, { $set: {img: image} });
+    res.status(200).json({
+      success: true,
+      message: "Avatar updated successfully",
     });
   } catch (error) {
     next(error);

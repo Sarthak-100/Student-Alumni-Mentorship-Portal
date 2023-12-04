@@ -1,0 +1,399 @@
+[{
+  "_id": {
+    "$oid": "6553bad492213e0210f5c8c9"
+  },
+  "name": "Lavina Jain",
+  "email": "lavina16052@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2016,
+  "img":"",
+  "work": {
+    "role": "Software Engineer",
+    "organization": "Facebook"
+  },
+  "location": {
+    "city": "London",
+    "state": "England",
+    "country": "United Kingdom"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553caae92213e0210f5c8d6"
+  },
+  "name": "Ekansh Sareen",
+  "email": "ekansh15139@iiitd.ac.in",
+  "branch": "ECE",
+  "batch": 2015,
+  "img":"",
+  "work": {
+    "role": "PhD Biomedical Engineering",
+    "organization": "EPFL"
+  },
+  "location": {
+    "city": "Lausanne",
+    "state": "Vaud",
+    "country": "Switzerland"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553b9ae92213e0210f5c8c8"
+  },
+  "name": "Meet Shah",
+  "email": "shah18046@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2018,
+  "img":"",
+  "work": {
+    "role": "Senior Software Engineer",
+    "organization": "MakeMyTrip"
+  },
+  "location": {
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553b70b92213e0210f5c8c7"
+  },
+  "name": "Yajur Ahuja",
+  "email": "yajur16121@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2016,
+  "img":"",
+  "work": {
+    "role": "Senior Software Engineer",
+    "organization": "A10 Networks"
+  },
+  "location": {
+    "city": "San Jose",
+    "state": "California",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553c3ed92213e0210f5c8d2"
+  },
+  "name": "Ishan Manjani",
+  "email": "ishan12041@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2012,
+  "img":"",
+  "work": {
+    "role": "Software Engineer",
+    "organization": "Google"
+  },
+  "location": {
+    "city": "Sunnyvale",
+    "state": "California",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553bba492213e0210f5c8ca"
+  },
+  "name": "Vrinda Malhotra",
+  "email": "vrinda14122@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2014,
+  "img":"",
+  "work": {
+    "role": "Software Engineer",
+    "organization": "Amazon"
+  },
+  "location": {
+    "city": "San Francisco",
+    "state": "California",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553be1892213e0210f5c8ce"
+  },
+  "name": "Manya Wadhwa",
+  "email": "manya12144@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2012,
+  "img":"",
+  "work": {
+    "role": "PhD Computer Science",
+    "organization": "University of Texas"
+  },
+  "location": {
+    "city": "Austin",
+    "state": "Texas",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553ca0c92213e0210f5c8d5"
+  },
+  "name": "Amod Agrawal",
+  "email": "amod13125@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2013,
+  "img":"",
+  "work": {
+    "role": "Software Engineer 2",
+    "organization": "Amazon"
+  },
+  "location": {
+    "city": "San Francisco",
+    "state": "California",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553cc0492213e0210f5c8d7"
+  },
+  "name": "Rohit Romley",
+  "email": "rohit1272@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2012,
+  "img":"",
+  "work": {
+    "role": "Senior Engagement Delivery Consultant",
+    "organization": "Salesforce"
+  },
+  "location": {
+    "city": "Toronto",
+    "state": "Ontario",
+    "country": "Canada"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553bc6792213e0210f5c8cb"
+  },
+  "name": "Mudit Goel",
+  "email": "mudit16165@iiitd.ac.in",
+  "branch": "ECE",
+  "batch": 2016,
+  "img":"",
+  "work": {
+    "role": "Program Manager",
+    "organization": "Amazon"
+  },
+  "location": {
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553cc6d92213e0210f5c8d8"
+  },
+  "name": "Sahil Yadav",
+  "email": "sahil16184@iiitd.ac.in",
+  "branch": "CSAM",
+  "batch": 2016,
+  "img":"",
+  "work": {
+    "role": "Software Engineer",
+    "organization": "Publicis Sapient"
+  },
+  "location": {
+    "city": "Gurugram",
+    "state": "Haryana",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553c4fd92213e0210f5c8d4"
+  },
+  "name": "Ayush Shah",
+  "email": "ayush13027@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2013,
+  "img":"",
+  "work": {
+    "role": "Engineering Manager",
+    "organization": "Unlikely AI"
+  },
+  "location": {
+    "city": "London",
+    "state": "England",
+    "country": "United Kingdom"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553bcf692213e0210f5c8cc"
+  },
+  "name": "Archie Gupta",
+  "email": "Archie12023@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2012,
+  "img":"",
+  "work": {
+    "role": "Software Engineer",
+    "organization": "Microsoft"
+  },
+  "location": {
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553c22592213e0210f5c8d1"
+  },
+  "name": "Divyanshu Talwar",
+  "email": "divyanshu15028@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2015,
+  "img":"",
+  "work": {
+    "role": "Associate",
+    "organization": "Goldman Sachs"
+  },
+  "location": {
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "655328973920aaa9bf5d92c8"
+  },
+  "name": "Abhishek Maiti",
+  "email": "abhishek16005@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2016,
+  "img":"",
+  "work": {
+    "role": "Applied Research Engineer",
+    "organization": "LinkedIn"
+  },
+  "location": {
+    "city": "Bengaluru",
+    "state": "Karnatka",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553bda192213e0210f5c8cd"
+  },
+  "name": "Sagar Khurana",
+  "email": "sagar15167@iiitd.ac.in",
+  "branch": "ECE",
+  "batch": 2015,
+  "img":"",
+  "work": {
+    "role": "Product Manager",
+    "organization": "Flipkart"
+  },
+  "location": {
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "country": "India"
+  }
+},
+{
+  "_id": {
+    "$oid": "65532bd33920aaa9bf5d92ca"
+  },
+  "name": "Swati Gaba",
+  "email": "swati16273@iiitd.ac.in",
+  "branch": "CSAM",
+  "batch": 2016,
+  "img":"",
+  "work": {
+    "role": "PhD Mathematics",
+    "organization": "University of Connecticut"
+  },
+  "location": {
+    "city": "Mansfield",
+    "state": "Connecticut",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553c49392213e0210f5c8d3"
+  },
+  "name": "Taruvar Aggarwal",
+  "email": "taruvar13166@iiitd.ac.in",
+  "branch": "ECE",
+  "batch": 2013,
+  "img":"",
+  "work": {
+    "role": "Senior Product Manager",
+    "organization": "Uber"
+  },
+  "location": {
+    "city": "San Francisco",
+    "state": "California",
+    "country": "United States"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553bf1092213e0210f5c8cf"
+  },
+  "name": "Sarthak Bajaj",
+  "email": "sarthak11098@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2011,
+  "img":"",
+  "work": {
+    "role": "Assistant Vice President",
+    "organization": "Barclays"
+  },
+  "location": {
+    "city": "London",
+    "state": "England",
+    "country": "United Kingdom"
+  }
+},
+{
+  "_id": {
+    "$oid": "6553bfa592213e0210f5c8d0"
+  },
+  "name": "Gargi Gupta",
+  "email": "gargi15029@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2015,
+  "img":"",
+  "work": {
+    "role": "Associate Consultant",
+    "organization": "EY-Parthenon"
+  },
+  "location": {
+    "city": "London",
+    "state": "England",
+    "country": "United Kingdom"
+  }
+},
+{
+  "_id": {
+    "$oid": "656739052651c983b44e95cd"
+  },
+  "name": "Harshit Jain",
+  "email": "harshit20063@iiitd.ac.in",
+  "branch": "CSE",
+  "batch": 2020,
+  "img":"",
+  "work": {
+    "role": "SDE",
+    "organization": "Google"
+  },
+  "location": {
+    "city": "Bengaluru",
+    "state": "Karnatka",
+    "country": "India"
+  }
+}]
