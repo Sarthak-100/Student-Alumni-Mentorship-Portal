@@ -44,7 +44,9 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
+import { useClearNotificationContext } from "../context/ClearNotificationContext";
 import Calendar from "./Calendar.js";
+import { set } from "lodash";
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -109,8 +111,6 @@ const Layout = () => {
     setOpen(!open);
   };
 
-
-
   // Context and authentication hooks
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
@@ -119,6 +119,9 @@ const Layout = () => {
 
   const { notificationsNo, setNotificationsNoValue, increment } =
     useNotificationsNoContext();
+
+  const { clearNotification, setClearNotificationValue } =
+    useClearNotificationContext();
 
   // Function to fetch the user profile
   useEffect(() => {
@@ -180,7 +183,7 @@ const Layout = () => {
       }
     };
     getNotificationsNo();
-  });
+  }, []);
 
   const handleCalendarClick = () => {
     console.log("calendar clicked");
@@ -319,6 +322,37 @@ const Layout = () => {
       socket.off("receiveNewConversation&MessageNotification");
       socket.off("updateBlockedStatusNotification");
     };
+  });
+
+  useEffect(() => {
+    const clearNotifications = async () => {
+      console.log("clear not useEffect 1");
+      console.log("clearNotification", clearNotification);
+      console.log("window.location.pathname", window.location.pathname);
+      if (clearNotification && window.location.pathname !== "/notifications") {
+        console.log("clear not useEffect 2");
+        try {
+          await axios
+            .delete(
+              `http://localhost:4000/api/v1/notifications/clearNotifications?userId=${userContext.user._id}`,
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+        } catch (error) {
+          console.error(error);
+        }
+        setNotificationsNoValue(0);
+        setClearNotificationValue(0);
+      }
+    };
+    clearNotifications();
   });
 
   return (

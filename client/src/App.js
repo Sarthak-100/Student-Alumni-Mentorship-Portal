@@ -19,6 +19,7 @@ import Chatting from "./components/Chatting";
 import Layout from "./components/Layout";
 import Hello from "./components/Hello";
 import Calendar from "./components/Calendar";
+import { ClearNotificationProvider } from "./context/ClearNotificationContext";
 import "./style.css";
 
 const App = () => {
@@ -52,20 +53,28 @@ const App = () => {
               <ConversationProvider>
                 <ChattedUsersProvider>
                   <SocketProvider>
-                    <Routes>
-                      <Route path="/" element={<Layout />}>
-                        <Route index element={<Hello />} />
-                        <Route path="profile" element={<ProfilePage />} />
-                        <Route path="filterAlumni" element={<FilterAlumni />} />
-                        <Route path="calendar" element={<Calendar />} />
-                        <Route path="notifications" element={<Notifications />} />
-                      </Route>
-                      <Route path="/chat" element={<Chat />}>
-                        {/* <Route path="/chat2" element={<Chat2 />}> */}
-                        <Route path="welcome" element={<ChatWelcome />} />
-                        <Route path="chatting" element={<Chatting />} />
-                      </Route>
-                    </Routes>
+                    <ClearNotificationProvider>
+                      <Routes>
+                        <Route path="/" element={<Layout />}>
+                          <Route index element={<Hello />} />
+                          <Route path="profile" element={<ProfilePage />} />
+                          <Route
+                            path="filterAlumni"
+                            element={<FilterAlumni />}
+                          />
+                          <Route path="calendar" element={<Calendar />} />
+                          <Route
+                            path="notifications"
+                            element={<Notifications />}
+                          />
+                        </Route>
+                        <Route path="/chat" element={<Chat />}>
+                          {/* <Route path="/chat2" element={<Chat2 />}> */}
+                          <Route path="welcome" element={<ChatWelcome />} />
+                          <Route path="chatting" element={<Chatting />} />
+                        </Route>
+                      </Routes>
+                    </ClearNotificationProvider>
                   </SocketProvider>
                 </ChattedUsersProvider>
               </ConversationProvider>
@@ -78,5 +87,3 @@ const App = () => {
 };
 
 export default App;
-
-
