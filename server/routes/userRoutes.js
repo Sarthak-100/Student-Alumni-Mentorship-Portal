@@ -29,7 +29,7 @@ userRouter.get("/myProfile", getMyProfile);
 
 userRouter.get("/getUserProfile", getUserProfile);
 
-userRouter.post("/updateAlumniProfile", updateAlumniProfile);
+userRouter.put("/updateAlumniProfile", updateAlumniProfile);
 
 userRouter.post("/updateAvatar", updateProfile);
 
