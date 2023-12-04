@@ -35,7 +35,8 @@ const Calendar = () => {
     const { error } = supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        scopes: 'https://www.googleapis.com/auth/calendar'
+        scopes: ['https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/meetings.space.created',]
       }
     });
     if (error) {
@@ -79,7 +80,7 @@ const Calendar = () => {
         // Assuming you have retrieved events from the database
         events.forEach(async (event) => {
           const googleEventId = event.googleEventId; // Assuming you have a unique Google Event ID
-  
+          console.log("meet link", event.meetLink);
           const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
           const updatedEvent = {
             summary: event.summary,
@@ -95,7 +96,7 @@ const Calendar = () => {
             attendees: event.attendees
             // Other event details to update
           };
-          console.log("abb h", updatedEvent);
+          console.log("updated event", updatedEvent);
           try {
             const patchResponse = await fetch(googleCalendarUrl, {
               method: 'PATCH',
@@ -120,14 +121,11 @@ const Calendar = () => {
         });
   
         console.log("All events synced with Google Calendar");
-        // Optionally, notify the user that events are synced
       } else {
         console.error('Failed to fetch events from the database:', response.status);
-        // Handle error
       }
     }).catch((error) => {
       console.error('Failed to fetch events from the database:', error);
-      // Handle error
     });
 }
   
@@ -136,13 +134,6 @@ const Calendar = () => {
     const event = {
         calendarId: 'primary',
         conferenceDataVersion: 1,
-        requestBody: {
-          conferenceData: {
-            createRequest: {
-              requestId: uuid(),
-            },
-          }
-        },
         summary: eventName,
         description: eventDescription,
         start: {
@@ -154,7 +145,27 @@ const Calendar = () => {
           timeZone: 'Asia/Kolkata',
         },
         attendees: [],
+        resources: {
+          conferenceData: {
+            createRequest: {
+              requestId: uuid(),
+            },
+          }
+        }
     }
+    // const videoConferenceResource = {
+    //   conferenceSolutionKey: {
+    //     type: 'hangoutsMeet',
+    //   },
+    //   conferenceDataVersion: 1,
+    // };
+    // // Add the video conferencing resource to the event
+    // event.conferenceData = {
+    //   createRequest: {
+    //     requestId: uuid(),
+    //     conferenceSolutionKey: videoConferenceResource.conferenceSolutionKey,
+    //   },
+    // };
     //schedule an event using the above details
 
     try {
@@ -189,7 +200,7 @@ const Calendar = () => {
           console.log(response.data);
           if (response.status == 201) {
             alert("Event created and saved, check your Google Calendar!");
-            navigate("/");
+            // navigate("/");
           } else {
             // Handle errors while saving to MongoDB
             console.error('Failed to save event in the database:', response.status);
