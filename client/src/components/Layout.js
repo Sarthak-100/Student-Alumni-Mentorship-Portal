@@ -182,6 +182,30 @@ const Layout = () => {
     getNotificationsNo();
   });
 
+  useEffect(() => {
+    //store the signed in user avatar in the database
+    try {
+      axios
+        .post(
+          `http://localhost:4000/api/v1/users/updateAvatar?userId=${userContext.user?._id}`,
+          {
+            avatar: user?.picture,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          console.log("Avatar updated successfully!", response.data);
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+        });
+    } catch (error) {
+      console.error("Error details:", error);
+    }
+  }, [user?.picture]);
+
   const handleCalendarClick = () => {
     console.log("calendar clicked");
     navigate("/calendar");

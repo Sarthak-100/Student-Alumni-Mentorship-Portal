@@ -94,6 +94,7 @@ app.get("/google/redirect", (req, res) => {
   res.redirect("/schedule_event");
 });
 
+app.use("api/v1/users/updateAvatar", userRouter);
 app.use("/api/v1/saveEvent", eventRouter);
 app.use("/api/v1/fetchSlots", eventRouter);
 app.use("/api/v1/updateEvent", eventRouter);

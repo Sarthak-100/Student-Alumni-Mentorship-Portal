@@ -110,3 +110,58 @@ export const updateAlumniProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateProfile = async (req, res, next) => {
+  //store the sent image in the database
+  try {
+    const id = new mongoose.Types.ObjectId(req.query.userId);
+    const image = req.body.image;
+
+    let user;
+    let user_type;
+    let model;
+
+    let out = await Student.find({ _id: id });
+
+    if (out.length !== 0) {
+      user = out[0];
+      user_type = "student";
+      model = Student;
+    } else {
+      out = await Alumni.find({ _id: id });
+      if (out.length !== 0) {
+        user = out[0];
+        user_type = "alumni";
+        model = Alumni;
+      } else {
+        out = await Admin.find({ _id: id });
+        if (out.length !== 0) {
+          user = out[0];
+          user_type = "admin";
+          model = Admin;
+        } else {
+          return res.status(404).json({
+            success: false,
+            message: "Could not find the user",
+          });
+        }
+      }
+    }
+
+    user.user_type = user_type;
+    console.log("model", model, id, image);
+    model.updateOne({ _id: id }, { $set: { image: image } }, (err, result) => {
+      if (err) {
+        console.error("Error updating document:", err);
+      } else {
+        console.log("Document updated successfully:", result);
+        res.status(200).json({
+          success: true,
+          message: "Profile updated successfully",
+        });
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
