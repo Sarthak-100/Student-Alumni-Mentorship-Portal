@@ -6,6 +6,10 @@ import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Cal from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Calendar = () => {
 
@@ -17,19 +21,46 @@ const Calendar = () => {
   const [ eventDescription, setEventDescription ] = useState("");
   const [ setApiResponse ] = useState({});
   const { user } = useUserContext();
-
-  useEffect(() => {
-    syncCalendar(); // Call the syncCalendar function on component mount
-  }, []);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const session = useSession(); // tokens, when session exists we have a user
   const supabase = useSupabaseClient(); // talk to supabase!
   const { isLoading } = useSessionContext();
   // console.log("supabase", supabase);
 
+  // useEffect(() => {
+  //   const { error } = supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //     options: {
+  //       scopes: ['https://www.googleapis.com/auth/calendar',
+  //       'https://www.googleapis.com/auth/meetings.space.created',]
+  //     }
+  //   });
+  //   if (error) {
+  //     alert("Error logging in to Google provider with Supabase");
+  //     console.log(error);
+  //   }else {
+  //     console.log("Supabase login successful");
+  //     // window.open('https://calendar.google.com/calendar/u/0/r', "_blank");
+  //   }
+  // }, [session?.provider_token]);
+
+  useEffect(() => {
+    syncCalendar(); // Call the syncCalendar function on component mount
+  }, []);
+
+
   if(isLoading) {
     return <></>
   }
+
+  const handleStartDateChange = (date) => {
+    setStart(date);
+  };
+
+  const handleEndDateChange = (date) => {
+    setEnd(date);
+  };
 
   function signIn() {
     const { error } = supabase.auth.signInWithOAuth({
@@ -68,70 +99,73 @@ const Calendar = () => {
 
   //write a function to sync calendar
   async function syncCalendar() {
-    console.log("syncing calendar");
-    const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
-    const userId = user._id;
-    const apiUrl = `${baseUrl}?userId=${userId}`;
-    console.log(apiUrl);
-    axios.get(apiUrl).then((response) => {
-      if (response.status === 200) {
-        const events = response.data.events;
-        //check length of events
-        if (events.length === 0) {
-          console.log("No events to sync");
-          return;
-        }
-        // console.log("events", events);
-        // Assuming you have retrieved events from the database
-        events.forEach(async (event) => {
-          const googleEventId = event.googleEventId; // Assuming you have a unique Google Event ID
-          // console.log("meet link", event.meetLink);
-          const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
-          const updatedEvent = {
-            summary: event.summary,
-            description: event.description,
-            start: {
-              dateTime: event.startDateTime,
-              timeZone: 'Asia/Kolkata', // Modify timezone as needed
-            },
-            end: {
-              dateTime: event.endDateTime,
-              timeZone: 'Asia/Kolkata', // Modify timezone as needed
-            },
-            attendees: event.attendees
-            // Other event details to update
-          };
-          console.log("updated event", updatedEvent);
-          try {
-            const patchResponse = await fetch(googleCalendarUrl, {
-              method: 'PATCH',
-              headers: {
-                'Authorization': 'Bearer ' + session.provider_token,
-                'Content-Type': 'application/json',
+    
+    if (session !== null) {
+      console.log("syncing calendar");
+      const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
+      const userId = user._id;
+      const apiUrl = `${baseUrl}?userId=${userId}`;
+      console.log(apiUrl);
+      axios.get(apiUrl).then((response) => {
+        if (response.status === 200) {
+          const events = response.data.events;
+          //check length of events
+          if (events.length === 0) {
+            console.log("No events to sync");
+            return;
+          }
+          // console.log("events", events);
+          // Assuming you have retrieved events from the database
+          events.forEach(async (event) => {
+            const googleEventId = event.googleEventId; // Assuming you have a unique Google Event ID
+            // console.log("meet link", event.meetLink);
+            const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
+            const updatedEvent = {
+              summary: event.summary,
+              description: event.description,
+              start: {
+                dateTime: event.startDateTime,
+                timeZone: 'Asia/Kolkata', // Modify timezone as needed
               },
-              body: JSON.stringify(updatedEvent),
-            });
-  
-            if (patchResponse.ok) {
-              console.log(`Event ${googleEventId} updated in Google Calendar`);
-              // Optionally handle success
-            } else {
-              console.error('Failed to update event in Google Calendar:', patchResponse.status);
+              end: {
+                dateTime: event.endDateTime,
+                timeZone: 'Asia/Kolkata', // Modify timezone as needed
+              },
+              attendees: event.attendees
+              // Other event details to update
+            };
+            console.log("updated event", updatedEvent);
+            try {
+              const patchResponse = await fetch(googleCalendarUrl, {
+                method: 'PATCH',
+                headers: {
+                  'Authorization': 'Bearer ' + session.provider_token,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedEvent),
+              });
+    
+              if (patchResponse.ok) {
+                console.log(`Event ${googleEventId} updated in Google Calendar`);
+                // Optionally handle success
+              } else {
+                console.error('Failed to update event in Google Calendar:', patchResponse.status);
+                // Handle error
+              }
+            } catch (error) {
+              console.error('Error updating event in Google Calendar:', error);
               // Handle error
             }
-          } catch (error) {
-            console.error('Error updating event in Google Calendar:', error);
-            // Handle error
-          }
-        });
-  
-        console.log("All events synced with Google Calendar");
-      } else {
-        console.error('Failed to fetch events from the database:', response.status);
-      }
-    }).catch((error) => {
-      console.error('Failed to fetch events from the database:', error);
-    });
+          });
+    
+          console.log("All events synced with Google Calendar");
+        } else {
+          console.error('Failed to fetch events from the database:', response.status);
+        }
+      }).catch((error) => {
+        console.error('Failed to fetch events from the database:', error);
+      });
+    }
 }
 
 // async function createGoogleMeetEvent() {
@@ -359,31 +393,49 @@ async function createCalendarEvent() {
   console.log(eventDescription);
 
   return (
+  //   <div className="App">
+  //     <div style={{ width: '600px', margin: '30px auto' }}>
+  //       <h2>Create Event</h2>
+  //       <p>Start of your event</p>
+  //       <input type="text" value={startDate.toString()} onClick={() => setShowCalendar(true)} readOnly />
+  //       {showCalendar && (
+  //         <Cal
+  //           onChange={handleStartDateChange}
+  //           value={startDate}
+  //           minDate={new Date()} // Set the minimum selectable date to today
+  //           onClickDay={() => setShowCalendar(false)}
+  //         />
+  //       )}
+  //       <p>End of your event</p>
+  //       <input type="text" value={endDate.toString()} onClick={() => setShowCalendar(true)} readOnly />
+  //       {showCalendar && (
+  //         <Cal
+  //           onChange={handleEndDateChange}
+  //           value={endDate}
+  //           minDate={startDate} // Set the minimum selectable date to the start date
+  //           onClickDay={() => setShowCalendar(false)}
+  //         />
+  //       )}
+  //       <p>Event name</p>
+  //       <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} />
+  //       <p>Event description</p>
+  //       <input type="text" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
+  //       <hr />
+  //       <button onClick={createCalendarEvent}>Create Calendar Event</button>
+  //     </div>
+  //   </div>
+  // );
     <div className="App">
       <div style={{width: "600px", margin: "30px auto"}}>
         {session ?
           <>
-            <h2>Hey there {session.user.email}</h2>
+            <h2>Hey there {user?.name}, mark your calendar here</h2>
             <p>Start of your event</p>
-            <input type="text" onChange={(e) => setStart(new Date(e.target.value))} />
-            {/* <input type="date" onChange={(e) => {
-                    const selectedDate = e.target.value;
-                    // Do something with the selectedDate (it will be in the format YYYY-MM-DD)
-                    // For instance, you can convert it to a Date object:
-                    const dateObject = new Date(selectedDate);
-                    console.log(dateObject); // This will show the selected date in the console
-            }} /> */}
-            {/* <DateTimePicker onChange={setStart} value={startDate} /> */}
+            <DatePicker selected={startDate} onChange={(date) => setStart(date)} showTimeSelect dateFormat="Pp" />
             <p>End of your event</p>
-            {/* <input type="date" onChange={(e) => {
-                    const selectedDate = e.target.value;
-                    // Do something with the selectedDate (it will be in the format YYYY-MM-DD)
-                    // For instance, you can convert it to a Date object:
-                    const dateObject = new Date(selectedDate);
-                    console.log(dateObject); // This will show the selected date in the console
-            }} /> */}
-            {/* <DateTimePicker onChange={setEnd} value={endDate} /> */}
-            <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} />
+            {/* <input type="text" onChange={(e) => setStart(new Date(e.target.value))} /> */}
+            <DatePicker selected={endDate} onChange={(date) => setEnd(date)} showTimeSelect dateFormat="Pp" />
+            {/* <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} /> */}
             <p>Event name</p>
             <input type="text" onChange={(e) => setEventName(e.target.value)} />
             <p>Event description</p>
@@ -399,6 +451,36 @@ async function createCalendarEvent() {
       </div>
     </div>
   );
+  // <div className="App">
+  //     <div style={{width: "600px", margin: "30px auto"}}>
+  //       {session ?
+  //         <>
+  //           <h2>Hey there {user?.name}, mark your calendar here</h2>
+  //           <form onSubmit={createCalendarEvent}>
+  //             <label htmlFor="startDate">Start of your event</label>
+  //             <input type="datetime-local" id="startDate" value={startDate.toISOString().slice(0, -8)} onChange={(e) => setStart(new Date(e.target.value))} />
+
+  //             <label htmlFor="endDate">End of your event</label>
+  //             <input type="datetime-local" id="endDate" value={endDate.toISOString().slice(0, -8)} onChange={(e) => setEnd(new Date(e.target.value))} />
+
+  //             <label htmlFor="eventName">Event name</label>
+  //             <input type="text" id="eventName" value={eventName} onChange={(e) => setEventName(e.target.value)} />
+
+  //             <label htmlFor="eventDescription">Event description</label>
+  //             <textarea id="eventDescription" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
+
+  //             <hr />
+  //             <button type="submit">Create Calendar Event</button>
+  //           </form>
+  //         </>
+  //         :
+  //         <>
+  //           <button onClick={() => signIn()}>Sign In</button>
+  //         </>
+  //       }
+  //     </div>
+  //   </div>
+  // );
 }
 
 export default Calendar;
