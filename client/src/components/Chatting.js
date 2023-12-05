@@ -242,6 +242,7 @@ const Chatting = () => {
 
   const blockBtController = async (e) => {
     const status = !blocked;
+    console.log("#$#$#$#$#$#Status", status);
     try {
       await axios
         .put(
@@ -269,6 +270,7 @@ const Chatting = () => {
         senderId: user._id,
         senderName: user.name,
         receiverIdArg: receiverIdTemp,
+        blockedStatus: status,
       });
       conversation.blocked = status;
     } catch (error) {
@@ -298,7 +300,14 @@ const Chatting = () => {
             sx={{ mr: 0 }}
           >
             {/* <MenuIcon /> */}
-            <Avatar alt="Remy Sharp" src={chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.img} sx={{ width: 24, height: 26 }} />
+            <Avatar
+              alt="Remy Sharp"
+              src={
+                chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+                  ?.img
+              }
+              sx={{ width: 24, height: 26 }}
+            />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
             {
