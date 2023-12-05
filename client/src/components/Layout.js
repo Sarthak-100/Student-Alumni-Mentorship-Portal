@@ -185,6 +185,34 @@ const Layout = () => {
     getNotificationsNo();
   }, []);
 
+  useEffect(() => {
+    if (userContext.user?._id !== undefined) {
+
+      //store the signed in user avatar in the database
+      console.log("INSIDE USE EFFECT", userContext.user?._id, user?.picture, typeof user?.picture);
+      try {
+        axios
+          .post(
+            `http://localhost:4000/api/v1/users/updateAvatar?userId=${userContext.user?._id}`,
+            {
+              avatar: user?.picture,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log("Avatar updated successfully!", response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error("Error details:", error);
+      }
+    }
+  }, [user?.picture, userContext]);
+
   const handleCalendarClick = () => {
     console.log("calendar clicked");
     navigate("/calendar");

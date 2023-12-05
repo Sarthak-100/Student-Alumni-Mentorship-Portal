@@ -35,7 +35,8 @@ const Calendar = () => {
     const { error } = supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        scopes: 'https://www.googleapis.com/auth/calendar'
+        scopes: ['https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/meetings.space.created',]
       }
     });
     if (error) {
@@ -75,11 +76,16 @@ const Calendar = () => {
     axios.get(apiUrl).then((response) => {
       if (response.status === 200) {
         const events = response.data.events;
+        //check length of events
+        if (events.length === 0) {
+          console.log("No events to sync");
+          return;
+        }
         // console.log("events", events);
         // Assuming you have retrieved events from the database
         events.forEach(async (event) => {
           const googleEventId = event.googleEventId; // Assuming you have a unique Google Event ID
-  
+          // console.log("meet link", event.meetLink);
           const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
           const updatedEvent = {
             summary: event.summary,
@@ -95,7 +101,7 @@ const Calendar = () => {
             attendees: event.attendees
             // Other event details to update
           };
-          console.log("abb h", updatedEvent);
+          console.log("updated event", updatedEvent);
           try {
             const patchResponse = await fetch(googleCalendarUrl, {
               method: 'PATCH',
@@ -120,96 +126,231 @@ const Calendar = () => {
         });
   
         console.log("All events synced with Google Calendar");
-        // Optionally, notify the user that events are synced
       } else {
         console.error('Failed to fetch events from the database:', response.status);
-        // Handle error
       }
     }).catch((error) => {
       console.error('Failed to fetch events from the database:', error);
-      // Handle error
     });
 }
-  
-  async function createCalendarEvent() {
-    console.log("Creating calendar event");
-    const event = {
-        calendarId: 'primary',
-        conferenceDataVersion: 1,
-        requestBody: {
-          conferenceData: {
-            createRequest: {
-              requestId: uuid(),
-            },
-          }
+
+// async function createGoogleMeetEvent() {
+//   try {
+//     const meetEvent = {
+//       conferenceData: {
+//         createRequest: {
+//           requestId: uuid(),
+//           conferenceSolutionKey: {
+//             type: 'hangoutsMeet',
+//           },
+//         },
+//       },
+//     };
+
+//     const response = await fetch("https://www.googleapis.com/calendar/v3/users/me/events", {
+//       method: "POST",
+//       headers: {
+//         'Authorization': 'Bearer ' + session.provider_token,
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(meetEvent),
+//     });
+
+//     if (response.ok) {
+//       const meetEventData = await response.json();
+//       const meetLink = meetEventData.hangoutLink;
+//       return meetLink;
+//     } else {
+//       console.error('Failed to create Google Meet event:', response.status);
+//       return null;
+//     }
+//   } catch (error) {
+//     console.error('Error creating Google Meet event:', error);
+//     return null;
+//   }
+// }
+
+//   async function createCalendarEvent() {
+//     console.log("Creating calendar event");
+
+//     const meetLink = await createGoogleMeetEvent();
+//     if (meetLink) {
+//       console.log("Meeting link", meetLink);
+//       // Now, you have the Meet link. Update your calendar event.
+//       const event = {
+//         calendarId: 'primary',
+//         conferenceDataVersion: 1,
+//         summary: eventName,
+//         description: eventDescription,
+//         start: {
+//           dateTime: startDate.toISOString(),
+//           timeZone: 'Asia/Kolkata',
+//         },
+//         end: {
+//           dateTime: endDate.toISOString(),
+//           timeZone: 'Asia/Kolkata',
+//         },
+//         attendees: [],
+//         reminders: {
+//           useDefault: false,
+//           overrides: [
+//             { method: 'email', minutes: 24 * 60 },
+//             { method: 'popup', minutes: 10 },
+//           ],
+//         },};
+//       event.conferenceDataVersion = 1;
+//       event.conferenceData = {
+//         createRequest: {
+//           requestId: uuid(),
+//           conferenceSolutionKey: {
+//             type: 'hangoutsMeet',
+//           },
+//         },
+//         entryPoints: [
+//           {
+//             entryPointType: 'video',
+//             uri: meetLink,
+//           },
+//         ],
+//       };
+    
+//       //schedule an event using the above details
+
+//       try {
+//         const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
+//           method: "POST",
+//           headers: {
+//             'Authorization': 'Bearer ' + session.provider_token, // Access token for Google
+//             'Content-Type': 'application/json'
+//           },
+//           body: JSON.stringify(event),
+//         });
+        
+//         if (response.ok) {
+//           const eventData = await response.json();
+//           const googleEventId = eventData.id;
+//           console.log('Event created and saved in MongoDB:', eventData, session.user.email, googleEventId);
+//           const apiUrl = "http://localhost:4000/api/v1/saveEvent/details";
+//           axios
+//           .post(apiUrl, {
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//             googleEventId: googleEventId,
+//             userId: session.user.email,
+//             summary: eventName,
+//             description: eventDescription,
+//             startDateTime: startDate.toISOString(),
+//             endDateTime: endDate.toISOString(),
+//           })
+//           .then((response) => {
+//             // setApiResponse(response.data);
+//             console.log(response.data);
+//             if (response.status == 201) {
+//               alert("Event created and saved, check your Google Calendar!");
+//               // navigate("/");
+//             } else {
+//               // Handle errors while saving to MongoDB
+//               console.error('Failed to save event in the database:', response.status);
+//               const errorData = response.json();
+//               console.error('Error details:', errorData);
+//             }
+//           })
+//           .catch((error) => {
+//             // Handle errors while saving to MongoDB
+//             console.error('Failed to save event in the database:', response.status);
+//             // const errorData = res.json();
+//             console.error('Error details:', error);
+//           });
+//         }
+//       } catch (error) {
+//         // console.error('Failed to add event in calendar', response.status);
+//         // const errorDat/ = await response.json();
+//         console.error('Error details:', error);
+//       }
+//     }else {
+//       console.error('Failed to create Google Meet event');
+//     }
+//  }
+
+async function createCalendarEvent() {
+  console.log("Creating calendar event");
+
+  const event = {
+    calendarId: 'primary',
+    summary: eventName,
+    description: eventDescription,
+    start: {
+      dateTime: startDate.toISOString(),
+      timeZone: 'Asia/Kolkata',
+    },
+    end: {
+      dateTime: endDate.toISOString(),
+      timeZone: 'Asia/Kolkata',
+    },
+    attendees: [],
+    reminders: {
+      useDefault: false,
+      overrides: [
+        { method: 'email', minutes: 24 * 60 },
+        { method: 'popup', minutes: 10 },
+      ],
+    },
+  };
+
+  try {
+    const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
+      method: "POST",
+      headers: {
+        'Authorization': 'Bearer ' + session.provider_token, // Access token for Google
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event),
+    });
+    
+    if (response.ok) {
+      const eventData = await response.json();
+      const googleEventId = eventData.id;
+      console.log('Event created and saved in MongoDB:', eventData, session.user.email, googleEventId, eventData.attendees, eventData.hangoutLink);
+      const apiUrl = "http://localhost:4000/api/v1/saveEvent/details";
+      axios
+      .post(apiUrl, {
+        headers: {
+          'Content-Type': 'application/json',
         },
+        googleEventId: googleEventId,
+        userId: session.user.email,
         summary: eventName,
         description: eventDescription,
-        start: {
-          dateTime: startDate.toISOString(),
-          timeZone: 'Asia/Kolkata',
-        },
-        end: {
-          dateTime: endDate.toISOString(),
-          timeZone: 'Asia/Kolkata',
-        },
-        attendees: [],
-    }
-    //schedule an event using the above details
-
-    try {
-      const response = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-        method: "POST",
-        headers: {
-          'Authorization': 'Bearer ' + session.provider_token, // Access token for Google
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(event)
-      });
-      
-      if (response.ok) {
-        const eventData = await response.json();
-        const googleEventId = eventData.id;
-        console.log('Event created and saved in MongoDB:', eventData, session.user.email, googleEventId);
-        const apiUrl = "http://localhost:4000/api/v1/saveEvent/details";
-        axios
-        .post(apiUrl, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          googleEventId: googleEventId,
-          userId: session.user.email,
-          summary: eventName,
-          description: eventDescription,
-          startDateTime: startDate.toISOString(),
-          endDateTime: endDate.toISOString(),
-        })
-        .then((response) => {
-          // setApiResponse(response.data);
-          console.log(response.data);
-          if (response.status == 201) {
-            alert("Event created and saved, check your Google Calendar!");
-            navigate("/");
-          } else {
-            // Handle errors while saving to MongoDB
-            console.error('Failed to save event in the database:', response.status);
-            const errorData = response.json();
-            console.error('Error details:', errorData);
-          }
-        })
-        .catch((error) => {
+        startDateTime: startDate.toISOString(),
+        endDateTime: endDate.toISOString(),
+      })
+      .then((response) => {
+        // setApiResponse(response.data);
+        console.log(response.data);
+        if (response.status == 201) {
+          alert("Event created and saved, check your Google Calendar!");
+          // navigate("/");
+        } else {
           // Handle errors while saving to MongoDB
           console.error('Failed to save event in the database:', response.status);
-          // const errorData = res.json();
-          console.error('Error details:', error);
-        });
-      }
-    } catch (error) {
-      // console.error('Failed to add event in calendar', response.status);
-      // const errorDat/ = await response.json();
-      console.error('Error details:', error);
+          const errorData = response.json();
+          console.error('Error details:', errorData);
+        }
+      })
+      .catch((error) => {
+        // Handle errors while saving to MongoDB
+        console.error('Failed to save event in the database:', response.status);
+        // const errorData = res.json();
+        console.error('Error details:', error);
+      });
     }
- }
+  } catch (error) {
+    // console.error('Failed to add event in calendar', response.status);
+    // const errorDat/ = await response.json();
+    console.error('Error details:', error);
+  }
+}
 
   console.log(session);
   console.log(startDate);

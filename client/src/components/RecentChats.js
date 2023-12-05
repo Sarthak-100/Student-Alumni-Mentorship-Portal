@@ -33,10 +33,10 @@ const RecentChats = () => {
       const fetchChats = async () => {
         try {
           // Fetch conversation details
-          const conversationsResponse = await axios.get('http://localhost:4000/api/v1/conversations/getConversations?user_id=6557abab3edbce75ade9d46f');
+          const conversationsResponse = await axios.get('http://localhost:4000/api/v1/conversations/getConversations?user_id=6553bf1092213e0210f5c8cf');
           const conversations = conversationsResponse.data;
   
-          const userIds = conversations.map(conv => conv.members.find(memberId => memberId !== '6557abab3edbce75ade9d46f'));
+          const userIds = conversations.map(conv => conv.members.find(memberId => memberId !== '6553bf1092213e0210f5c8cf'));
   
           // Fetch user profiles based on IDs
           const usersData = await Promise.all(

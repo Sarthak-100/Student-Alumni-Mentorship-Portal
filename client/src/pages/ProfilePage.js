@@ -32,11 +32,11 @@ const ProfilePage = () => {
 
   const [editMode, setEditMode] = useState(false);
   const [editedValues, setEditedValues] = useState({
-    role: userContext.user.work.role,
-    organization: userContext.user.work.organization,
-    city: userContext.user.location.city,
-    state: userContext.user.location.state,
-    country: userContext.user.location.country,
+    role: userContext.user?.work?.role,
+    organization: userContext.user?.work?.organization,
+    city: userContext.user?.location?.city,
+    state: userContext.user?.location?.state,
+    country: userContext.user?.location?.country,
   });
 
   const toggleEditMode = () => {

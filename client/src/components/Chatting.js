@@ -298,7 +298,7 @@ const Chatting = () => {
             sx={{ mr: 0 }}
           >
             {/* <MenuIcon /> */}
-            <Avatar alt="Remy Sharp" src="" sx={{ width: 24, height: 26 }} />
+            <Avatar alt="Remy Sharp" src={chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.img} sx={{ width: 24, height: 26 }} />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
             {

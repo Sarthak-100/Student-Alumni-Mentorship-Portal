@@ -97,6 +97,8 @@ const UserCard = (props) => {
     }
     if (!updatedEvent.attendees.includes(user)) {
       updatedEvent.attendees.push(user);
+      //change event description
+      // updatedEvent.description = "Meeting fixed with ";
     }
     console.log("updatedEvent", updatedEvent);
 
