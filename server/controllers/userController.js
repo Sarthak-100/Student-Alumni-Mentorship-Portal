@@ -202,3 +202,35 @@ export const insertAvatar = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const getBatchwiseCounts = async (req, res, next) => {
+  try {
+    const alumniCounts = await Alumni.aggregate([
+      {
+        $group: {
+          _id: "$batch",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const studentCounts = await Student.aggregate([
+      {
+        $group: {
+          _id: "$batch",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      alumniCounts,
+      studentCounts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

@@ -1,6 +1,6 @@
 // import alumni from "../models/alumniModel.js";
 import { Alumni } from "../models/userModel.js";
-import mongoose from "mongoose";
+
 
 const values = async (req, res) => {
   try {

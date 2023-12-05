@@ -90,7 +90,7 @@ const UserCard = (props) => {
   const fixMeeting = async (event) => {
     console.log("fixMeeting", event);
     const updatedEvent = { ...event };
-  
+
     // Assuming 'user' is the user object with necessary details
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
@@ -112,11 +112,11 @@ const UserCard = (props) => {
     //     },
     //     body: JSON.stringify(updatedEvent)
     //   });
-  
+
     //   if (response.ok) {
     //     const eventData = await response.json();
     //     console.log('Event updated in Google Calendar:', eventData);
-  
+
     //     // Update the event details in your database if required
     //     // ...
     //   } else {
@@ -142,12 +142,15 @@ const UserCard = (props) => {
         // Update the event in the local state as well, if required
         // setEvents([...events]); // Assuming events state exists
       } else {
-        console.error("Failed to update event in the database:", response.status);
+        console.error(
+          "Failed to update event in the database:",
+          response.status
+        );
       }
     } catch (error) {
       console.error("Error updating event in the database:", error);
     }
-  }
+  };
   const cardStyle = {
     maxWidth: 300,
     margin: "20px auto",
@@ -175,10 +178,14 @@ const UserCard = (props) => {
   return (
     <Card style={cardStyle}>
       <CardHeader
-        avatar={<Avatar>{props.cardUser?.name.charAt(0)}</Avatar>}
+        avatar={
+          <Avatar>
+            {props.cardUser?.name ? props.cardUser.name.charAt(0) : ""}
+          </Avatar>
+        }
         title={
           <Typography variant="h6" style={titleStyle}>
-            {props.cardUser?.name}
+            {props.cardUser?.name || "No Name"}
           </Typography>
         }
         subheader={
@@ -192,7 +199,8 @@ const UserCard = (props) => {
           {/* Display user information */}
           <Grid item xs={12}>
             <Typography variant="body1" style={contentStyle}>
-              <strong>Current Work:</strong> {props.cardUser?.work.role}
+              <strong>Current Work:</strong>{" "}
+              {props.cardUser?.work?.role || "Role not specified"}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -207,7 +215,9 @@ const UserCard = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" style={contentStyle}>
-              <strong>Organization:</strong> {props.cardUser?.work.organization}
+              <strong>Organization:</strong>{" "}
+              {props.cardUser?.work?.organization ||
+                "Organization not specified"}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -244,6 +254,7 @@ const UserCard = (props) => {
             Events
           </Typography>
           <ul>
+
           {events.map((event, index) => (
         <li key={index}>
           {/* Displaying start date with time */}
@@ -274,6 +285,7 @@ const UserCard = (props) => {
       ))}
 
         </ul>
+
         </div>
       )}
       {/* Display the profile dialog */}

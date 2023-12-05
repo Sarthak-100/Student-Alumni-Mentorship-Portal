@@ -5,12 +5,15 @@ import Notification from "../components/Notification";
 import { format } from "timeago.js";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext";
 import { useNavigate } from "react-router-dom";
+import { useClearNotificationContext } from "../context/ClearNotificationContext";
 import Button from "@mui/material/Button";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const { user } = useUserContext();
   const { setNotificationsNoValue } = useNotificationsNoContext();
+  const { clearNotification, setClearNotificationValue } =
+    useClearNotificationContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +34,7 @@ const Notifications = () => {
             console.error("API Error:", error);
           });
         setNotificationsNoValue(0);
+        setClearNotificationValue(1);
       } catch (error) {
         console.error(error);
       }

@@ -28,6 +28,7 @@ import ProfilePage from "./../pages/ProfilePage";
 import Notifications from "./../pages/Notifications";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
+import FilterStudent from "./FilterStudent.js";
 import TodayIcon from "@mui/icons-material/Today";
 import { useUserContext } from "../context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -44,7 +45,9 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
+import { useClearNotificationContext } from "../context/ClearNotificationContext";
 import Calendar from "./Calendar.js";
+import { set } from "lodash";
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -109,8 +112,6 @@ const Layout = () => {
     setOpen(!open);
   };
 
-
-
   // Context and authentication hooks
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
@@ -119,6 +120,11 @@ const Layout = () => {
 
   const { notificationsNo, setNotificationsNoValue, increment } =
     useNotificationsNoContext();
+  const isStudentOrAlumni =
+    user && (user.user_type === "student" || user.user_type === "alumni");
+
+  const { clearNotification, setClearNotificationValue } =
+    useClearNotificationContext();
 
   // Function to fetch the user profile
   useEffect(() => {
@@ -180,13 +186,17 @@ const Layout = () => {
       }
     };
     getNotificationsNo();
-  });
+  }, []);
 
   useEffect(() => {
     if (userContext.user?._id !== undefined) {
-
       //store the signed in user avatar in the database
-      console.log("INSIDE USE EFFECT", userContext.user?._id, user?.picture, typeof user?.picture);
+      console.log(
+        "INSIDE USE EFFECT",
+        userContext.user?._id,
+        user?.picture,
+        typeof user?.picture
+      );
       try {
         axios
           .post(
@@ -226,7 +236,7 @@ const Layout = () => {
 
   useEffect(() => {
     console.log("socket#$#$#$#$#$#$#$#$#$#$#", socket, socket.id);
-    socket.emit("addUser", userContext.user?._id);
+    socket.emit("addUser", userContext.user?._id, userContext.user?.user_type);
     // socket.emit("addUser", user.email);
     socket.on("getUsers", (users) => {
       console.log(users);
@@ -323,7 +333,7 @@ const Layout = () => {
                 senderName: data.senderName,
                 messageType: "blockingUpdate",
                 message: `You have been ${
-                  data.blocked ? "blocked" : "unblocked"
+                  data.blockedStatus ? "blocked" : "unblocked"
                 }.`,
               },
               {
@@ -342,11 +352,51 @@ const Layout = () => {
         }
       }
     });
+    socket.on("reportNotificationAdmin", async (data) => {
+      console.log("reportNotificationAdmin");
+      increment();
+    });
+    socket.on("reportNotificationUser", async (data) => {
+      increment();
+    });
     return () => {
       socket.off("getMessageNotification");
       socket.off("receiveNewConversation&MessageNotification");
       socket.off("updateBlockedStatusNotification");
+      socket.off("reportNotificationAdmin");
+      socket.off("reportNotificationUser");
     };
+  });
+
+  useEffect(() => {
+    const clearNotifications = async () => {
+      console.log("clear not useEffect 1");
+      console.log("clearNotification", clearNotification);
+      console.log("window.location.pathname", window.location.pathname);
+      if (clearNotification && window.location.pathname !== "/notifications") {
+        console.log("clear not useEffect 2");
+        try {
+          await axios
+            .delete(
+              `http://localhost:4000/api/v1/notifications/clearNotifications?userId=${userContext.user._id}`,
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+        } catch (error) {
+          console.error(error);
+        }
+        setNotificationsNoValue(0);
+        setClearNotificationValue(0);
+      }
+    };
+    clearNotifications();
   });
 
   return (
@@ -422,24 +472,34 @@ const Layout = () => {
               <ListItemText primary="Filter Alumni" />
             </ListItemButton>
           </Link>
-          <ListItemButton>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Customers" />
-          </ListItemButton>
+          {isStudentOrAlumni ? (
+            <ListItemButton>
+              <ListItemIcon>
+                <LayersIcon />
+              </ListItemIcon>
+              <ListItemText primary="Integrations" />
+            </ListItemButton>
+          ) : (
+            <Link
+              to="/filterStudent"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <FilterAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="Filter Student" />
+              </ListItemButton>
+            </Link>
+          )}
+
           <ListItemButton>
             <ListItemIcon>
               <BarChartIcon />
             </ListItemIcon>
             <ListItemText primary="Reports" />
           </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <LayersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Integrations" />
-          </ListItemButton>
+
           <Divider />
         </Drawer>
         <Box
@@ -462,6 +522,7 @@ const Layout = () => {
               <Route index element={<Hello />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/filterAlumni" element={<FilterAlumni />} />
+              <Route path="/filterStudent" element={<FilterStudent />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/notifications" element={<Notifications />} />
             </Routes>

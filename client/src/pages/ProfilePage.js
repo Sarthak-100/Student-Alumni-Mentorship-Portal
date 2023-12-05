@@ -148,8 +148,20 @@ const ProfilePage = () => {
                 onChange={(e) => handleInputChange("country", e.target.value)}
               />
             </div>
-          ) : null
-          }
+          ) : (
+            <div>
+              <Typography variant="h5" component="div">
+                Work
+              </Typography>
+              <Typography>Role : {editedValues.role}</Typography>
+              <Typography>
+                Organization : {editedValues.organization}
+              </Typography>
+              <Typography>City : {editedValues.city}</Typography>
+              <Typography>State : {editedValues.state}</Typography>
+              <Typography>Country : {editedValues.country}</Typography>
+            </div>
+          )}
         </div>
         <Button
           variant="contained"
