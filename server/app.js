@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import userRouter from "./routes/userRoutes.js";
+import filterStudentRouter from "./routes/filterStudentRoutes.js";
 import conversationRouter from "./routes/conversationRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import eventRouter from "./routes/eventRouter.js";
@@ -47,6 +48,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
 app.use("/api/v1/notifications", notificationRouter);
+app.use("/api/v1/filter-student", filterStudentRouter);
 
 //API for filtering alumni profiles as per added filters
 app.use("/api/v1/student/filter-alumni", filterRouter);

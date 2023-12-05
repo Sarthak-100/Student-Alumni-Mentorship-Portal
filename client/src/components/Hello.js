@@ -1,9 +1,11 @@
 import React from 'react';
 import Carousel from './Carousel';
-import { useAuth0 } from "@auth0/auth0-react";
+// import { useAuth0 } from "@auth0/auth0-react";
+import { useUserContext } from '../context/UserContext';
 import { Typography, Box, Grid } from '@mui/material';
 import { styled } from "@mui/system";
 import RecentMeetings from './RecentMeetings';
+import ChartComponent from './Chart';
 import RecentChats from './RecentChats'; // Imported the RecentChats component
 
 const MeetingsAndChatsContainer = styled(Box)(({ theme }) => ({
@@ -20,7 +22,9 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const Hello = () => {
-  const { user } = useAuth0();
+  const { user } = useUserContext();
+  console.log(user)
+  const isStudentOrAlumni = user && (user.user_type === 'student' || user.user_type === 'alumni');
 
   return (
     <Grid container spacing={4}>
@@ -28,12 +32,18 @@ const Hello = () => {
         <Carousel />
       </Grid>
       <Grid item xs={12} md={5}>
-        <StyledTitle variant="h6" component="div">Recent Conversations</StyledTitle>
+        <StyledTitle variant="h6" component="div">
+        {isStudentOrAlumni ? 'Recent Conversations' : 'Charts'}
+        </StyledTitle>
         <MeetingsAndChatsContainer mt={4}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {/* Render the RecentChats component */}
-              <RecentChats />
+              {isStudentOrAlumni ? (
+                <RecentChats />
+              ) : (
+                <ChartComponent />
+              )}
             </Grid>
           </Grid>
         </MeetingsAndChatsContainer>

@@ -7,6 +7,7 @@ import {
   getMyProfile,
   getUserProfile,
   updateAlumniProfile,
+  getBatchwiseCounts,
   // getMyToken,
 } from "../controllers/userController.js";
 
@@ -29,6 +30,8 @@ userRouter.get("/myProfile", getMyProfile);
 userRouter.get("/getUserProfile", getUserProfile);
 
 userRouter.post("/updateAlumniProfile", updateAlumniProfile);
+
+userRouter.get("/getBatchwiseCounts", getBatchwiseCounts);
 
 // userRouter.get("/myToken", getMyToken);
 

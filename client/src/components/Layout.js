@@ -28,6 +28,7 @@ import ProfilePage from "./../pages/ProfilePage";
 import Notifications from "./../pages/Notifications";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
+import FilterStudent from "./FilterStudent.js";
 import TodayIcon from "@mui/icons-material/Today";
 import { useUserContext } from "../context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -109,8 +110,6 @@ const Layout = () => {
     setOpen(!open);
   };
 
-
-
   // Context and authentication hooks
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
@@ -119,6 +118,8 @@ const Layout = () => {
 
   const { notificationsNo, setNotificationsNoValue, increment } =
     useNotificationsNoContext();
+  const isStudentOrAlumni =
+    user && (user.user_type === "student" || user.user_type === "alumni");
 
   // Function to fetch the user profile
   useEffect(() => {
@@ -394,24 +395,34 @@ const Layout = () => {
               <ListItemText primary="Filter Alumni" />
             </ListItemButton>
           </Link>
-          <ListItemButton>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Customers" />
-          </ListItemButton>
+          {isStudentOrAlumni ? (
+            <ListItemButton>
+              <ListItemIcon>
+                <LayersIcon />
+              </ListItemIcon>
+              <ListItemText primary="Integrations" />
+            </ListItemButton>
+          ) : (
+            <Link
+              to="/filterStudent"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <FilterAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="Filter Student" />
+              </ListItemButton>
+            </Link>
+          )}
+
           <ListItemButton>
             <ListItemIcon>
               <BarChartIcon />
             </ListItemIcon>
             <ListItemText primary="Reports" />
           </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <LayersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Integrations" />
-          </ListItemButton>
+
           <Divider />
         </Drawer>
         <Box
@@ -434,6 +445,7 @@ const Layout = () => {
               <Route index element={<Hello />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/filterAlumni" element={<FilterAlumni />} />
+              <Route path="/filterStudent" element={<FilterStudent />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/notifications" element={<Notifications />} />
             </Routes>

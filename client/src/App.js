@@ -10,6 +10,7 @@ import { NotificationsNoProvider } from "./context/NotificationsNoContext";
 // import Calendar from "./components/Calendar";
 import { Route, Routes } from "react-router-dom";
 import FilterAlumni from "./components/FilterAlumni.js";
+import FilterStudent from "./components/FilterStudent";
 import Notifications from "./pages/Notifications";
 import Chat from "./pages/Chat";
 import ChatWelcome from "./components/ChatWelcome";
@@ -57,6 +58,7 @@ const App = () => {
                         <Route index element={<Hello />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="filterAlumni" element={<FilterAlumni />} />
+                        <Route path="filterStudent" element={<FilterStudent />} />
                         <Route path="calendar" element={<Calendar />} />
                         <Route path="notifications" element={<Notifications />} />
                       </Route>
