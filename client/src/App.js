@@ -53,23 +53,34 @@ const App = () => {
             <LoadConversationsProvider>
               <ConversationProvider>
                 <ChattedUsersProvider>
-                  <SocketProvider>
-                    <Routes>
-                      <Route path="/" element={<Layout />}>
-                        <Route index element={<Hello />} />
-                        <Route path="profile" element={<ProfilePage />} />
-                        <Route path="filterAlumni" element={<FilterAlumni />} />
-                        <Route path="filterStudent" element={<FilterStudent />} />
-                        <Route path="calendar" element={<Calendar />} />
-                        <Route path="notifications" element={<Notifications />} />
-                      </Route>
-                      <Route path="/chat" element={<Chat />}>
-                        {/* <Route path="/chat2" element={<Chat2 />}> */}
-                        <Route path="welcome" element={<ChatWelcome />} />
-                        <Route path="chatting" element={<Chatting />} />
-                      </Route>
-                    </Routes>
-                  </SocketProvider>
+                  <ClearNotificationProvider>
+                    <SocketProvider>
+                      <Routes>
+                        <Route path="/" element={<Layout />}>
+                          <Route index element={<Hello />} />
+                          <Route path="profile" element={<ProfilePage />} />
+                          <Route
+                            path="filterAlumni"
+                            element={<FilterAlumni />}
+                          />
+                          <Route
+                            path="filterStudent"
+                            element={<FilterStudent />}
+                          />
+                          <Route path="calendar" element={<Calendar />} />
+                          <Route
+                            path="notifications"
+                            element={<Notifications />}
+                          />
+                        </Route>
+                        <Route path="/chat" element={<Chat />}>
+                          {/* <Route path="/chat2" element={<Chat2 />}> */}
+                          <Route path="welcome" element={<ChatWelcome />} />
+                          <Route path="chatting" element={<Chatting />} />
+                        </Route>
+                      </Routes>
+                    </SocketProvider>
+                  </ClearNotificationProvider>
                 </ChattedUsersProvider>
               </ConversationProvider>
             </LoadConversationsProvider>
