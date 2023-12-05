@@ -244,17 +244,36 @@ const UserCard = (props) => {
             Events
           </Typography>
           <ul>
-            {events.map((event, index) => (
-              <li key={index}>
-                <p>Date: {event.startDateTime}</p>
-                <p>Time: {event.endDateTime}</p>
-                <p>Summary: {event.summary}</p>
-                <p>Description: {event.description}</p>
-                {/* Add a button to fix a meeting for this slot */}
-                <button onClick={() => fixMeeting(event)}>Fix Meeting</button>
-            </li>
-            ))}
-          </ul>
+          {events.map((event, index) => (
+        <li key={index}>
+          {/* Displaying start date with time */}
+          <p>
+            Start Date/Time:{" "}
+            {new Date(
+              new Date(event.startDateTime).getTime()
+            ).toLocaleString([], {
+              dateStyle: "long",
+              timeStyle: "short",
+            })}
+          </p>
+          {/* Displaying end date with time */}
+          <p>
+            End Date/Time:{" "}
+            {new Date(
+              new Date(event.endDateTime).getTime()
+            ).toLocaleString([], {
+              dateStyle: "long",
+              timeStyle: "short",
+            })}
+          </p>
+          <p>Summary: {event.summary}</p>
+          <p>Description: {event.description}</p>
+          {/* Add a button to fix a meeting for this slot */}
+          <button onClick={() => fixMeeting(event)}>Fix Meeting</button>
+        </li>
+      ))}
+
+        </ul>
         </div>
       )}
       {/* Display the profile dialog */}
