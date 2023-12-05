@@ -20,6 +20,7 @@ import Chatting from "./components/Chatting";
 import Layout from "./components/Layout";
 import Hello from "./components/Hello";
 import Calendar from "./components/Calendar";
+import { ClearNotificationProvider } from "./context/ClearNotificationContext";
 import "./style.css";
 
 const App = () => {
@@ -80,5 +81,3 @@ const App = () => {
 };
 
 export default App;
-
-

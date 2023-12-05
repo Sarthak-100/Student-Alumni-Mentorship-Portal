@@ -1,0 +1,30 @@
+[{
+  "_id": {
+    "$oid": "6557abab3edbce75ade9d46f"
+  },
+  "name": "Abhit Rana",
+  "email": "abhit20421@iiitd.ac.in",
+  "branch": "CSSS",
+  "batch": 2020,
+  "img": ""
+},
+{
+  "_id": {
+    "$oid": "6557abc53edbce75ade9d471"
+  },
+  "name": "Sarthak Maini",
+  "email": "sarthak20576@iiitd.ac.in",
+  "branch": "CSAI",
+  "batch": 2020,
+  "img": ""
+},
+{
+  "_id": {
+    "$oid": "6561175367dac2a1bc0257c5"
+  },
+  "name": "Jay Saraf",
+  "email": "jay20438@iiitd.ac.in",
+  "branch": "CSSS",
+  "batch": 2020,
+  "img": ""
+}]

@@ -24,11 +24,11 @@ export const setEventDetails = async (req, res) => {
             endDateTime,
             alumni: alumniJSON[0]._id,
             // Add other event details here as needed
-        };
+           };
 
-        const event = new Event(newEvent);
-        await event.save();
-        console.log("event", event);
+          const event = new Event(newEvent);
+          await event.save();
+          console.log("event", event);
 
           res.status(201).json({ message: 'Event added to alumni calendar' });
         } catch (error) {
@@ -54,6 +54,7 @@ export const getEventDetails = async (req, res) => {
 export const updateEventDetails = async (req, res) => {
     try {
         const updatedEvent = req.body.event;
+        updatedEvent.description = "okay nice";
         console.log("eventId", updatedEvent, updatedEvent._id);
         const event = await Event.findOne({ "_id": updatedEvent._id });
         console.log("event", event);

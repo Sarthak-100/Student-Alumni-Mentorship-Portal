@@ -45,7 +45,9 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
+import { useClearNotificationContext } from "../context/ClearNotificationContext";
 import Calendar from "./Calendar.js";
+import { set } from "lodash";
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -121,6 +123,9 @@ const Layout = () => {
   const isStudentOrAlumni =
     user && (user.user_type === "student" || user.user_type === "alumni");
 
+  const { clearNotification, setClearNotificationValue } =
+    useClearNotificationContext();
+
   // Function to fetch the user profile
   useEffect(() => {
     const getMyProfile = async () => {
@@ -181,7 +186,35 @@ const Layout = () => {
       }
     };
     getNotificationsNo();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (userContext.user?._id !== undefined) {
+
+      //store the signed in user avatar in the database
+      console.log("INSIDE USE EFFECT", userContext.user?._id, user?.picture, typeof user?.picture);
+      try {
+        axios
+          .post(
+            `http://localhost:4000/api/v1/users/updateAvatar?userId=${userContext.user?._id}`,
+            {
+              avatar: user?.picture,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log("Avatar updated successfully!", response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error("Error details:", error);
+      }
+    }
+  }, [user?.picture, userContext]);
 
   const handleCalendarClick = () => {
     console.log("calendar clicked");
@@ -199,7 +232,7 @@ const Layout = () => {
 
   useEffect(() => {
     console.log("socket#$#$#$#$#$#$#$#$#$#$#", socket, socket.id);
-    socket.emit("addUser", userContext.user?._id);
+    socket.emit("addUser", userContext.user?._id, userContext.user?.user_type);
     // socket.emit("addUser", user.email);
     socket.on("getUsers", (users) => {
       console.log(users);
@@ -315,11 +348,46 @@ const Layout = () => {
         }
       }
     });
+    socket.on("reportNotification", async (data) => {
+      increment();
+    });
     return () => {
       socket.off("getMessageNotification");
       socket.off("receiveNewConversation&MessageNotification");
       socket.off("updateBlockedStatusNotification");
+      socket.off("reportNotification");
     };
+  });
+
+  useEffect(() => {
+    const clearNotifications = async () => {
+      console.log("clear not useEffect 1");
+      console.log("clearNotification", clearNotification);
+      console.log("window.location.pathname", window.location.pathname);
+      if (clearNotification && window.location.pathname !== "/notifications") {
+        console.log("clear not useEffect 2");
+        try {
+          await axios
+            .delete(
+              `http://localhost:4000/api/v1/notifications/clearNotifications?userId=${userContext.user._id}`,
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+        } catch (error) {
+          console.error(error);
+        }
+        setNotificationsNoValue(0);
+        setClearNotificationValue(0);
+      }
+    };
+    clearNotifications();
   });
 
   return (
