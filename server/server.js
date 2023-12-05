@@ -186,7 +186,7 @@ io.on("connection", (socket) => {
       console.log(users);
       if (user) {
         console.log("inside userReported");
-        io.to(user?.socketId).emit("reportNotification", {});
+        io.to(user?.socketId).emit("reportNotificationAdmin", {});
       }
       const result = await Admin.findOne({}).exec();
       if (!result) {
@@ -198,7 +198,7 @@ io.on("connection", (socket) => {
           senderId: reporterId,
           senderName: reporterName,
           messageType: "report",
-          message: `Reported ${reportedUserType}: ${reportedName}.`,
+          message: `Reported ${reportedUserType}: ${reportedName}. \n Reason: ${reason}`,
         });
 
         // receiverId: document._id.toString(),
@@ -211,10 +211,30 @@ io.on("connection", (socket) => {
 
         try {
           const savedNotification = await newNotification.save();
-          console.log(savedNotification);
+          // console.log(savedNotification);
         } catch (error) {
           console.log(error);
         }
+      }
+      const reportedUser = getUser(reportedId);
+      console.log("#$#$@#@#@$#$%^*&*", reportedUser);
+      if (reportedUser) {
+        io.to(reportedUser?.socketId).emit("reportNotificationUser", {});
+      }
+      console.log("inside reportedUser");
+      const newNotification2 = new Notification({
+        receiverId: reportedId,
+        senderId: reporterId,
+        senderName: reporterName,
+        messageType: "report",
+        message: `You have been reported to Admin.`,
+      });
+
+      try {
+        const savedNotification2 = await newNotification2.save();
+        console.log(savedNotification2);
+      } catch (error) {
+        console.log(error);
       }
     }
   );

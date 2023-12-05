@@ -190,9 +190,13 @@ const Layout = () => {
 
   useEffect(() => {
     if (userContext.user?._id !== undefined) {
-
       //store the signed in user avatar in the database
-      console.log("INSIDE USE EFFECT", userContext.user?._id, user?.picture, typeof user?.picture);
+      console.log(
+        "INSIDE USE EFFECT",
+        userContext.user?._id,
+        user?.picture,
+        typeof user?.picture
+      );
       try {
         axios
           .post(
@@ -329,7 +333,7 @@ const Layout = () => {
                 senderName: data.senderName,
                 messageType: "blockingUpdate",
                 message: `You have been ${
-                  data.blocked ? "blocked" : "unblocked"
+                  data.blockedStatus ? "blocked" : "unblocked"
                 }.`,
               },
               {
@@ -348,14 +352,19 @@ const Layout = () => {
         }
       }
     });
-    socket.on("reportNotification", async (data) => {
+    socket.on("reportNotificationAdmin", async (data) => {
+      console.log("reportNotificationAdmin");
+      increment();
+    });
+    socket.on("reportNotificationUser", async (data) => {
       increment();
     });
     return () => {
       socket.off("getMessageNotification");
       socket.off("receiveNewConversation&MessageNotification");
       socket.off("updateBlockedStatusNotification");
-      socket.off("reportNotification");
+      socket.off("reportNotificationAdmin");
+      socket.off("reportNotificationUser");
     };
   });
 
