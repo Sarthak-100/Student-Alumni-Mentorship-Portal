@@ -15,6 +15,8 @@ import { useSocketContext } from "../context/SocketContext";
 import { useChattedUsersContext } from "../context/ChattedUsers";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import BlockingPrompt from "./BlockingPrompt";
+import ReportIcon from "@mui/icons-material/Report";
+import ReportingPrompt from "./ReportingPrompt";
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
 
@@ -54,6 +56,36 @@ const Chatting = () => {
 
   const [showBlockingPrompt, setShowBlockingPrompt] = useState(false);
   const [updateBlockingPrompt, setUpdateBlockingPrompt] = useState(false);
+
+  const [showReportPrompt, setShowReportPrompt] = useState(false);
+
+  const handleReport = () => {
+    setShowReportPrompt(true);
+  };
+
+  const handleCloseReportPrompt = () => {
+    setShowReportPrompt(false);
+  };
+
+  const handleSubmitReport = (reason) => {
+    // Handle the submitted report reason, e.g., send it to the server
+    console.log("Report Reason:", reason);
+    const receiverIdTemp = conversation?.members.find(
+      (member) => member !== user._id
+    );
+    const tempName =
+      chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.name;
+
+    const tempUserType = user.user_type === "student" ? "alumni" : "student";
+    socket.emit("userReported", {
+      reporterId: user._id,
+      reporterName: user.name,
+      reportedId: receiverIdTemp,
+      reportedName: tempName,
+      reportedUserType: tempUserType,
+      reason: reason,
+    });
+  };
 
   const scrollRef = useRef();
 
@@ -248,6 +280,12 @@ const Chatting = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // const handleReport = () => {
+  //   const receiverIdTemp = conversation?.members.find(
+  //     (member) => member !== user._id
+  //   );
+  // };
+
   return (
     <div className="chatting">
       <AppBar position="static">
@@ -268,16 +306,6 @@ const Chatting = () => {
                 ?.name
             }
           </Typography>
-          {user.user_type !== "student" ? (
-            <Button
-              variant="contained"
-              color="primary"
-              className="button"
-              onClick={blockBtController}
-            >
-              {blocked ? "Unblock" : "Block"}
-            </Button>
-          ) : null}
           <IconButton
             size="large"
             aria-label="display more actions"
@@ -286,14 +314,52 @@ const Chatting = () => {
           >
             <VideoCallIcon />
           </IconButton>
-          <IconButton
-            size="large"
-            aria-label="display more actions"
-            edge="end"
-            color="inherit"
-          >
-            <DownloadIcon />
-          </IconButton>
+          {/* {user.user_type !== "student" ? (
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: blocked ? "#00FF00" : "#FF0000",
+                marginLeft: "12px",
+              }}
+              className="button"
+              onClick={blockBtController}
+            >
+              {blocked ? "Unblock" : "Block"}
+            </Button>
+          ) : null} */}
+          {user.user_type !== "admin" ? (
+            <div>
+              {user.user_type !== "student" ? (
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: blocked ? "#00FF00" : "#FF0000",
+                    marginLeft: "12px",
+                  }}
+                  className="button"
+                  onClick={blockBtController}
+                >
+                  {blocked ? "Unblock" : "Block"}
+                </Button>
+              ) : null}
+              <IconButton
+                size="large"
+                aria-label="display more actions"
+                edge="end"
+                onClick={handleReport}
+              >
+                <ReportIcon style={{ color: "#FF0000" }} />
+              </IconButton>
+            </div>
+          ) : (
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#FF0000" }}
+              className="button"
+            >
+              Remove User
+            </Button>
+          )}
         </StyledToolbar>
       </AppBar>
       {/* <Messages /> */}
@@ -354,6 +420,11 @@ const Chatting = () => {
           true &&
           chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.name
         }.`}
+      />
+      <ReportingPrompt
+        open={showReportPrompt}
+        onClose={handleCloseReportPrompt}
+        onSubmit={handleSubmitReport}
       />
     </div>
   );

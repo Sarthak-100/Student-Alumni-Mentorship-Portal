@@ -201,7 +201,7 @@ const Layout = () => {
 
   useEffect(() => {
     console.log("socket#$#$#$#$#$#$#$#$#$#$#", socket, socket.id);
-    socket.emit("addUser", userContext.user?._id);
+    socket.emit("addUser", userContext.user?._id, userContext.user?.user_type);
     // socket.emit("addUser", user.email);
     socket.on("getUsers", (users) => {
       console.log(users);
@@ -317,10 +317,14 @@ const Layout = () => {
         }
       }
     });
+    socket.on("reportNotification", async (data) => {
+      increment();
+    });
     return () => {
       socket.off("getMessageNotification");
       socket.off("receiveNewConversation&MessageNotification");
       socket.off("updateBlockedStatusNotification");
+      socket.off("reportNotification");
     };
   });
 
