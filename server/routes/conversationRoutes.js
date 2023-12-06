@@ -2,7 +2,7 @@ import router from "express";
 import {
   newConversation,
   getConversations,
-
+  conversationsByDate,
   updateConversation,
   // findConversation,
 } from "../controllers/conversationController.js";
@@ -13,6 +13,8 @@ const conversationRouter = router.Router();
 conversationRouter.post("/newConversation", newConversation);
 
 conversationRouter.get("/getConversations", getConversations);
+
+conversationRouter.get("/conversationsByDate", conversationsByDate);
 
 // conversationRouter.get("/findConversation", findConversation);
 

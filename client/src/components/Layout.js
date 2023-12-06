@@ -26,6 +26,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ChatIcon from "@mui/icons-material/Chat";
 import ProfilePage from "./../pages/ProfilePage";
 import Notifications from "./../pages/Notifications";
+import Admin_Charts from "./Admin_Charts";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
 import FilterStudent from "./FilterStudent.js";
@@ -493,13 +494,17 @@ const Layout = () => {
             </Link>
           )}
 
+          <Link
+              to="/stats"
+              style={{ textDecoration: "none", color: "inherit" }}
+          >
           <ListItemButton>
             <ListItemIcon>
               <BarChartIcon />
             </ListItemIcon>
             <ListItemText primary="Reports" />
           </ListItemButton>
-
+          </Link>
           <Divider />
         </Drawer>
         <Box
@@ -523,6 +528,7 @@ const Layout = () => {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/filterAlumni" element={<FilterAlumni />} />
               <Route path="/filterStudent" element={<FilterStudent />} />
+              <Route path="/stats" element={<Admin_Charts />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/notifications" element={<Notifications />} />
             </Routes>

@@ -46,6 +46,33 @@ export const updateConversation = async (req, res, next) => {
   }
 };
 
+export const conversationsByDate = async (req, res, next) => {
+  try {
+    const conversations = await Conversation.aggregate([
+      {
+        $project: {
+          yearMonthDay: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        },
+      },
+      {
+        $group: {
+          _id: "$yearMonthDay",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sort by date in ascending order
+      },
+    ]);
+
+    res.status(200).json(conversations);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 // export const findConversation = async (req, res, next) => {
 //   try {
 //     const conversation = await Conversation.findOne({

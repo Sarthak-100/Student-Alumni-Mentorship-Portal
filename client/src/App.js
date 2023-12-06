@@ -19,6 +19,7 @@ import LoginButton from "./components/LoginButton";
 import Chatting from "./components/Chatting";
 import Layout from "./components/Layout";
 import Hello from "./components/Hello";
+import Admin_Charts from "./components/Admin_Charts";
 import Calendar from "./components/Calendar";
 import { ClearNotificationProvider } from "./context/ClearNotificationContext";
 import "./style.css";
@@ -67,6 +68,7 @@ const App = () => {
                             path="filterStudent"
                             element={<FilterStudent />}
                           />
+                          <Route path="/stats" element={<Admin_Charts />} />
                           <Route path="calendar" element={<Calendar />} />
                           <Route
                             path="notifications"
@@ -92,3 +94,5 @@ const App = () => {
 };
 
 export default App;
+
+
