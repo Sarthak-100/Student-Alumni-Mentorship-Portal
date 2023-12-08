@@ -48,7 +48,7 @@ export const updateConversation = async (req, res, next) => {
 
 export const conversationsByDate = async (req, res, next) => {
   try {
-    const conversations = await Conversation.aggregate([
+    let pipeline = [
       {
         $project: {
           yearMonthDay: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
@@ -63,7 +63,27 @@ export const conversationsByDate = async (req, res, next) => {
       {
         $sort: { _id: 1 }, // Sort by date in ascending order
       },
-    ]);
+    ];
+
+    // Check if month and year parameters are provided in the request
+    if (req.query.month && req.query.year) {
+      const selectedMonth = parseInt(req.query.month);
+      const selectedYear = parseInt(req.query.year);
+
+      // Add $match stage to filter by selected month and year
+      pipeline.unshift({
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: [{ $year: "$createdAt" }, selectedYear] },
+              { $eq: [{ $month: "$createdAt" }, selectedMonth] },
+            ],
+          },
+        },
+      });
+    }
+
+    const conversations = await Conversation.aggregate(pipeline);
 
     res.status(200).json(conversations);
   } catch (error) {
