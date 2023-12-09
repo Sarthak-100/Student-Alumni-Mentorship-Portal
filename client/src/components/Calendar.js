@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Cal from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 const Calendar = () => {
@@ -21,11 +20,66 @@ const Calendar = () => {
   const [ eventDescription, setEventDescription ] = useState("");
   const [ setApiResponse ] = useState({});
   const { user } = useUserContext();
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [pastMeetings, setPastMeetings] = useState([]);
 
   const session = useSession(); // tokens, when session exists we have a user
   const supabase = useSupabaseClient(); // talk to supabase!
   const { isLoading } = useSessionContext();
+
+  // const { user } = useUserContext();
+  const isAlumni = user?.role === 'alumni'; // Assuming you have a role field for differentiation
+
+  const renderCalendar = () => {
+    if (isAlumni) {
+      return (
+        // Alumni Calendar creation components and functionality
+        // ... existing alumni calendar code ...
+        <>
+            {session ?
+              <>
+                <h2>Hey there {user?.name}, mark your calendar here</h2>
+                <p>Start of your event</p>
+                <DatePicker selected={startDate} onChange={(date) => setStart(date)} showTimeSelect dateFormat="Pp" />
+                <p>End of your event</p>
+                {/* <input type="text" onChange={(e) => setStart(new Date(e.target.value))} /> */}
+                <DatePicker selected={endDate} onChange={(date) => setEnd(date)} showTimeSelect dateFormat="Pp" />
+                {/* <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} /> */}
+                <p>Event name</p>
+                <input type="text" onChange={(e) => setEventName(e.target.value)} />
+                <p>Event description</p>
+                <input type="text" onChange={(e) => setEventDescription(e.target.value)} />
+                <hr />
+                <button onClick={() => createCalendarEvent()}>Create Calendar Event</button>
+              </>
+              :
+              <>
+                <button onClick={() => signIn()}>Sign In</button>
+              </>
+            }
+          </>
+      );
+    } else {
+      return (
+        // For students: show past meetings
+        <>
+            <h2>Past Meetings</h2>
+            <h4 class="unbold-heading">No past meetings found</h4>
+            {/* Implement a UI to display past meetings */}
+            {/* For example, you can use a table to display meeting details */}
+            {/* Loop through past meetings and display details */}
+            
+        </>
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (!isAlumni) {
+      // Call showPastMeetings when component mounts for students
+      showPastMeetings();
+    }
+  }, [isAlumni]);
+
   // console.log("supabase", supabase);
 
   // useEffect(() => {
@@ -79,6 +133,26 @@ const Calendar = () => {
     }
   }
 
+  async function showPastMeetings() {
+    const currentDate = new Date().toISOString();
+    const userId = user._id;
+
+    try {
+      const baseUrl = `http://localhost:4000/api/v1/fetchPastMeetings/details?userId=${userId}`;
+      const response = await axios.get(baseUrl);
+
+      if (response.status === 200) {
+        const pastMeetings = response.data.pastMeetings;
+        console.log("Past meetings:", pastMeetings);
+        setPastMeetings(pastMeetings);
+        // Display past meetings or handle the data accordingly
+      } else {
+        console.error('Failed to fetch past meetings:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching past meetings:', error);
+    }
+  }
   // async function signOut() {
   //   await supabase.auth.signOut();
   // }
@@ -102,6 +176,22 @@ const Calendar = () => {
     
     if (session !== null) {
       console.log("syncing calendar");
+
+      //remove all the past events from the database
+      const url = "http://localhost:4000/api/v1/removePastEvents/delete";
+      const id = user._id;
+      console.log(`${url}?userId=${id}`);
+      axios.post(`${url}?userId=${id}`).then((response) => {
+        if (response.status === 200) {
+          console.log("Past events removed from database");
+        } else {
+          console.error('Failed to remove past events from the database:', response.status);
+        }
+      }).catch((error) => {
+        console.error('Failed to remove past events from the database:', error);
+      });
+
+
       const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
       const userId = user._id;
       const apiUrl = `${baseUrl}?userId=${userId}`;
@@ -120,6 +210,26 @@ const Calendar = () => {
             const googleEventId = event.googleEventId; // Assuming you have a unique Google Event ID
             // console.log("meet link", event.meetLink);
             const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
+
+            //check this event exists in google calendar
+            // try {
+            //   const checkResponse = await fetch(googleCalendarUrl, {
+            //     method: 'GET',
+            //     headers: {
+            //       'Authorization': 'Bearer ' + session.provider_token,
+            //     },
+            //   });
+            //   console.log("check response", event, checkResponse);
+            //   // If the event doesn't exist, delete it from the database
+            //   if (!checkResponse.ok) {
+            //     const deleteUrl = `http://localhost:4000/api/v1/deleteEvent/${googleEventId}`;
+            //     // await axios.delete(deleteUrl);
+            //     console.log(`Event ${googleEventId} deleted from the database.`);
+            //   }
+            // } catch (error) {
+            //   console.error('Error checking event existence:', error);
+            // }
+
             const updatedEvent = {
               summary: event.summary,
               description: event.description,
@@ -136,6 +246,7 @@ const Calendar = () => {
             };
             console.log("updated event", updatedEvent);
             try {
+
               const patchResponse = await fetch(googleCalendarUrl, {
                 method: 'PATCH',
                 headers: {
@@ -425,29 +536,35 @@ async function createCalendarEvent() {
   //     </div>
   //   </div>
   // );
+
+    // <div className="App">
+    //   <div style={{width: "600px", margin: "30px auto"}}>
+    //     {session ?
+    //       <>
+    //         <h2>Hey there {user?.name}, mark your calendar here</h2>
+    //         <p>Start of your event</p>
+    //         <DatePicker selected={startDate} onChange={(date) => setStart(date)} showTimeSelect dateFormat="Pp" />
+    //         <p>End of your event</p>
+    //         {/* <input type="text" onChange={(e) => setStart(new Date(e.target.value))} /> */}
+    //         <DatePicker selected={endDate} onChange={(date) => setEnd(date)} showTimeSelect dateFormat="Pp" />
+    //         {/* <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} /> */}
+    //         <p>Event name</p>
+    //         <input type="text" onChange={(e) => setEventName(e.target.value)} />
+    //         <p>Event description</p>
+    //         <input type="text" onChange={(e) => setEventDescription(e.target.value)} />
+    //         <hr />
+    //         <button onClick={() => createCalendarEvent()}>Create Calendar Event</button>
+    //       </>
+    //       :
+    //       <>
+    //         <button onClick={() => signIn()}>Sign In</button>
+    //       </>
+    //     }
+    //   </div>
+    // </div>
     <div className="App">
-      <div style={{width: "600px", margin: "30px auto"}}>
-        {session ?
-          <>
-            <h2>Hey there {user?.name}, mark your calendar here</h2>
-            <p>Start of your event</p>
-            <DatePicker selected={startDate} onChange={(date) => setStart(date)} showTimeSelect dateFormat="Pp" />
-            <p>End of your event</p>
-            {/* <input type="text" onChange={(e) => setStart(new Date(e.target.value))} /> */}
-            <DatePicker selected={endDate} onChange={(date) => setEnd(date)} showTimeSelect dateFormat="Pp" />
-            {/* <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} /> */}
-            <p>Event name</p>
-            <input type="text" onChange={(e) => setEventName(e.target.value)} />
-            <p>Event description</p>
-            <input type="text" onChange={(e) => setEventDescription(e.target.value)} />
-            <hr />
-            <button onClick={() => createCalendarEvent()}>Create Calendar Event</button>
-          </>
-          :
-          <>
-            <button onClick={() => signIn()}>Sign In</button>
-          </>
-        }
+      <div style={{ width: "600px", margin: "30px auto" }}>
+        {renderCalendar()}
       </div>
     </div>
   );

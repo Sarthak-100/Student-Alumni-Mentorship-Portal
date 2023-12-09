@@ -30,11 +30,14 @@ const UserCard = (props) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [slots, setSlots] = useState([]);
   const [events, setEvents] = useState([]);
+  const [meetingFixed, setMeetingFixed] = useState(false);
+  const [meetingStatus, setMeetingStatus] = useState([]);
 
   // const handleChat = () => {
   //   useReceiverIdContext(props.cardUser._id);
   //   navigate("/chat/welcome");
   // };
+
 
   const handleChat = async () => {
     console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
@@ -62,10 +65,11 @@ const UserCard = (props) => {
         .then((response) => {
           // console.log(response.data);
           if (response.status == 200) {
-            console.log("Slots fetched successfully!");
-            //display the slots in a
+            console.log("Slots fetched successfully!", response.data);
             setSlots(response.data);
             const fetchedEvents = response.data.events; // Replace 'events' with the actual key containing events in your response
+            const initialStatus = fetchedEvents.map(() => false);
+            setMeetingStatus(initialStatus);
             setEvents(fetchedEvents);
           } else {
             console.error(
@@ -87,45 +91,58 @@ const UserCard = (props) => {
     }
   };
 
-  const fixMeeting = async (event) => {
+  const fixMeeting = async (event, index) => {
     console.log("fixMeeting", event);
     const updatedEvent = { ...event };
-
-    // Assuming 'user' is the user object with necessary details
+  
+    // Check the current status for this event
+    const isMeetingFixed = meetingStatus[index];
+  
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
     }
-    if (!updatedEvent.attendees.includes(user)) {
+  
+    if (!isMeetingFixed) {
       updatedEvent.attendees.push(user);
-      //change event description
-      // updatedEvent.description = "Meeting fixed with ";
+      // const apiUrl = "http://localhost:4000/api/v1/saveEvent/studentEvents";
+      // axios
+      // .post(apiUrl, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   googleEventId: event.googleEventId,
+      //   userId: user._id,
+      //   summary: event.eventName,
+      //   description: event.eventDescription,
+      //   startDateTime: event.startDate.toISOString(),
+      //   endDateTime: event.endDate.toISOString(),
+      //   alumni: event.alumni._id,
+      // })
+      // .then(() => {
+      //   // setApiResponse(response.data);
+      //   // console.log(response.data);
+      //   // if (response.status == 201) {
+      //   //   alert("Event created and saved, check your Google Calendar!");
+      //   //   // navigate("/");
+      //   // } else {
+      //   //   // Handle errors while saving to MongoDB
+      //   //   console.error('Failed to save event in the database:', response.status);
+      //   //   const errorData = response.json();
+      //   //   console.error('Error details:', errorData);
+      //   // }
+      // })
+      // .catch((error) => {
+      //   // Handle errors while saving to MongoDB
+      //   // console.error('Failed to save event in the database:', response.status);
+      //   // const errorData = res.json();
+      //   console.error('Error details:', error);
+      // });
+    } else {
+      const attendeeIndex = updatedEvent.attendees.indexOf(user);
+      updatedEvent.attendees.splice(attendeeIndex, 1);
     }
-    console.log("updatedEvent", updatedEvent);
-
-    //update event in google calendar of alumni
-    // try {
-    //   const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${updatedEvent.googleEventId}`, {
-    //     method: "PATCH",
-    //     headers: {
-    //       'Authorization': 'Bearer ' + session.provider_token,
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(updatedEvent)
-    //   });
-
-    //   if (response.ok) {
-    //     const eventData = await response.json();
-    //     console.log('Event updated in Google Calendar:', eventData);
-
-    //     // Update the event details in your database if required
-    //     // ...
-    //   } else {
-    //     console.error('Failed to update event in Google Calendar:', response.status);
-    //   }
-    // } catch (error) {
-    //   console.error('Error updating event in Google Calendar:', error);
-    // }
-
+  
+    // Update event in the database or Google Calendar
     try {
       const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
       const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
@@ -147,10 +164,22 @@ const UserCard = (props) => {
           response.status
         );
       }
+      // Toggle the meeting status for this specific event
+      const newMeetingStatus = [...meetingStatus];
+      newMeetingStatus[index] = !isMeetingFixed;
+      setMeetingStatus(newMeetingStatus);
+  
+      // Show appropriate alert based on meeting status
+      if (!isMeetingFixed) {
+        alert("Meeting successfully fixed with " + props.cardUser.name);
+      } else {
+        alert("Meeting successfully cancelled with " + props.cardUser.name);
+      }
     } catch (error) {
-      console.error("Error updating event in the database:", error);
+      console.error("Error updating event:", error);
     }
   };
+
   const cardStyle = {
     maxWidth: 300,
     margin: "20px auto",
@@ -280,7 +309,11 @@ const UserCard = (props) => {
           <p>Summary: {event.summary}</p>
           <p>Description: {event.description}</p>
           {/* Add a button to fix a meeting for this slot */}
-          <button onClick={() => fixMeeting(event)}>Fix Meeting</button>
+          {!meetingStatus[index] ? (
+            <button onClick={() => fixMeeting(event, index)}>Fix Meeting</button>
+          ) : (
+            <button onClick={() => fixMeeting(event, index)}>Cancel Meeting</button>
+          )}
         </li>
       ))}
 
@@ -288,6 +321,7 @@ const UserCard = (props) => {
 
         </div>
       )}
+      
       {/* Display the profile dialog */}
       {/* Display the user's profile */}
       {selectedUser && (
