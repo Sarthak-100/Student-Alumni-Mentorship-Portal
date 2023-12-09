@@ -11,6 +11,7 @@ import { styled } from "@mui/system";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
+import { useSocketContext } from "../context/SocketContext";
 
 const CenteredContainer = styled(Container)(({ theme }) => ({
   display: "flex",
@@ -27,7 +28,7 @@ const ProfileAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const ProfilePage = () => {
-  const { user } = useAuth0();
+  const { user, logout } = useAuth0();
   const userContext = useUserContext();
 
   const [editMode, setEditMode] = useState(false);
@@ -73,8 +74,29 @@ const ProfilePage = () => {
             },
           }
         )
-        .then((response) => {
+        .then(async (response) => {
           console.log(response);
+          await axios
+            .get(
+              `http://localhost:4000/api/v1/users/myProfile?email=${user?.email}`,
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              if (response.data.success && !response.data.user.removed) {
+                // console.log("INSIDE PROFILE API", response.data);
+                let tempUser = response.data.user;
+                let user_type = response.data.user_type;
+                tempUser.user_type = user_type;
+                // console.log("INSIDE PROFILE API 2", tempUser);
+                userContext.login(tempUser);
+              } else {
+                console.log("Login Failed");
+                logout({ returnTo: "http://localhost:5000" });
+                // logout();
+              }
+            });
           toggleEditMode();
         })
         .catch((error) => {
@@ -102,7 +124,7 @@ const ProfilePage = () => {
         <Typography variant="h6" component="div">
           Specialization:
         </Typography>
-        <Typography>{userContext.user.branch}</Typography>
+        <Typography>{userContext.user?.branch}</Typography>
         <Typography variant="h6" component="div">
           Batch:
         </Typography>

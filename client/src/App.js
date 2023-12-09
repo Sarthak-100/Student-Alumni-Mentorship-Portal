@@ -7,14 +7,17 @@ import { SocketProvider } from "./context/SocketContext";
 import { ChattedUsersProvider } from "./context/ChattedUsers";
 import { ReceiverIdProvider } from "./context/ReceiverIdContext";
 import { NotificationsNoProvider } from "./context/NotificationsNoContext";
+import { ReportedNoProvider } from "./context/ReportedNoContext";
 // import Calendar from "./components/Calendar";
 import { Route, Routes } from "react-router-dom";
 import FilterAlumni from "./components/FilterAlumni.js";
 import FilterStudent from "./components/FilterStudent";
 import Notifications from "./pages/Notifications";
 import Chat from "./pages/Chat";
+import CreateProfile from "./pages/CreateProfile";
 import ChatWelcome from "./components/ChatWelcome";
 import ProfilePage from "./pages/ProfilePage";
+import Reports from "./pages/Reports";
 import LoginButton from "./components/LoginButton";
 import Chatting from "./components/Chatting";
 import Layout from "./components/Layout";
@@ -49,50 +52,55 @@ const App = () => {
   return (
     <>
       <UserProvider>
-        <NotificationsNoProvider>
-          <ReceiverIdProvider>
-            <LoadConversationsProvider>
-              <ConversationProvider>
-                <ChattedUsersProvider>
-                  <ClearNotificationProvider>
-                    <SocketProvider>
-                      <Routes>
-                        <Route path="/" element={<Layout />}>
-                          <Route index element={<Hello />} />
-                          <Route path="profile" element={<ProfilePage />} />
-                          <Route
-                            path="filterAlumni"
-                            element={<FilterAlumni />}
-                          />
-                          <Route
-                            path="filterStudent"
-                            element={<FilterStudent />}
-                          />
-                          <Route path="/stats" element={<Admin_Charts />} />
-                          <Route path="calendar" element={<Calendar />} />
-                          <Route
-                            path="notifications"
-                            element={<Notifications />}
-                          />
-                        </Route>
-                        <Route path="/chat" element={<Chat />}>
-                          {/* <Route path="/chat2" element={<Chat2 />}> */}
-                          <Route path="welcome" element={<ChatWelcome />} />
-                          <Route path="chatting" element={<Chatting />} />
-                        </Route>
-                      </Routes>
-                    </SocketProvider>
-                  </ClearNotificationProvider>
-                </ChattedUsersProvider>
-              </ConversationProvider>
-            </LoadConversationsProvider>
-          </ReceiverIdProvider>
-        </NotificationsNoProvider>
+        <ReportedNoProvider>
+          <NotificationsNoProvider>
+            <ReceiverIdProvider>
+              <LoadConversationsProvider>
+                <ConversationProvider>
+                  <ChattedUsersProvider>
+                    <ClearNotificationProvider>
+                      <SocketProvider>
+                        <Routes>
+                          <Route path="/" element={<Layout />}>
+                            <Route index element={<Hello />} />
+                            <Route path="profile" element={<ProfilePage />} />
+                            <Route
+                              path="filterAlumni"
+                              element={<FilterAlumni />}
+                            />
+                            <Route
+                              path="filterStudent"
+                              element={<FilterStudent />}
+                            />
+                            <Route path="/stats" element={<Admin_Charts />} />
+                            <Route path="calendar" element={<Calendar />} />
+                            <Route
+                              path="notifications"
+                              element={<Notifications />}
+                            />
+                            <Route path="/reports" element={<Reports />} />
+                            <Route
+                              path="createProfile"
+                              element={<CreateProfile />}
+                            />
+                          </Route>
+                          <Route path="/chat" element={<Chat />}>
+                            {/* <Route path="/chat2" element={<Chat2 />}> */}
+                            <Route path="welcome" element={<ChatWelcome />} />
+                            <Route path="chatting" element={<Chatting />} />
+                          </Route>
+                        </Routes>
+                      </SocketProvider>
+                    </ClearNotificationProvider>
+                  </ChattedUsersProvider>
+                </ConversationProvider>
+              </LoadConversationsProvider>
+            </ReceiverIdProvider>
+          </NotificationsNoProvider>
+        </ReportedNoProvider>
       </UserProvider>
     </>
   );
 };
 
 export default App;
-
-

@@ -14,7 +14,6 @@ const Notifications = () => {
   const { setNotificationsNoValue } = useNotificationsNoContext();
   const { clearNotification, setClearNotificationValue } =
     useClearNotificationContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -41,27 +40,6 @@ const Notifications = () => {
     };
     getNotifications();
   }, []);
-
-  const handleBack = async () => {
-    try {
-      await axios
-        .delete(
-          `http://localhost:4000/api/v1/notifications/clearNotifications?userId=${user._id}`,
-          {
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error("API Error:", error);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-    navigate("/");
-  };
 
   return (
     <div>

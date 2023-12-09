@@ -16,6 +16,7 @@ import {
   Badge,
   Divider,
   Drawer as MuiDrawer,
+  Button,
 } from "@mui/material";
 
 // Import icons and components
@@ -47,8 +48,12 @@ import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
+import { useReportedNoContext } from "../context/ReportedNoContext";
 import Calendar from "./Calendar.js";
+import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
+import Reports from "../pages/Reports.js";
 import { set } from "lodash";
+import CreateProfile from "../pages/CreateProfile";
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -121,6 +126,9 @@ const Layout = () => {
 
   const { notificationsNo, setNotificationsNoValue, increment } =
     useNotificationsNoContext();
+
+  const reportedNoContext = useReportedNoContext();
+
   const isStudentOrAlumni =
     user && (user.user_type === "student" || user.user_type === "alumni");
 
@@ -140,7 +148,7 @@ const Layout = () => {
             }
           )
           .then((response) => {
-            if (response.data.success) {
+            if (response.data.success && !response.data.user.removed) {
               // console.log("INSIDE PROFILE API", response.data);
               let tempUser = response.data.user;
               let user_type = response.data.user_type;
@@ -150,8 +158,8 @@ const Layout = () => {
               setSocketValue(socket);
             } else {
               console.log("Login Failed");
-              logout({ returnTo: "http://localhost:5000" });
-              // logout();
+              // logout({ returnTo: "http://localhost:5000" });
+              logout();
             }
           })
           .catch((error) => {
@@ -164,6 +172,15 @@ const Layout = () => {
 
     getMyProfile();
   }, []);
+
+  useEffect(() => {
+    socket.on("getRemoveUserNotification", async (data) => {
+      logout({ returnTo: "http://localhost:5000" });
+    });
+    return () => {
+      socket.off("getRemoveUserNotification");
+    };
+  });
 
   useEffect(() => {
     const getNotificationsNo = async () => {
@@ -187,6 +204,27 @@ const Layout = () => {
       }
     };
     getNotificationsNo();
+  }, []);
+
+  useEffect(() => {
+    const getReportedNo = async () => {
+      try {
+        await axios
+          .get(`http://localhost:4000/api/v1/reports/countUnresolvedReports`, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log(response);
+            reportedNoContext.setReportedNoValue(response.data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getReportedNo();
   }, []);
 
   useEffect(() => {
@@ -355,7 +393,7 @@ const Layout = () => {
     });
     socket.on("reportNotificationAdmin", async (data) => {
       console.log("reportNotificationAdmin");
-      increment();
+      reportedNoContext.increment();
     });
     socket.on("reportNotificationUser", async (data) => {
       increment();
@@ -400,6 +438,14 @@ const Layout = () => {
     clearNotifications();
   });
 
+  const handleReports = () => {
+    navigate("/reports");
+  };
+
+  const handleCreateProfile = () => {
+    navigate("/createProfile");
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -427,6 +473,27 @@ const Layout = () => {
             >
               Dashboard
             </Typography>
+            <Button style={{ color: "#FF0000" }} onClick={handleCreateProfile}>
+              CreateProfile
+            </Button>
+            {userContext.user?.user_type === "admin" ? (
+              <IconButton color="inherit">
+                <Badge
+                  badgeContent={reportedNoContext?.reportedNo}
+                  color="secondary"
+                >
+                  <AssignmentLateIcon
+                    // style={{ color: "#FF0000" }}
+                    onClick={handleReports}
+                  />
+                </Badge>
+              </IconButton>
+            ) : null}
+            <IconButton color="inherit">
+              <Badge badgeContent={notificationsNo} color="secondary">
+                <NotificationsIcon onClick={handleNotification} />
+              </Badge>
+            </IconButton>
             <IconButton color="inherit" onClick={handleCalendarClick}>
               <TodayIcon /> {/* Calendar icon */}
             </IconButton>
@@ -441,11 +508,6 @@ const Layout = () => {
                 <AccountCircleIcon />
               </IconButton>
             </Link>
-            <IconButton color="inherit">
-              <Badge badgeContent={notificationsNo} color="secondary">
-                <NotificationsIcon onClick={handleNotification} />
-              </Badge>
-            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -495,15 +557,15 @@ const Layout = () => {
           )}
 
           <Link
-              to="/stats"
-              style={{ textDecoration: "none", color: "inherit" }}
+            to="/stats"
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-          <ListItemButton>
-            <ListItemIcon>
-              <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reports" />
-          </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <BarChartIcon />
+              </ListItemIcon>
+              <ListItemText primary="Reports" />
+            </ListItemButton>
           </Link>
           <Divider />
         </Drawer>
@@ -531,6 +593,8 @@ const Layout = () => {
               <Route path="/stats" element={<Admin_Charts />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/createProfile" element={<CreateProfile />} />
             </Routes>
           </Container>
         </Box>
