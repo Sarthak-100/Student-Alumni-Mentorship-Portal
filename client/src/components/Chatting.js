@@ -17,6 +17,7 @@ import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import BlockingPrompt from "./BlockingPrompt";
 import ReportIcon from "@mui/icons-material/Report";
 import ReportingPrompt from "./ReportingPrompt";
+import { useAuth0 } from "@auth0/auth0-react";
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
 
@@ -43,6 +44,8 @@ const Chatting = () => {
   // const { setLoadConversationsValue } = useLoadConversationsContext();
 
   const { user } = useUserContext();
+
+  const authContext = useAuth0();
 
   const { socket } = useSocketContext();
 
@@ -119,6 +122,15 @@ const Chatting = () => {
     // return () => {
     //   socket.off("updateBlockedStatus");
     // };
+  });
+
+  useEffect(() => {
+    socket.on("getRemoveUserNotificationChat", async (data) => {
+      authContext.logout({ returnTo: "http://localhost:5000" });
+    });
+    return () => {
+      socket.off("getRemoveUserNotification");
+    };
   });
 
   useEffect(() => {

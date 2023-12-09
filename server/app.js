@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import filterRouter from "./routes/filterRouter.js";
 import { useAuth0 } from "@auth0/auth0-react";
 import notificationRouter from "./routes/notificationsRoutes.js";
+import reportRouter from "./routes/reportsRoutes.js";
 import cors from "cors";
 import { google } from "googleapis";
 import dayjs from "dayjs";
@@ -48,6 +49,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/conversations", conversationRouter);
 app.use("/api/v1/messages", messageRouter);
 app.use("/api/v1/notifications", notificationRouter);
+app.use("/api/v1/reports", reportRouter);
 app.use("/api/v1/filter-student", filterStudentRouter);
 
 //API for filtering alumni profiles as per added filters

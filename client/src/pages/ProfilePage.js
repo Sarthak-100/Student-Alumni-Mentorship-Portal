@@ -1,16 +1,7 @@
-// import React, { useState } from "react";
-// import {
-//   Container,
-//   Paper,
-//   Typography,
-//   Avatar,
-//   Button,
-//   TextField,
-// } from "@mui/material";
-// import { styled } from "@mui/system";
-// import { useAuth0 } from "@auth0/auth0-react";
-// import { useUserContext } from "../context/UserContext";
+
+import { useUserContext } from "../context/UserContext";
 // import axios from "axios";
+// import { useSocketContext } from "../context/SocketContext";
 
 // const CenteredContainer = styled(Container)(({ theme }) => ({
 //   display: "flex",
@@ -27,7 +18,7 @@
 // }));
 
 // const ProfilePage = () => {
-//   const { user } = useAuth0();
+//   const { user, logout } = useAuth0();
 //   const userContext = useUserContext();
 
 //   const [editMode, setEditMode] = useState(false);
@@ -73,8 +64,29 @@
 //             },
 //           }
 //         )
-//         .then((response) => {
+//         .then(async (response) => {
 //           console.log(response);
+//           await axios
+//             .get(
+//               `http://localhost:4000/api/v1/users/myProfile?email=${user?.email}`,
+//               {
+//                 withCredentials: true,
+//               }
+//             )
+//             .then((response) => {
+//               if (response.data.success && !response.data.user.removed) {
+//                 // console.log("INSIDE PROFILE API", response.data);
+//                 let tempUser = response.data.user;
+//                 let user_type = response.data.user_type;
+//                 tempUser.user_type = user_type;
+//                 // console.log("INSIDE PROFILE API 2", tempUser);
+//                 userContext.login(tempUser);
+//               } else {
+//                 console.log("Login Failed");
+//                 logout({ returnTo: "http://localhost:5000" });
+//                 // logout();
+//               }
+//             });
 //           toggleEditMode();
 //         })
 //         .catch((error) => {
@@ -96,25 +108,17 @@
 //         }}
 //       >
 //         {user?.picture && <img src={user.picture} alt={user?.name} />}
-//         {userContext.user.user_type === "admin" ? (
-//           <Typography variant="h5" component="div">
-//             Admin
-//           </Typography>
-//         ) : (
-//           <div>
-//             <Typography variant="h5" component="div">
-//               {user?.name}
-//             </Typography>
-//             <Typography variant="h6" component="div">
-//               Specialization:
-//             </Typography>
-//             <Typography>{userContext.user.branch}</Typography>
-//             <Typography variant="h6" component="div">
-//               Batch:
-//             </Typography>
-//             <Typography>{userContext.user.batch}</Typography>
-//           </div>
-//         )}
+//         <Typography variant="h5" component="div">
+//           {user?.name}
+//         </Typography>
+//         <Typography variant="h6" component="div">
+//           Specialization:
+//         </Typography>
+//         <Typography>{userContext.user?.branch}</Typography>
+//         <Typography variant="h6" component="div">
+//           Batch:
+//         </Typography>
+//         <Typography>{userContext.user.batch}</Typography>
 //         <Typography variant="h5" component="div">
 //           Contact Information
 //         </Typography>
@@ -156,18 +160,20 @@
 //                 onChange={(e) => handleInputChange("country", e.target.value)}
 //               />
 //             </div>
-//           ) : userContext.user.user_type === "alumni" ? (
+//           ) : (
 //             <div>
 //               <Typography variant="h5" component="div">
 //                 Work
 //               </Typography>
-//               <Typography>Role: {editedValues.role}</Typography>
-//               <Typography>Organization: {editedValues.organization}</Typography>
-//               <Typography>City: {editedValues.city}</Typography>
-//               <Typography>State: {editedValues.state}</Typography>
-//               <Typography>Country: {editedValues.country}</Typography>
+//               <Typography>Role : {editedValues.role}</Typography>
+//               <Typography>
+//                 Organization : {editedValues.organization}
+//               </Typography>
+//               <Typography>City : {editedValues.city}</Typography>
+//               <Typography>State : {editedValues.state}</Typography>
+//               <Typography>Country : {editedValues.country}</Typography>
 //             </div>
-//           ) : null}
+//           )}
 //         </div>
 //         <Button
 //           variant="contained"
@@ -183,12 +189,6 @@
 //     </CenteredContainer>
 //   );
 // };
-
-// export default ProfilePage;
-
-
-
-import { useUserContext } from "../context/UserContext";
 import AdminProfilePage from "./AdminProfilePage";
 import AlumniProfilePage from "./AlumniProfilePage";
 import StudentProfilePage from "./StudentProfilePage";
