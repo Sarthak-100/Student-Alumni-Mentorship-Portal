@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Carousel = () => {
-  const images = [image1, image2, image3,image4];
+  const images = [image1, image2, image3, image4];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Function to go to the next image
@@ -27,7 +27,7 @@ const Carousel = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       nextImage();
-    }, 4000); // Change image every 3 seconds (3000 milliseconds)
+    }, 4000); // Change image every 4 seconds
 
     // Clear the interval when component unmounts or when the user interacts with the carousel manually
     return () => clearInterval(interval);
@@ -35,17 +35,42 @@ const Carousel = () => {
 
   return (
     <div className="carousel">
-      <IconButton onClick={prevImage}>
-        <ArrowBackIcon />
-      </IconButton>
       <img
         src={images[currentImageIndex]}
         alt={`Slide ${currentImageIndex + 1}`}
-        style={{ width: '450px', height: '600px' }}
+        style={{
+          width: '450px',
+          height: '570px',
+          objectFit: 'cover', // ensures images fill the container
+        }}
+        className="carousel-image" // add custom class for styling
       />
-      <IconButton onClick={nextImage}>
-        <ArrowForwardIcon />
-      </IconButton>
+      <div className="carousel-controls">
+        <IconButton
+          onClick={prevImage}
+          className="carousel-button prev-button" // Add custom button styles
+        >
+          <ArrowBackIcon fontSize="medium" />
+        </IconButton>
+        <IconButton
+          onClick={nextImage}
+          className="carousel-button next-button" // Add custom button styles
+        >
+          <ArrowForwardIcon fontSize="medium" />
+        </IconButton>
+      </div>
+      <div className="carousel-indicators">
+        {images.map((_, index) => (
+          <span
+            key={index}
+            className={
+              `carousel-indicator ${
+                index === currentImageIndex ? 'active' : ''
+              }`
+            }
+          />
+        ))}
+      </div>
     </div>
   );
 };
