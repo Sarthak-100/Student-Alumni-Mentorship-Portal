@@ -129,8 +129,8 @@ const Layout = () => {
 
   const reportedNoContext = useReportedNoContext();
 
-  const isStudentOrAlumni =
-    user && (user.user_type === "student" || user.user_type === "alumni");
+  // const isStudentOrAlumni =
+  //   user && (user.user_type === "student" || user.user_type === "alumni");
 
   const { clearNotification, setClearNotificationValue } =
     useClearNotificationContext();
@@ -398,12 +398,16 @@ const Layout = () => {
     socket.on("reportNotificationUser", async (data) => {
       increment();
     });
+    socket.on("getFixMeetingNotification", async (data) => {
+      increment();
+    });
     return () => {
       socket.off("getMessageNotification");
       socket.off("receiveNewConversation&MessageNotification");
       socket.off("updateBlockedStatusNotification");
       socket.off("reportNotificationAdmin");
       socket.off("reportNotificationUser");
+      socket.off("getFixMeetingNotification");
     };
   });
 
@@ -535,38 +539,33 @@ const Layout = () => {
               <ListItemText primary="Filter Alumni" />
             </ListItemButton>
           </Link>
-          {isStudentOrAlumni ? (
-            <ListItemButton>
-              <ListItemIcon>
-                <LayersIcon />
-              </ListItemIcon>
-              <ListItemText primary="Integrations" />
-            </ListItemButton>
-          ) : (
-            <Link
-              to="/filterStudent"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItemButton>
-                <ListItemIcon>
-                  <FilterAltIcon />
-                </ListItemIcon>
-                <ListItemText primary="Filter Student" />
-              </ListItemButton>
-            </Link>
-          )}
+          {userContext.user?.user_type === "admin" ? (
+            <>
+              <Link
+                to="/filterStudent"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <ListItemButton>
+                  <ListItemIcon>
+                    <FilterAltIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Filter Student" />
+                </ListItemButton>
+              </Link>
+              <Link
+                to="/stats"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <ListItemButton>
+                  <ListItemIcon>
+                    <BarChartIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Reports" />
+                </ListItemButton>
+              </Link>
+            </>
+          ) : null}
 
-          <Link
-            to="/stats"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <BarChartIcon />
-              </ListItemIcon>
-              <ListItemText primary="Reports" />
-            </ListItemButton>
-          </Link>
           <Divider />
         </Drawer>
         <Box

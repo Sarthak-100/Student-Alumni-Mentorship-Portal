@@ -20,6 +20,7 @@ import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay 
 
 import axios from "axios";
 import Calendar from "react-calendar";
+import { useSocketContext } from "../context/SocketContext";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const UserCard = (props) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [slots, setSlots] = useState([]);
   const [events, setEvents] = useState([]);
+  const { socket } = useSocketContext();
 
   // const handleChat = () => {
   //   useReceiverIdContext(props.cardUser._id);
@@ -147,6 +149,20 @@ const UserCard = (props) => {
           response.status
         );
       }
+
+      console.log(typeof event.endDateTime);
+      socket.emit("fixMeeting", {
+        receiverId: props.cardUser._id,
+        senderId: user._id,
+        senderName: user.name,
+        messageType: "Meeting",
+        message: `${new Date(
+          new Date(event.startDateTime).getTime()
+        ).toLocaleString([], {
+          dateStyle: "long",
+          timeStyle: "short",
+        })}, has been booked`,
+      });
     } catch (error) {
       console.error("Error updating event in the database:", error);
     }
@@ -254,38 +270,35 @@ const UserCard = (props) => {
             Events
           </Typography>
           <ul>
-
-          {events.map((event, index) => (
-        <li key={index}>
-          {/* Displaying start date with time */}
-          <p>
-            Start Date/Time:{" "}
-            {new Date(
-              new Date(event.startDateTime).getTime()
-            ).toLocaleString([], {
-              dateStyle: "long",
-              timeStyle: "short",
-            })}
-          </p>
-          {/* Displaying end date with time */}
-          <p>
-            End Date/Time:{" "}
-            {new Date(
-              new Date(event.endDateTime).getTime()
-            ).toLocaleString([], {
-              dateStyle: "long",
-              timeStyle: "short",
-            })}
-          </p>
-          <p>Summary: {event.summary}</p>
-          <p>Description: {event.description}</p>
-          {/* Add a button to fix a meeting for this slot */}
-          <button onClick={() => fixMeeting(event)}>Fix Meeting</button>
-        </li>
-      ))}
-
-        </ul>
-
+            {events.map((event, index) => (
+              <li key={index}>
+                {/* Displaying start date with time */}
+                <p>
+                  Start Date/Time:{" "}
+                  {new Date(
+                    new Date(event.startDateTime).getTime()
+                  ).toLocaleString([], {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                  })}
+                </p>
+                {/* Displaying end date with time */}
+                <p>
+                  End Date/Time:{" "}
+                  {new Date(
+                    new Date(event.endDateTime).getTime()
+                  ).toLocaleString([], {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                  })}
+                </p>
+                <p>Summary: {event.summary}</p>
+                <p>Description: {event.description}</p>
+                {/* Add a button to fix a meeting for this slot */}
+                <button onClick={() => fixMeeting(event)}>Fix Meeting</button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {/* Display the profile dialog */}

@@ -38,7 +38,7 @@ const ElegantTypography = styled(Typography)`
   font-family: "Segoe UI", sans-serif;
   font-weight: 400;
   &.bold {
-    font-weight: 700; 
+    font-weight: 700;
   }
 `;
 
@@ -56,7 +56,7 @@ const ElegantButton = styled(Button)`
 `;
 
 const AlumniProfilePage = () => {
-  const { user } = useAuth0();
+  const { user, logout } = useAuth0();
   const userContext = useUserContext();
 
   const [editMode, setEditMode] = useState(false);
@@ -81,30 +81,56 @@ const AlumniProfilePage = () => {
 
   const saveProfile = async () => {
     try {
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/users/updateAlumniProfile?userId=${userContext.user._id}`,
-        {
-          work: {
-            role: editedValues.role,
-            organization: editedValues.organization,
+      await axios
+        .put(
+          `http://localhost:4000/api/v1/users/updateAlumniProfile?userId=${userContext.user._id}`,
+          {
+            work: {
+              role: editedValues.role,
+              organization: editedValues.organization,
+            },
+            location: {
+              city: editedValues.city,
+              state: editedValues.state,
+              country: editedValues.country,
+            },
           },
-          location: {
-            city: editedValues.city,
-            state: editedValues.state,
-            country: editedValues.country,
-          },
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log(response);
-      toggleEditMode();
+          {
+            headers: {
+              "Content-Type": "application/json", // Set the content type to JSON
+            },
+          }
+        )
+        .then(async (response) => {
+          console.log(response);
+          await axios
+            .get(
+              `http://localhost:4000/api/v1/users/myProfile?email=${user?.email}`,
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              if (response.data.success && !response.data.user.removed) {
+                // console.log("INSIDE PROFILE API", response.data);
+                let tempUser = response.data.user;
+                let user_type = response.data.user_type;
+                tempUser.user_type = user_type;
+                // console.log("INSIDE PROFILE API 2", tempUser);
+                userContext.login(tempUser);
+              } else {
+                console.log("Login Failed");
+                logout({ returnTo: "http://localhost:5000" });
+                // logout();
+              }
+            });
+          toggleEditMode();
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+        });
     } catch (error) {
-      console.error("API Error:", error);
+      console.log(error);
     }
   };
 
@@ -152,37 +178,35 @@ const AlumniProfilePage = () => {
             {editMode ? "Save Profile" : "Edit Profile"}
           </ElegantButton>
         </ProfileHeader>
-        
+
         {!editMode && (
           <Grid container spacing={1}>
-          {/* Work Section */}
-          <Grid item xs={12} md={6}>
-            <ElegantTypography variant="h6" className="bold">
-              Work
-            </ElegantTypography>
-            <ElegantTypography>
-              <b>Role</b>: {editedValues.role}
-            </ElegantTypography>
-            <ElegantTypography>
-              <b>Organization</b>: {editedValues.organization}
-            </ElegantTypography>
+            {/* Work Section */}
+            <Grid item xs={12} md={6}>
+              <ElegantTypography variant="h6" className="bold">
+                Work
+              </ElegantTypography>
+              <ElegantTypography>
+                <b>Role</b>: {editedValues.role}
+              </ElegantTypography>
+              <ElegantTypography>
+                <b>Organization</b>: {editedValues.organization}
+              </ElegantTypography>
+            </Grid>
+
+            {/* Location Section */}
+            <Grid item xs={12} md={6}>
+              <ElegantTypography variant="h6" className="bold">
+                Location
+              </ElegantTypography>
+              <ElegantTypography>
+                {editedValues.city},{editedValues.state}
+              </ElegantTypography>
+              <ElegantTypography>{editedValues.country}</ElegantTypography>
+            </Grid>
           </Grid>
-        
-          {/* Location Section */}
-          <Grid item xs={12} md={6}>
-            <ElegantTypography variant="h6" className="bold">
-              Location
-            </ElegantTypography>
-            <ElegantTypography>
-            {editedValues.city},{editedValues.state}
-            </ElegantTypography>
-            <ElegantTypography>
-              {editedValues.country}
-            </ElegantTypography>
-          </Grid>
-        </Grid>
         )}
-        
+
         {editMode && (
           <Grid container spacing={2}>
             <Grid item xs={12}>

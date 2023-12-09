@@ -327,14 +327,14 @@ const Chatting = () => {
                 ?.name
             }
           </Typography>
-          <IconButton
+          {/* <IconButton
             size="large"
             aria-label="display more actions"
             edge="end"
             color="inherit"
           >
             <VideoCallIcon />
-          </IconButton>
+          </IconButton> */}
           {/* {user.user_type !== "student" ? (
             <Button
               variant="contained"

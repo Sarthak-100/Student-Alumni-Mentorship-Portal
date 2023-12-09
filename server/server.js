@@ -251,6 +251,34 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on(
+    "fixMeeting",
+    async ({ receiverId, senderId, senderName, messageType, message }) => {
+      const user = getUser(receiverId);
+      if (user) {
+        io.to(user?.socketId).emit("getFixMeetingNotification", {
+          senderId,
+          senderName,
+        });
+      }
+
+      const newNotification = new Notification({
+        receiverId,
+        senderId,
+        senderName,
+        messageType,
+        message,
+      });
+
+      try {
+        const savedNotification = await newNotification.save();
+        console.log(savedNotification);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
+
   // when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected");
