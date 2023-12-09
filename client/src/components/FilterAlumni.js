@@ -1,7 +1,15 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { IconButton, Input, Grid } from "@mui/material";
+import {
+  IconButton,
+  Input,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  Typography,
+} from "@mui/material";
 import UserCard from "./UserCard";
 import FilterMenu from "./Filter";
 
@@ -23,7 +31,6 @@ const FilterAlumni = () => {
   // Function to fetch the filtered results
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
-
     const filterParams = new URLSearchParams(filters).toString();
     const apiUrl = `${baseUrl}?${filterParams}`;
     console.log(apiUrl);
@@ -60,22 +67,25 @@ const FilterAlumni = () => {
   };
 
   return (
-    <div>
-      <Input
-        ref={inputRef}
-        placeholder="Search For Alumni"
-        sx={{
-          width: "78%",
-          fontSize: "15px",
-          fontWeight: "550",
-          marginLeft: "5px",
-          marginBottom: "-3px",
-        }}
-        onChange={handleSearchChange}
-      />
-      <IconButton onClick={openFilterMenu} sx={{ marginLeft: "10px" }}>
-        <FilterAltIcon />
-      </IconButton>
+    <Grid container direction="column" spacing={3}>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Input
+          ref={inputRef}
+          placeholder="Search For Alumni"
+          sx={{
+            width: "70%",
+            fontSize: "16px",
+            fontWeight: 500,
+            borderRadius: "4px",
+            padding: "10px",
+            marginRight: "10px",
+          }}
+          onChange={handleSearchChange}
+        />
+        <IconButton onClick={openFilterMenu} sx={{ color: "#4285f4" }}>
+          <FilterAltIcon />
+        </IconButton>
+      </Box>
       {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (
         <Grid container spacing={3}>
           {apiResponse.result.map((user, index) => (
@@ -91,7 +101,7 @@ const FilterAlumni = () => {
         applyFilters={applyFilters}
         anchorEl={inputRef.current}
       />
-    </div>
+    </Grid>
   );
 };
 
