@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
-
 import axios from "axios";
 import Calendar from "react-calendar";
 import { useSocketContext } from "../context/SocketContext";
@@ -392,6 +391,7 @@ const UserCard = (props) => {
             <Button
               variant="contained"
               color="secondary"
+              style={{ backgroundColor: '#b71c1c', color: '#fff' }}
               onClick={() => cancelMeeting(event, index)}
             >
               Cancel Meeting
@@ -400,9 +400,10 @@ const UserCard = (props) => {
             <Button
               variant="contained"
               color="primary"
+              style={{ backgroundColor: '#4caf50', color: '#fff' }}
               onClick={() => fixMeeting(event, index)}
             >
-              Fix Meeting
+                Fix Meeting  
             </Button>
           )}
           {/* {!meetingStatus[index] ? (
