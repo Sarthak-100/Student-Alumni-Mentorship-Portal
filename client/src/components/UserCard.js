@@ -68,6 +68,10 @@ const UserCard = (props) => {
             const initialStatus = fetchedEvents.map(() => false);
             setMeetingStatus(initialStatus);
             setEvents(fetchedEvents);
+            if (fetchedEvents.length === 0) {
+              // Display an alert if there are no events
+              alert(props.cardUser.name + " has no available meetings slots.");
+            }
           } else {
             console.error(
               "Failed to fetch slots details from the database:",
