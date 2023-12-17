@@ -1,15 +1,5 @@
 [{
   "_id": {
-    "$oid": "6557abab3edbce75ade9d46f"
-  },
-  "name": "Abhit Rana",
-  "email": "abhit20421@iiitd.ac.in",
-  "branch": "CSSS",
-  "batch": 2020,
-  "img": ""
-},
-{
-  "_id": {
     "$oid": "6557abc53edbce75ade9d471"
   },
   "name": "Sarthak Maini",

@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 
 export const setEventDetails = async (req, res) => {
     try {
-        console.log("req.body", req.body);
+        // console.log("req.body", req.body);
         const { userId, summary, description, startDateTime, endDateTime, googleEventId } = req.body;
-        console.log("google event id", googleEventId);
+        // console.log("google event id", googleEventId);
         // Find the alumni by email
         const alumni = await Alumni.find({ "email": userId });
         
@@ -29,7 +29,7 @@ export const setEventDetails = async (req, res) => {
 
           const event = new Event(newEvent);
           await event.save();
-          console.log("event", event);
+        //   console.log("event", event);
 
           res.status(201).json({ message: 'Event added to alumni calendar' });
         } catch (error) {
@@ -40,7 +40,7 @@ export const setEventDetails = async (req, res) => {
 
 export const setStudentEventDetails = async (req, res) => {
     try {
-        console.log("req.body", req.body);
+        // console.log("req.body", req.body);
         const { userId, summary, description, startDateTime, endDateTime, googleEventId, alumni } = req.body;
         // console.log("google event id", googleEventId);
         // Find the alumni by email
@@ -62,7 +62,7 @@ export const setStudentEventDetails = async (req, res) => {
 
           const event = new studentEvent(newEvent);
           await event.save();
-          console.log("event", event);
+        //   console.log("event", event);
 
           res.status(201).json({ message: 'Event added to student calendar' });
         } catch (error) {
@@ -87,7 +87,7 @@ export const getEventDetails = async (req, res) => {
 export const updateEventDetails = async (req, res) => {
     try {
         const updatedEvent = req.body.event;
-        console.log("eventId", updatedEvent, updatedEvent._id);
+        // console.log("eventId", updatedEvent, updatedEvent._id);
         const event = await Event.findOne({ "_id": updatedEvent._id });
         if (event.length === 0) {
             return res.status(404).json({ error: 'Event not found' });
@@ -103,7 +103,7 @@ export const updateEventDetails = async (req, res) => {
 export const deleteEvents = async (req, res) => {
     try {
         const { userId } = req.query;
-        console.log("userId", userId, req.query);
+        // console.log("userId", userId, req.query);
 
         //delete all events of this user which have been past
         const events = await Event.find({ "alumni": userId });
@@ -136,17 +136,13 @@ export const deleteEvents = async (req, res) => {
 export const getPastEvents = async (req, res) => {
     try {
         const { userId } = req.query;
-        console.log("userId", userId, req.query);
+        console.log("userId hello", userId, req.query);
 
-        const events = await Event.find({
-            attendees: {
-                $elemMatch: { "_id": userId }
-            }
-        });
+        const events = await Event.find({ attendees: userId });
 
-        console.log("past events", events);
+        console.log("past events ok", events);
         res.status(200).json({ events });
-    } catch(error) {
+    } catch (error) {
         console.error('Error fetching event details:', error);
         res.status(500).json({ error: 'An error occurred while fetching event details' });
     }

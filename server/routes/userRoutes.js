@@ -9,6 +9,8 @@ import {
   updateAlumniProfile,
   getBatchwiseCounts,
   insertAvatar,
+  removeUser,
+  createProfile,
   // getMyToken,
 } from "../controllers/userController.js";
 
@@ -36,6 +38,8 @@ userRouter.post("/updateAvatar", insertAvatar);
 
 userRouter.get("/getBatchwiseCounts", getBatchwiseCounts);
 
-// userRouter.get("/myToken", getMyToken);
+userRouter.put("/removeUser", removeUser);
+
+userRouter.post("/createProfile", createProfile);
 
 export default userRouter;

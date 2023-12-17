@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext";
 import { useNavigate } from "react-router-dom";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -14,7 +14,6 @@ const Notifications = () => {
   const { setNotificationsNoValue } = useNotificationsNoContext();
   const { clearNotification, setClearNotificationValue } =
     useClearNotificationContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -42,32 +41,11 @@ const Notifications = () => {
     getNotifications();
   }, []);
 
-  const handleBack = async () => {
-    try {
-      await axios
-        .delete(
-          `http://localhost:4000/api/v1/notifications/clearNotifications?userId=${user._id}`,
-          {
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error("API Error:", error);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-    navigate("/");
-  };
-
   return (
     <div>
-      {/* <Button variant="contained" onClick={handleBack}>
+      {/* <IconButton variant="contained" onClick={handleBack}>
         Back
-      </Button> */}
+      </IconButton> */}
       <h1>Notifications</h1>
       {notifications.map((notification) => (
         <Notification

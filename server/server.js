@@ -4,6 +4,7 @@ import http from "http";
 import { Server } from "socket.io";
 import { Notification } from "./models/notificationModel.js";
 import { Admin } from "./models/userModel.js";
+import { Reports } from "./models/reportsModel.js";
 // import io from "socket.io";
 
 connectDB();
@@ -188,34 +189,35 @@ io.on("connection", (socket) => {
         console.log("inside userReported");
         io.to(user?.socketId).emit("reportNotificationAdmin", {});
       }
-      const result = await Admin.findOne({}).exec();
-      if (!result) {
-        console.error("Error:", err);
-      } else {
-        console.log(result[0]);
-        const newNotification = new Notification({
-          receiverId: result._id.toString(),
-          senderId: reporterId,
-          senderName: reporterName,
-          messageType: "report",
-          message: `Reported ${reportedUserType}: ${reportedName}. \n Reason: ${reason}`,
-        });
+      // const result = await Admin.findOne({}).exec();
+      // if (!result) {
+      //   console.error("Error:", err);
+      // } else {
+      //   console.log(result[0]);
+      const report = new Reports({
+        reporterId: reporterId,
+        reporterName: reporterName,
+        reportedId: reportedId,
+        reportedName: reportedName,
+        reportedUserType: reportedUserType,
+        reason: reason,
+      });
 
-        // receiverId: document._id.toString(),
-        // senderId: reporterId,
-        // senderName: reporterName,
-        // messageType: "report",
-        // message: `Reported ${reportedUserType}: ${reportedName}.`,
-        // reportedUserId: reportedId,
-        // reportingReason: reason,
+      // receiverId: document._id.toString(),
+      // senderId: reporterId,
+      // senderName: reporterName,
+      // messageType: "report",
+      // message: `Reported ${reportedUserType}: ${reportedName}.`,
+      // reportedUserId: reportedId,
+      // reportingReason: reason,
 
-        try {
-          const savedNotification = await newNotification.save();
-          // console.log(savedNotification);
-        } catch (error) {
-          console.log(error);
-        }
+      try {
+        const savedReport = await report.save();
+        // console.log(savedNotification);
+      } catch (error) {
+        console.log(error);
       }
+      // }
       const reportedUser = getUser(reportedId);
       console.log("#$#$@#@#@$#$%^*&*", reportedUser);
       if (reportedUser) {
@@ -233,6 +235,44 @@ io.on("connection", (socket) => {
       try {
         const savedNotification2 = await newNotification2.save();
         console.log(savedNotification2);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
+
+  socket.on("sendRemoveUserNotification", ({ removedUserId }) => {
+    const user = getUser(removedUserId);
+    if (user) {
+      io.to(user?.socketId).emit("getRemoveUserNotification", {});
+      io.to(user?.socketId).emit("getRemoveUserNotificationChat", {});
+    } else {
+      console.log("User not found");
+    }
+  });
+
+  socket.on(
+    "fixMeeting",
+    async ({ receiverId, senderId, senderName, messageType, message }) => {
+      const user = getUser(receiverId);
+      if (user) {
+        io.to(user?.socketId).emit("getFixMeetingNotification", {
+          senderId,
+          senderName,
+        });
+      }
+
+      const newNotification = new Notification({
+        receiverId,
+        senderId,
+        senderName,
+        messageType,
+        message,
+      });
+
+      try {
+        const savedNotification = await newNotification.save();
+        console.log(savedNotification);
       } catch (error) {
         console.log(error);
       }

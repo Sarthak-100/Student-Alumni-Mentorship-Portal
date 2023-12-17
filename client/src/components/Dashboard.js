@@ -33,7 +33,7 @@ import { Link } from "react-router-dom";
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";
-import LoginButton from "./LoginButton";
+import LoginIconButton from "./LoginIconButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/SocketContext";
@@ -236,7 +236,7 @@ const Dashboard = () => {
     navigate("/calendar");
   };
 
-  // Function to handle chat button click
+  // Function to handle chat IconButton click
   const handleChat = () => {
     navigate("/chat/welcome");
   };

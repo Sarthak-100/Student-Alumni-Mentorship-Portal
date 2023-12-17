@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import LoginButton from './LoginButton';
+import LoginIconButton from './LoginIconButton';
 
-test('renders login button when user is not authenticated', () => {
-  render(<LoginButton />);
+test('renders login IconButton when user is not authenticated', () => {
+  render(<LoginIconButton />);
   
-  // Check if the "Log In" button is rendered
-  const loginButton = screen.getByRole('button', { name: /Log In/i });
-  expect(loginButton).toBeInTheDocument();
+  // Check if the "Log In" IconButton is rendered
+  const loginIconButton = screen.getByRole('IconButton', { name: /Log In/i });
+  expect(loginIconButton).toBeInTheDocument();
 });
 

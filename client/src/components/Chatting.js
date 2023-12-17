@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { Avatar, Input, Button } from "@mui/material";
+import { Avatar, Input, Button } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import Message from "./Message";
@@ -17,6 +17,7 @@ import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import BlockingPrompt from "./BlockingPrompt";
 import ReportIcon from "@mui/icons-material/Report";
 import ReportingPrompt from "./ReportingPrompt";
+import { useAuth0 } from "@auth0/auth0-react";
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
 
@@ -43,6 +44,8 @@ const Chatting = () => {
   // const { setLoadConversationsValue } = useLoadConversationsContext();
 
   const { user } = useUserContext();
+
+  const authContext = useAuth0();
 
   const { socket } = useSocketContext();
 
@@ -119,6 +122,15 @@ const Chatting = () => {
     // return () => {
     //   socket.off("updateBlockedStatus");
     // };
+  });
+
+  useEffect(() => {
+    socket.on("getRemoveUserNotificationChat", async (data) => {
+      authContext.logout({ returnTo: "http://localhost:5000" });
+    });
+    return () => {
+      socket.off("getRemoveUserNotification");
+    };
   });
 
   useEffect(() => {
@@ -315,41 +327,41 @@ const Chatting = () => {
                 ?.name
             }
           </Typography>
-          <IconButton
+          {/* <IconButton
             size="large"
             aria-label="display more actions"
             edge="end"
             color="inherit"
           >
             <VideoCallIcon />
-          </IconButton>
+          </IconButton> */}
           {/* {user.user_type !== "student" ? (
-            <Button
+            <IconButton
               variant="contained"
               style={{
                 backgroundColor: blocked ? "#00FF00" : "#FF0000",
                 marginLeft: "12px",
               }}
-              className="button"
+              className="IconButton"
               onClick={blockBtController}
             >
               {blocked ? "Unblock" : "Block"}
-            </Button>
+            </IconButton>
           ) : null} */}
           {user.user_type !== "admin" ? (
             <div>
               {user.user_type !== "student" ? (
-                <Button
+                <IconButton
                   variant="contained"
                   style={{
                     backgroundColor: blocked ? "#00FF00" : "#FF0000",
                     marginLeft: "12px",
                   }}
-                  className="button"
+                  className="IconButton"
                   onClick={blockBtController}
                 >
                   {blocked ? "Unblock" : "Block"}
-                </Button>
+                </IconButton>
               ) : null}
               <IconButton
                 size="large"
@@ -361,13 +373,13 @@ const Chatting = () => {
               </IconButton>
             </div>
           ) : (
-            <Button
+            <IconButton
               variant="contained"
               style={{ backgroundColor: "#FF0000" }}
-              className="button"
+              className="IconButton"
             >
               Remove User
-            </Button>
+            </IconButton>
           )}
         </StyledToolbar>
       </AppBar>
@@ -390,14 +402,14 @@ const Chatting = () => {
               onChange={(e) => setNewMessage(e.target.value)}
               value={newMessage}
             />
-            <Button
+            <IconButton
               variant="contained"
               color="primary"
-              className="button"
+              className="IconButton"
               onClick={sendMeesageBtController}
             >
               Send
-            </Button>
+            </IconButton>
           </div>
         ) : (
           <div className="BlockedContainer">

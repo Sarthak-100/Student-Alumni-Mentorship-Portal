@@ -1,6 +1,6 @@
 // // import SignInSide from './SignInSide';
-// import LoginButton from './components/LoginButton';
-// // import LogoutButton from './components/LogoutButton';
+// import LoginIconButton from './components/LoginIconButton';
+// // import LogoutIconButton from './components/LogoutIconButton';
 // // import Profile from './components/Profile';
 // // import Background_Component from './components/Background';
 // import Dashboard from './components/Dashboard';
@@ -10,7 +10,7 @@
 //   const { isAuthenticated } = useAuth0();
 //   return (
 //     <main className="column">
-//       <LoginButton />
+//       <LoginIconButton />
 //       isAuthenticated && (<Dashboard />)
       
 //     </main>

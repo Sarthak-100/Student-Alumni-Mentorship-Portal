@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import image1 from '../images/Carousel_img_1.png';
-import image2 from '../images/Carousel_img_2.jpg';
-import image3 from '../images/Carousel_img_3.png';
-import image4 from '../images/Carousel_img_4.png';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import React, { useState, useEffect } from "react";
+import image1 from "../images/Carousel_img_1.png";
+import image2 from "../images/Carousel_img_2.jpg";
+import image3 from "../images/Carousel_img_3.png";
+import image4 from "../images/Carousel_img_4.png";
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const Carousel = () => {
-  const images = [image1, image2, image3,image4];
+  const images = [image1, image2, image3, image4];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Function to go to the next image
@@ -41,7 +41,7 @@ const Carousel = () => {
       <img
         src={images[currentImageIndex]}
         alt={`Slide ${currentImageIndex + 1}`}
-        style={{ width: '450px', height: '600px' }}
+        style={{ width: "450px", height: "580px" }}
       />
       <IconButton onClick={nextImage}>
         <ArrowForwardIcon />

@@ -9,6 +9,7 @@ import {
   CardActions,
   IconButton,
   Grid,
+  Button,
 } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -20,6 +21,7 @@ import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay 
 
 import axios from "axios";
 import Calendar from "react-calendar";
+import { useSocketContext } from "../context/SocketContext";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -32,12 +34,7 @@ const UserCard = (props) => {
   const [events, setEvents] = useState([]);
   const [meetingFixed, setMeetingFixed] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState([]);
-
-  // const handleChat = () => {
-  //   useReceiverIdContext(props.cardUser._id);
-  //   navigate("/chat/welcome");
-  // };
-
+  const { socket } = useSocketContext();
 
   const handleChat = async () => {
     console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
@@ -93,90 +90,168 @@ const UserCard = (props) => {
 
   const fixMeeting = async (event, index) => {
     console.log("fixMeeting", event);
-    const updatedEvent = { ...event };
+    // const updatedEvent = { ...event };
   
     // Check the current status for this event
     const isMeetingFixed = meetingStatus[index];
   
+    // if (!updatedEvent.attendees) {
+    //   updatedEvent.attendees = [];
+    // }
+  
+    // if (!isMeetingFixed) {
+    //   updatedEvent.attendees.push(user);
+    //   // const apiUrl = "http://localhost:4000/api/v1/saveEvent/studentEvents";
+    //   // axios
+    //   // .post(apiUrl, {
+    //   //   headers: {
+    //   //     'Content-Type': 'application/json',
+    //   //   },
+    //   //   googleEventId: event.googleEventId,
+    //   //   userId: user._id,
+    //   //   summary: event.eventName,
+    //   //   description: event.eventDescription,
+    //   //   startDateTime: event.startDate.toISOString(),
+    //   //   endDateTime: event.endDate.toISOString(),
+    //   //   alumni: event.alumni._id,
+    //   // })
+    //   // .then(() => {
+    //   //   // setApiResponse(response.data);
+    //   //   // console.log(response.data);
+    //   //   // if (response.status == 201) {
+    //   //   //   alert("Event created and saved, check your Google Calendar!");
+    //   //   //   // navigate("/");
+    //   //   // } else {
+    //   //   //   // Handle errors while saving to MongoDB
+    //   //   //   console.error('Failed to save event in the database:', response.status);
+    //   //   //   const errorData = response.json();
+    //   //   //   console.error('Error details:', errorData);
+    //   //   // }
+    //   // })
+    //   // .catch((error) => {
+    //   //   // Handle errors while saving to MongoDB
+    //   //   // console.error('Failed to save event in the database:', response.status);
+    //   //   // const errorData = res.json();
+    //   //   console.error('Error details:', error);
+    //   // });
+    // } else {
+    //   const attendeeIndex = updatedEvent.attendees.indexOf(user);
+    //   updatedEvent.attendees.splice(attendeeIndex, 1);
+    // }
+    
+    const bookingStudent = user;
+
+    // Update the event's attendees
+    const updatedEvent = { ...event };
+
+    // Check if attendees array exists, if not create it
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
     }
-  
-    if (!isMeetingFixed) {
-      updatedEvent.attendees.push(user);
-      // const apiUrl = "http://localhost:4000/api/v1/saveEvent/studentEvents";
-      // axios
-      // .post(apiUrl, {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   googleEventId: event.googleEventId,
-      //   userId: user._id,
-      //   summary: event.eventName,
-      //   description: event.eventDescription,
-      //   startDateTime: event.startDate.toISOString(),
-      //   endDateTime: event.endDate.toISOString(),
-      //   alumni: event.alumni._id,
-      // })
-      // .then(() => {
-      //   // setApiResponse(response.data);
-      //   // console.log(response.data);
-      //   // if (response.status == 201) {
-      //   //   alert("Event created and saved, check your Google Calendar!");
-      //   //   // navigate("/");
-      //   // } else {
-      //   //   // Handle errors while saving to MongoDB
-      //   //   console.error('Failed to save event in the database:', response.status);
-      //   //   const errorData = response.json();
-      //   //   console.error('Error details:', errorData);
-      //   // }
-      // })
-      // .catch((error) => {
-      //   // Handle errors while saving to MongoDB
-      //   // console.error('Failed to save event in the database:', response.status);
-      //   // const errorData = res.json();
-      //   console.error('Error details:', error);
-      // });
-    } else {
-      const attendeeIndex = updatedEvent.attendees.indexOf(user);
-      updatedEvent.attendees.splice(attendeeIndex, 1);
+
+    // Check if the booking student is not already in the attendees list
+    const isStudentAlreadyAttendee = updatedEvent.attendees.some(
+      (attendee) => attendee.toString() === bookingStudent._id.toString()
+    );
+
+    if (!isStudentAlreadyAttendee) {
+      // Add the booking student to the attendees list
+      updatedEvent.attendees.push(bookingStudent._id);
+      // Update event in the database or Google Calendar
+      try {
+        const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+        const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
+
+        const response = await axios.post(apiUrl, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          event: updatedEvent,
+        });
+
+        if (response.status === 200) {
+          console.log("Event updated successfully in the database!");
+          // Update the event in the local state as well, if required
+          // setEvents([...events]); // Assuming events state exists
+        } else {
+          console.error(
+            "Failed to update event in the database:",
+            response.status
+          );
+        }
+        // Toggle the meeting status for this specific event
+        const newMeetingStatus = [...meetingStatus];
+        newMeetingStatus[index] = !isMeetingFixed;
+        setMeetingStatus(newMeetingStatus);
+    
+        // Show appropriate alert based on meeting status
+        if (!isMeetingFixed) {
+          alert("Meeting successfully fixed with " + props.cardUser.name);
+        } else {
+          alert("Meeting successfully cancelled with " + props.cardUser.name);
+        }
+
+        console.log(typeof event.endDateTime);
+        socket.emit("fixMeeting", {
+          receiverId: props.cardUser._id,
+          senderId: user._id,
+          senderName: user.name,
+          messageType: "Meeting",
+          message: `${new Date(
+            new Date(event.startDateTime).getTime()
+          ).toLocaleString([], {
+            dateStyle: "long",
+            timeStyle: "short",
+          })}, has been booked`,
+        });
+      } catch (error) {
+        console.error("Error updating event:", error);
+      }
     }
-  
-    // Update event in the database or Google Calendar
+  };
+
+  const cancelMeeting = async (event, index) => {
     try {
+      // Update the event's attendees by removing the current user
+      const updatedEvent = { ...event };
+      updatedEvent.attendees = updatedEvent.attendees.filter(
+        (attendee) => attendee !== user._id
+      );
+  
+      // Update event in the database or Google Calendar
       const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
       const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
-
+  
       const response = await axios.post(apiUrl, {
         headers: {
           "Content-Type": "application/json",
         },
         event: updatedEvent,
       });
-
+  
       if (response.status === 200) {
         console.log("Event updated successfully in the database!");
         // Update the event in the local state as well, if required
-        // setEvents([...events]); // Assuming events state exists
-      } else {
-        console.error(
-          "Failed to update event in the database:",
-          response.status
-        );
-      }
-      // Toggle the meeting status for this specific event
-      const newMeetingStatus = [...meetingStatus];
-      newMeetingStatus[index] = !isMeetingFixed;
-      setMeetingStatus(newMeetingStatus);
-  
-      // Show appropriate alert based on meeting status
-      if (!isMeetingFixed) {
-        alert("Meeting successfully fixed with " + props.cardUser.name);
-      } else {
+        const updatedEvents = [...events];
+        updatedEvents[index] = updatedEvent;
+        setEvents(updatedEvents);
+        // Update the meeting status
+        const newMeetingStatus = [...meetingStatus];
+        newMeetingStatus[index] = false;
+        setMeetingStatus(newMeetingStatus);
         alert("Meeting successfully cancelled with " + props.cardUser.name);
+        socket.emit("fixMeeting", {
+          receiverId: props.cardUser._id,
+          senderId: user._id,
+          senderName: user.name,
+          messageType: "Meeting",
+          message: `Your meeting with ${user.name} has been cancelled`,
+        });
+      } else {
+        console.error("Failed to update event in the database:", response.status);
       }
     } catch (error) {
-      console.error("Error updating event:", error);
+      console.error("Error cancelling meeting:", error);
     }
   };
 
@@ -257,11 +332,11 @@ const UserCard = (props) => {
         </Grid>
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
-        {/* Button to start a chat */}
+        {/* IconButton to start a chat */}
         <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
           <ChatIcon />
         </IconButton>
-        {/* Button to view user profile */}
+        {/* IconButton to view user profile */}
         <IconButton
           color="primary"
           aria-label="Profile"
@@ -308,17 +383,33 @@ const UserCard = (props) => {
           </p>
           <p>Summary: {event.summary}</p>
           <p>Description: {event.description}</p>
-          {/* Add a button to fix a meeting for this slot */}
-          {!meetingStatus[index] ? (
-            <button onClick={() => fixMeeting(event, index)}>Fix Meeting</button>
+          {/* Add a IconButton to fix a meeting for this slot */}
+          {event.attendees && event.attendees.includes(user._id) ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => cancelMeeting(event, index)}
+            >
+              Cancel Meeting
+            </Button>
           ) : (
-            <button onClick={() => fixMeeting(event, index)}>Cancel Meeting</button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => fixMeeting(event, index)}
+            >
+              Fix Meeting
+            </Button>
           )}
+          {/* {!meetingStatus[index] ? (
+            <IconButton onClick={() => fixMeeting(event, index)}>Fix Meeting</IconButton>
+          ) : (
+            <IconButton onClick={() => fixMeeting(event, index)}>Cancel Meeting</IconButton>
+          )} */}
         </li>
       ))}
 
         </ul>
-
         </div>
       )}
       

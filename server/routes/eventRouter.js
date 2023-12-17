@@ -10,6 +10,6 @@ eventRouter.post('/studentEvents', setStudentEventDetails);
 eventRouter.get('/details', getEventDetails);
 eventRouter.post('/update', updateEventDetails);
 eventRouter.post('/delete', deleteEvents);
-eventRouter.get('/details', getPastEvents);
+eventRouter.get('/meetings', getPastEvents);
 
 export default eventRouter;

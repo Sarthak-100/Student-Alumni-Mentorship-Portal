@@ -11,9 +11,10 @@ export const UserProvider = ({ children }) => {
     setUser(userData);
   };
 
-  const logout = () => {
+  const logout = ({ returnTo }) => {
     // Perform logout logic, clear user data, etc.
-    setUser(null);
+    // setUser(null);
+    window.location.href = "http://localhost:5000";
   };
 
   return (
