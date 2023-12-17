@@ -323,13 +323,6 @@ const Calendar = () => {
             {showPastMeetings && (
             <div>
               <Typography variant="h6">Past Meetings</Typography>
-              {pastMeetings.map((meeting, index) => (
-                <div key={index}>
-                  {/* Render past meeting details as needed */}
-                  <p>{meeting.name}</p>
-                  {/* Add more details or structure based on your past meeting data */}
-                </div>
-              ))}
             </div>
           )}
         </>
