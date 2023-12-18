@@ -159,7 +159,7 @@ const UserCard = (props) => {
 
     if (!isStudentAlreadyAttendee) {
       // Add the booking student to the attendees list
-      updatedEvent.attendees.push(bookingStudent._id);
+      updatedEvent.attendees.push(bookingStudent);
       // Update event in the database or Google Calendar
       try {
         const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";

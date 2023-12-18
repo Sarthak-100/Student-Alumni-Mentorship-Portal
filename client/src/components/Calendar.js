@@ -9,10 +9,10 @@ import { useUserContext } from '../context/UserContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-calendar/dist/Calendar.css';
+import { useNavigate } from 'react-router-dom';
 
 
 const Calendar = () => {
-
   const [startDate, setStart] = useState(new Date());
   const [endDate, setEnd] = useState(new Date());
   const [eventName, setEventName] = useState("");
@@ -22,6 +22,7 @@ const Calendar = () => {
   const [pastMeetings, setPastMeetings] = useState([]);
   const [showPastMeetings, setShowPastMeetings] = useState(false);
 
+  const navigate = useNavigate();
   const session = useSession(); // tokens, when session exists we have a user
   const supabase = useSupabaseClient(); // talk to supabase!
   const { isLoading } = useSessionContext();
@@ -33,8 +34,9 @@ const Calendar = () => {
       const response = await axios.get(`http://localhost:4000/api/v1/fetchPastMeetings/meetings?userId=${user._id}`);
 
       if (response.status === 200) {
-        const pastMeetings = response.data.pastMeetings;
-        console.log("Past meetings:", response.data.pastMeetings);
+        // const pastMeetings = response.data
+
+        console.log("Past meetings:", response.data);
         setPastMeetings(pastMeetings);
         setShowPastMeetings(true); // Show past meetings when fetched
       } else {
@@ -228,7 +230,7 @@ const Calendar = () => {
             console.log(response.data);
             if (response.status == 201) {
               alert("Event created and saved, check your Google Calendar!");
-              // navigate("/");
+              navigate("/");
             } else {
               // Handle errors while saving to MongoDB
               console.error(
