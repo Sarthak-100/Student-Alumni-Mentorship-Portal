@@ -19,8 +19,8 @@ import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import axios from "axios";
-import Calendar from "react-calendar";
 import { useSocketContext } from "../context/SocketContext";
+import Calendar from "react-calendar";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -97,61 +97,29 @@ const UserCard = (props) => {
   
     // Check the current status for this event
     const isMeetingFixed = meetingStatus[index];
-  
-    // if (!updatedEvent.attendees) {
-    //   updatedEvent.attendees = [];
-    // }
-  
-    // if (!isMeetingFixed) {
-    //   updatedEvent.attendees.push(user);
-    //   // const apiUrl = "http://localhost:4000/api/v1/saveEvent/studentEvents";
-    //   // axios
-    //   // .post(apiUrl, {
-    //   //   headers: {
-    //   //     'Content-Type': 'application/json',
-    //   //   },
-    //   //   googleEventId: event.googleEventId,
-    //   //   userId: user._id,
-    //   //   summary: event.eventName,
-    //   //   description: event.eventDescription,
-    //   //   startDateTime: event.startDate.toISOString(),
-    //   //   endDateTime: event.endDate.toISOString(),
-    //   //   alumni: event.alumni._id,
-    //   // })
-    //   // .then(() => {
-    //   //   // setApiResponse(response.data);
-    //   //   // console.log(response.data);
-    //   //   // if (response.status == 201) {
-    //   //   //   alert("Event created and saved, check your Google Calendar!");
-    //   //   //   // navigate("/");
-    //   //   // } else {
-    //   //   //   // Handle errors while saving to MongoDB
-    //   //   //   console.error('Failed to save event in the database:', response.status);
-    //   //   //   const errorData = response.json();
-    //   //   //   console.error('Error details:', errorData);
-    //   //   // }
-    //   // })
-    //   // .catch((error) => {
-    //   //   // Handle errors while saving to MongoDB
-    //   //   // console.error('Failed to save event in the database:', response.status);
-    //   //   // const errorData = res.json();
-    //   //   console.error('Error details:', error);
-    //   // });
-    // } else {
-    //   const attendeeIndex = updatedEvent.attendees.indexOf(user);
-    //   updatedEvent.attendees.splice(attendeeIndex, 1);
-    // }
     
     const bookingStudent = user;
 
     // Update the event's attendees
     const updatedEvent = { ...event };
 
+
+    // Check the current status for this event
+    const isMeetingFixed = meetingStatus[index];
+
     // Check if attendees array exists, if not create it
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
     }
 
+//     if (!isMeetingFixed) {
+//       updatedEvent.attendees.push(user);
+//     } else {
+//       const attendeeIndex = updatedEvent.attendees.indexOf(user);
+//       updatedEvent.attendees.splice(attendeeIndex, 1);
+//     }
+
+    // Update event in the database or Google Calendar
     // Check if the booking student is not already in the attendees list
     const isStudentAlreadyAttendee = updatedEvent.attendees.some(
       (attendee) => attendee.toString() === bookingStudent._id.toString()
@@ -253,6 +221,33 @@ const UserCard = (props) => {
       } else {
         console.error("Failed to update event in the database:", response.status);
       }
+
+      // Toggle the meeting status for this specific event
+      const newMeetingStatus = [...meetingStatus];
+      newMeetingStatus[index] = !isMeetingFixed;
+      setMeetingStatus(newMeetingStatus);
+
+      // Show appropriate alert based on meeting status
+      if (!isMeetingFixed) {
+        alert("Meeting successfully fixed with " + props.cardUser.name);
+      } else {
+        alert("Meeting successfully cancelled with " + props.cardUser.name);
+      }
+
+      console.log(typeof event.endDateTime);
+
+      socket.emit("fixMeeting", {
+        receiverId: props.cardUser._id,
+        senderId: user._id,
+        senderName: user.name,
+        messageType: "Meeting",
+        message: `${new Date(
+          new Date(event.startDateTime).getTime()
+        ).toLocaleString([], {
+          dateStyle: "long",
+          timeStyle: "short",
+        })}, has been booked`,
+      });
     } catch (error) {
       console.error("Error cancelling meeting:", error);
     }
@@ -361,6 +356,45 @@ const UserCard = (props) => {
             Events
           </Typography>
           <ul>
+//             {events.map((event, index) => (
+//               <li key={index}>
+//                 {/* Displaying start date with time */}
+//                 <p>
+//                   Start Date/Time:{" "}
+//                   {new Date(
+//                     new Date(event.startDateTime).getTime()
+//                   ).toLocaleString([], {
+//                     dateStyle: "long",
+//                     timeStyle: "short",
+//                   })}
+//                 </p>
+//                 {/* Displaying end date with time */}
+//                 <p>
+//                   End Date/Time:{" "}
+//                   {new Date(
+//                     new Date(event.endDateTime).getTime()
+//                   ).toLocaleString([], {
+//                     dateStyle: "long",
+//                     timeStyle: "short",
+//                   })}
+//                 </p>
+//                 <p>Summary: {event.summary}</p>
+//                 <p>Description: {event.description}</p>
+//                 {/* Add a button to fix a meeting for this slot */}
+//                 {!meetingStatus[index] ? (
+//                   <button onClick={() => fixMeeting(event, index)}>
+//                     Fix Meeting
+//                   </button>
+//                 ) : (
+//                   <button onClick={() => fixMeeting(event, index)}>
+//                     Cancel Meeting
+//                   </button>
+//                 )}
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+//       )}
 
           {events.map((event, index) => (
         <li key={index}>
@@ -432,3 +466,4 @@ const UserCard = (props) => {
 };
 
 export default UserCard;
+
