@@ -477,9 +477,9 @@ const Layout = () => {
             >
               Dashboard
             </Typography>
-            <Button style={{ color: "#FF0000" }} onClick={handleCreateProfile}>
+            {/* <Button style={{ color: "#FF0000" }} onClick={handleCreateProfile}>
               CreateProfile
-            </Button>
+            </Button> */}
             {userContext.user?.user_type === "admin" ? (
               <IconButton color="inherit">
                 <Badge
