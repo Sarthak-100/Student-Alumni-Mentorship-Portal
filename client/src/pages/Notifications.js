@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext";
 import { useNavigate } from "react-router-dom";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -43,9 +43,9 @@ const Notifications = () => {
 
   return (
     <div>
-      {/* <Button variant="contained" onClick={handleBack}>
+      {/* <IconButton variant="contained" onClick={handleBack}>
         Back
-      </Button> */}
+      </IconButton> */}
       <h1>Notifications</h1>
       {notifications.map((notification) => (
         <Notification

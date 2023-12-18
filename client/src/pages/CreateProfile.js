@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
 import React from "react";
 import axios from "axios";
 
@@ -21,9 +21,9 @@ const CreateProfile = () => {
   };
   return (
     <div>
-      <Button variant="contained" onClick={createProfile}>
-        Button
-      </Button>
+      <IconButton variant="contained" onClick={createProfile}>
+        IconButton
+      </IconButton>
     </div>
   );
 };

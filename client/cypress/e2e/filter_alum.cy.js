@@ -8,7 +8,7 @@ describe('filter Alumni', () => {
         cy.findByRole('option', {
         name: /2011/i
         }).click()
-        cy.findByRole('button', {
+        cy.findByRole('IconButton', {
             name: /apply filters/i
           }).click()
         cy.findByText('2011').should('exist');

@@ -97,11 +97,11 @@ const StudentUserCard = (props) => {
         </Grid>
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
-        {/* Button to start a chat */}
+        {/* IconButton to start a chat */}
         <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
           <ChatIcon />
         </IconButton>
-        {/* Button to view user profile */}
+        {/* IconButton to view user profile */}
         <IconButton
           color="primary"
           aria-label="Profile"

@@ -118,7 +118,7 @@ export default function Dashboard() {
   // const { isLoading, error, isAuthenticated } = useAuth0();
 
   // if (!isAuthenticated) {
-  //   return <LoginButton />;
+  //   return <LoginIconButton />;
   // }
   // {error && <div>Oops... {error.message}</div>}
   // {!error && isLoading && <div>Loading...</div>}
@@ -143,7 +143,7 @@ export default function Dashboard() {
 //     </UserProvider>
 
 {/* <> */}
-{/* <LogoutButton /> */}
+{/* <LogoutIconButton /> */}
 {/* <Routes>
   <Route path="/" element={<Dashboard />} />
   <Route path="/profile" element={<ProfilePage />} />

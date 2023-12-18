@@ -4,7 +4,7 @@ import {
   Box,
   Typography,
   Avatar,
-  Button,
+  IconButton,
   TextField,
   Grid,
   Stack,
@@ -42,7 +42,7 @@ const ElegantTypography = styled(Typography)`
   }
 `;
 
-const ElegantButton = styled(Button)`
+const ElegantIconButton = styled(IconButton)`
   background-color: #1976d2;
   color: #fff;
   padding: 0.8rem 1.5rem;
@@ -170,13 +170,13 @@ const AlumniProfilePage = () => {
             )}
           </Stack>
 
-          <ElegantButton
+          <ElegantIconButton
             variant="contained"
             color="primary"
             onClick={editMode ? saveProfile : toggleEditMode}
           >
             {editMode ? "Save Profile" : "Edit Profile"}
-          </ElegantButton>
+          </ElegantIconButton>
         </ProfileHeader>
 
         {!editMode && (

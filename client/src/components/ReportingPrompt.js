@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 
 const ReportPrompt = ({ open, onClose, onSubmit }) => {
   const [reportReason, setReportReason] = useState("");
@@ -46,9 +46,9 @@ const ReportPrompt = ({ open, onClose, onSubmit }) => {
           variant="outlined"
           sx={{ marginBottom: 2 }}
         />
-        <Button variant="contained" onClick={handleSubmit}>
+        <IconButton variant="contained" onClick={handleSubmit}>
           Submit Report
-        </Button>
+        </IconButton>
       </Box>
     </Modal>
   );

@@ -175,7 +175,7 @@ import { useUserContext } from "../context/UserContext";
 //             </div>
 //           )}
 //         </div>
-//         <Button
+//         <IconButton
 //           variant="contained"
 //           color="primary"
 //           onClick={editMode ? saveProfile : toggleEditMode}
@@ -184,7 +184,7 @@ import { useUserContext } from "../context/UserContext";
 //           }}
 //         >
 //           {editMode ? "Save Profile" : "Edit Profile"}
-//         </Button>
+//         </IconButton>
 //       </Paper>
 //     </CenteredContainer>
 //   );

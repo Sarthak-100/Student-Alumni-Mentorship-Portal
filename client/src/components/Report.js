@@ -1,5 +1,5 @@
 import {
-  Button,
+  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
@@ -45,7 +45,7 @@ const Report = (props) => {
     color: "#888",
   };
 
-  const handleChatButton = async (e) => {
+  const handleChatIconButton = async (e) => {
     if (props.report.reportedUserType === "student") {
       await setReceiverIdValue(props.report.reportedId);
     } else {
@@ -117,21 +117,21 @@ const Report = (props) => {
         <div style={bodyStyle}>
           <strong>Reason:</strong> {props.report.reason}
         </div>
-        <Button
+        <IconButton
           style={{ textTransform: "none" }}
           variant="contained"
-          onClick={handleChatButton}
+          onClick={handleChatIconButton}
         >
           Chat With Student
-        </Button>
-        <Button
+        </IconButton>
+        <IconButton
           style={{ marginLeft: "13px", textTransform: "none" }}
           variant="contained"
-          onClick={handleChatButton}
+          onClick={handleChatIconButton}
         >
           Chat With Alumni
-        </Button>
-        <Button
+        </IconButton>
+        <IconButton
           style={{
             marginLeft: "13px",
             backgroundColor: "#00FF00",
@@ -141,8 +141,8 @@ const Report = (props) => {
           onClick={handleResolved}
         >
           Mark as Resolved
-        </Button>
-        <Button
+        </IconButton>
+        <IconButton
           style={{
             marginLeft: "13px",
             backgroundColor: "#FF0000",
@@ -153,7 +153,7 @@ const Report = (props) => {
         >
           Remove{" "}
           {props.report.reportedUserType === "student" ? "Student" : "Alumni"}
-        </Button>
+        </IconButton>
         <div style={footerStyle}>
           <small>{format(props.report.createdAt)}</small>
         </div>
@@ -166,9 +166,9 @@ const Report = (props) => {
           <DialogContentText>The issue has been resolved.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} autoFocus>
+          <IconButton onClick={handleDialogClose} autoFocus>
             OK
-          </Button>
+          </IconButton>
         </DialogActions>
       </Dialog>
 
@@ -183,9 +183,9 @@ const Report = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} autoFocus>
+          <IconButton onClick={handleDialogClose} autoFocus>
             OK
-          </Button>
+          </IconButton>
         </DialogActions>
       </Dialog>
     </div>

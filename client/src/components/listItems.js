@@ -1,5 +1,5 @@
 import * as React from "react";
-import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIconButton from "@mui/material/ListItemIconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -24,42 +24,42 @@ const ListItems = ({ showFilterAlumniCallback ,showFilterStudentCallback}) => {
 
   return (
     <React.Fragment>
-      <ListItemButton>
+      <ListItemIconButton>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
-      </ListItemButton>
+      </ListItemIconButton>
 
-      <ListItemButton
+      <ListItemIconButton
         onClick={() => handleFilterAlumniClick(showFilterAlumniCallback)}
       >
         <ListItemIcon>
           <FilterAltIcon />
         </ListItemIcon>
         <ListItemText primary="Filter Alumni" />
-      </ListItemButton>
+      </ListItemIconButton>
   
-      <ListItemButton
+      <ListItemIconButton
       onClick={() => handleFilterStudentClick(showFilterStudentCallback)}>
         <ListItemIcon>
           <FilterAltIcon />
         </ListItemIcon>
         <ListItemText primary="Filter Students" />
-      </ListItemButton>
+      </ListItemIconButton>
       
-      <ListItemButton>
+      <ListItemIconButton>
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary="Reports" />
-      </ListItemButton>
-      <ListItemButton>
+      </ListItemIconButton>
+      <ListItemIconButton>
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
         <ListItemText primary="Integrations" />
-      </ListItemButton>
+      </ListItemIconButton>
     </React.Fragment>
   );
 };
@@ -67,7 +67,7 @@ const ListItems = ({ showFilterAlumniCallback ,showFilterStudentCallback}) => {
 export default ListItems;
 
 // import * as React from 'react';
-// import ListItemButton from '@mui/material/ListItemButton';
+// import ListItemIconButton from '@mui/material/ListItemIconButton';
 // import ListItemIcon from '@mui/material/ListItemIcon';
 // import ListItemText from '@mui/material/ListItemText';
 // import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -78,35 +78,35 @@ export default ListItems;
 
 // export const mainListItems = (
 //   <React.Fragment>
-//     <ListItemButton>
+//     <ListItemIconButton>
 //       <ListItemIcon>
 //         <DashboardIcon />
 //       </ListItemIcon>
 //       <ListItemText primary="Dashboard" />
-//     </ListItemButton>
-//     <ListItemButton>
+//     </ListItemIconButton>
+//     <ListItemIconButton>
 //       <ListItemIcon>
 //         <ShoppingCartIcon />
 //       </ListItemIcon>
 //       <ListItemText primary="Filter Alumni" />
-//     </ListItemButton>
-//     <ListItemButton>
+//     </ListItemIconButton>
+//     <ListItemIconButton>
 //       <ListItemIcon>
 //         <PeopleIcon />
 //       </ListItemIcon>
 //       <ListItemText primary="Customers" />
-//     </ListItemButton>
-//     <ListItemButton>
+//     </ListItemIconButton>
+//     <ListItemIconButton>
 //       <ListItemIcon>
 //         <BarChartIcon />
 //       </ListItemIcon>
 //       <ListItemText primary="Reports" />
-//     </ListItemButton>
-//     <ListItemButton>
+//     </ListItemIconButton>
+//     <ListItemIconButton>
 //       <ListItemIcon>
 //         <LayersIcon />
 //       </ListItemIcon>
 //       <ListItemText primary="Integrations" />
-//     </ListItemButton>
+//     </ListItemIconButton>
 //   </React.Fragment>
 // );

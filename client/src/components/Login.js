@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logo from "../images/live-chat_512px.png";
-import { Backdrop, Button, CircularProgress, TextField } from "@mui/material";
+import { Backdrop, IconButton, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Toaster from "./Toaster";
@@ -162,14 +162,14 @@ function Login() {
                 }
               }}
             />
-            <Button
+            <IconButton
               variant="outlined"
               color="secondary"
               onClick={loginHandler}
               isLoading
             >
               Login
-            </Button>
+            </IconButton>
             <p>
               Don't have an Account ?{" "}
               <span
@@ -233,13 +233,13 @@ function Login() {
                 }
               }}
             />
-            <Button
+            <IconButton
               variant="outlined"
               color="secondary"
               onClick={signUpHandler}
             >
               Sign Up
-            </Button>
+            </IconButton>
             <p>
               Already have an Account ?
               <span

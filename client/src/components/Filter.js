@@ -5,7 +5,7 @@ import {
   Box,
   Typography,
   Divider,
-  Button,
+  IconButton,
   TextField,
   MenuItem,
 } from "@mui/material";
@@ -181,13 +181,13 @@ const FilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
         </TextField>
 
         <Box p={2} display="flex" justifyContent="flex-end">
-          <Button variant="contained" style={{ marginRight: '8px' }} onClick={handleApplyFilters}>
+          <IconButton variant="contained" style={{ marginRight: '8px' }} onClick={handleApplyFilters}>
             Apply Filters
-          </Button>
+          </IconButton>
 
-          <Button variant="outlined" size="small" onClick={handleClearFilters}>
+          <IconButton variant="outlined" size="small" onClick={handleClearFilters}>
             Clear Filters
-          </Button>
+          </IconButton>
         </Box>
 
         {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (

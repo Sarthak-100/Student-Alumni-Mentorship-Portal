@@ -4,7 +4,16 @@
   display: flex;
   align-items: center;
   justify-content: center; */
-
+  
+  .react-calendar__tile--active {
+    background-color: green !important; /* Set the background color to green */
+    color: white; /* Set text color for better visibility */
+    /* Add any other styling properties you want for the selected date */
+  }
+  .unbold-heading {
+    font-weight: normal;
+  }
+  
   .chatContainer{
     border: 1px solid white;
     border-radius: 10px;
@@ -212,7 +221,7 @@
           }
         }
   
-        .button {
+        .IconButton {
           border: none;
           padding: 10px 15px;
           color: white;
