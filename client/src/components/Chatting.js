@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { Avatar, Input, Button } from "@mui/material"
+import { Avatar, Input, Button } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import Message from "./Message";
@@ -351,7 +351,7 @@ const Chatting = () => {
           {user.user_type !== "admin" ? (
             <div>
               {user.user_type !== "student" ? (
-                <IconButton
+                <Button
                   variant="contained"
                   style={{
                     backgroundColor: blocked ? "#00FF00" : "#FF0000",
@@ -361,7 +361,7 @@ const Chatting = () => {
                   onClick={blockBtController}
                 >
                   {blocked ? "Unblock" : "Block"}
-                </IconButton>
+                </Button>
               ) : null}
               <IconButton
                 size="large"
@@ -373,13 +373,13 @@ const Chatting = () => {
               </IconButton>
             </div>
           ) : (
-            <IconButton
+            <Button
               variant="contained"
               style={{ backgroundColor: "#FF0000" }}
               className="IconButton"
             >
               Remove User
-            </IconButton>
+            </Button>
           )}
         </StyledToolbar>
       </AppBar>
@@ -402,14 +402,14 @@ const Chatting = () => {
               onChange={(e) => setNewMessage(e.target.value)}
               value={newMessage}
             />
-            <IconButton
+            <Button
               variant="contained"
               color="primary"
               className="IconButton"
               onClick={sendMeesageBtController}
             >
               Send
-            </IconButton>
+            </Button>
           </div>
         ) : (
           <div className="BlockedContainer">

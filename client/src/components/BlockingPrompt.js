@@ -4,7 +4,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 
 const BlockingPrompt = (props) => {
   return (
@@ -14,9 +14,9 @@ const BlockingPrompt = (props) => {
         <DialogContentText>{props.message}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <IconButton onClick={props.onClose} color="primary" autoFocus>
+        <Button onClick={props.onClose} color="primary" autoFocus>
           OK
-        </IconButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

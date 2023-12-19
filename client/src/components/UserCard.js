@@ -19,8 +19,8 @@ import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import axios from "axios";
-import Calendar from "react-calendar";
 import { useSocketContext } from "../context/SocketContext";
+import Calendar from "react-calendar";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ const UserCard = (props) => {
   const fixMeeting = async (event, index) => {
     console.log("fixMeeting", event);
     // const updatedEvent = { ...event };
-  
+
     // Check the current status for this event
     const isMeetingFixed = meetingStatus[index];
   
@@ -150,6 +150,8 @@ const UserCard = (props) => {
     // Update the event's attendees
     const updatedEvent = { ...event };
 
+    // Check the current status for this event
+
     // Check if attendees array exists, if not create it
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
@@ -197,7 +199,7 @@ const UserCard = (props) => {
         const newMeetingStatus = [...meetingStatus];
         newMeetingStatus[index] = !isMeetingFixed;
         setMeetingStatus(newMeetingStatus);
-    
+
         // Show appropriate alert based on meeting status
         if (!isMeetingFixed) {
           alert("Meeting successfully fixed with " + props.cardUser.name);
@@ -231,18 +233,18 @@ const UserCard = (props) => {
       updatedEvent.attendees = updatedEvent.attendees.filter(
         (attendee) => attendee._id !== user._id
       );
-  
+
       // Update event in the database or Google Calendar
       const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
       const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
-  
+
       const response = await axios.post(apiUrl, {
         headers: {
           "Content-Type": "application/json",
         },
         event: updatedEvent,
       });
-  
+
       if (response.status === 200) {
         console.log("Event updated successfully in the database!");
         // Update the event in the local state as well, if required
@@ -262,8 +264,33 @@ const UserCard = (props) => {
           message: `Your meeting with ${user.name} has been cancelled`,
         });
       } else {
-        console.error("Failed to update event in the database:", response.status);
+        console.error(
+          "Failed to update event in the database:",
+          response.status
+        );
       }
+
+      // Toggle the meeting status for this specific event
+      const newMeetingStatus = [...meetingStatus];
+      newMeetingStatus[index] = false;
+      setMeetingStatus(newMeetingStatus);
+
+      alert("Meeting successfully cancelled with " + props.cardUser.name);
+
+      console.log(typeof event.endDateTime);
+
+      socket.emit("fixMeeting", {
+        receiverId: props.cardUser._id,
+        senderId: user._id,
+        senderName: user.name,
+        messageType: "Meeting",
+        message: `${new Date(
+          new Date(event.startDateTime).getTime()
+        ).toLocaleString([], {
+          dateStyle: "long",
+          timeStyle: "short",
+        })}, has been booked`,
+      });
     } catch (error) {
       console.error("Error cancelling meeting:", error);
     }
@@ -684,7 +711,7 @@ const UserCard = (props) => {
         </ul>
         </div>
       )}
-      
+
       {/* Display the profile dialog */}
       {/* Display the user's profile */}
       {selectedUser && (
