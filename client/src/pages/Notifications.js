@@ -2,7 +2,6 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
 import Notification from "../components/Notification";
-import { format } from "timeago.js";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext";
 import { useNavigate } from "react-router-dom";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
@@ -43,17 +42,33 @@ const Notifications = () => {
 
   return (
     <div>
-      {/* <IconButton variant="contained" onClick={handleBack}>
-        Back
-      </IconButton> */}
       <h1>Notifications</h1>
-      {notifications.map((notification) => (
-        <Notification
-          from={notification.senderName}
-          message={notification.message}
-          time={format(notification.createdAt)}
-        />
-      ))}
+      {notifications.length !== 0 ? (
+        <>
+          {notifications.map((notification) => (
+            <Notification notification={notification} />
+          ))}
+        </>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "10vh",
+          }}
+        >
+          <p
+            style={{
+              fontStyle: "italic",
+              color: "#808080",
+              fontSize: "24px",
+            }}
+          >
+            All Notifications seen!
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -37,13 +37,37 @@ const Reports = () => {
   return (
     <div>
       <h1>Reports</h1>
-      {reports.map((report) => (
-        <Report
-          key={report._id}
-          report={report}
-          onReportResolved={handleReportResolved}
-        />
-      ))}
+
+      {reports.length !== 0 ? (
+        <>
+          {reports.map((report) => (
+            <Report
+              key={report._id}
+              report={report}
+              onReportResolved={handleReportResolved}
+            />
+          ))}
+        </>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "10vh",
+          }}
+        >
+          <p
+            style={{
+              fontStyle: "italic",
+              color: "#808080",
+              fontSize: "24px",
+            }}
+          >
+            All reports resolved!
+          </p>
+        </div>
+      )}
     </div>
   );
 };
