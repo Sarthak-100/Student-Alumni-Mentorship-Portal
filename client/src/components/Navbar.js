@@ -1,5 +1,5 @@
 import React from "react";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 
 import { useNavigate } from "react-router-dom";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
@@ -25,9 +25,9 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      <IconButton variant="contained" onClick={handleBack}>
+      <Button variant="contained" onClick={handleBack}>
         Back
-      </IconButton>
+      </Button>
     </div>
   );
 };
