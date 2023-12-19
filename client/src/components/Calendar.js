@@ -117,7 +117,10 @@ const Calendar = () => {
                   dateTime: event.endDateTime,
                   timeZone: "Asia/Kolkata", // Modify timezone as needed
                 },
-                attendees: event.attendees,
+                attendees: event.attendees.map(attendee => ({
+                  email: attendee.email,
+                  responseStatus: "accepted" // Assuming all attendees are accepted
+                })),
                 // Other event details to update
               };
               console.log("updated event", updatedEvent);

@@ -27,8 +27,15 @@ const eventSchema = new mongoose.Schema({
         required: true,
     },
     attendees: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Student' // Reference to the Student model
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Student', // Reference to the Student model
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        }
     }]
 });
 

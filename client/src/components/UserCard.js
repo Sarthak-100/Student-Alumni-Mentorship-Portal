@@ -142,7 +142,10 @@ const UserCard = (props) => {
     //   updatedEvent.attendees.splice(attendeeIndex, 1);
     // }
     
-    const bookingStudent = user;
+    const bookingStudent = {
+      _id: user._id,
+      email: user.email,
+    };
 
     // Update the event's attendees
     const updatedEvent = { ...event };
@@ -151,11 +154,19 @@ const UserCard = (props) => {
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
     }
-
+    console.log("updatedEvent ok", updatedEvent.attendees[0]?._id, "bookingStudent ok", bookingStudent?._id.toString(), updatedEvent.attendees[0]?._id ===
+    bookingStudent?._id.toString());
+    console.log("Booking Student:", bookingStudent);
+    console.log(
+      "Comparing IDs:",
+      updatedEvent.attendees?.map((attendee) => attendee?._id),
+      // bookingStudent?._id.toString(), "ok", typeof bookingStudent?._id, typeof updatedEvent.attendees?.map((attendee) => attendee?._id.toString())
+    );
     // Check if the booking student is not already in the attendees list
     const isStudentAlreadyAttendee = updatedEvent.attendees.some(
-      (attendee) => attendee.toString() === bookingStudent._id.toString()
+      (attendee) => attendee._id === bookingStudent._id.toString()
     );
+    console.log("isStudentAlreadyAttendee", isStudentAlreadyAttendee);
 
     if (!isStudentAlreadyAttendee) {
       // Add the booking student to the attendees list
@@ -218,7 +229,7 @@ const UserCard = (props) => {
       // Update the event's attendees by removing the current user
       const updatedEvent = { ...event };
       updatedEvent.attendees = updatedEvent.attendees.filter(
-        (attendee) => attendee !== user._id
+        (attendee) => attendee._id !== user._id
       );
   
       // Update event in the database or Google Calendar
@@ -257,6 +268,262 @@ const UserCard = (props) => {
       console.error("Error cancelling meeting:", error);
     }
   };
+
+  // const fixMeeting = async (event, index) => {
+  //   console.log("fixMeeting", event);
+  //   // const updatedEvent = { ...event };
+  
+  //   // Check the current status for this event
+  //   const isMeetingFixed = meetingStatus[index];
+  
+  //   // if (!updatedEvent.attendees) {
+  //   //   updatedEvent.attendees = [];
+  //   // }
+  
+  //   // if (!isMeetingFixed) {
+  //   //   updatedEvent.attendees.push(user);
+  //   //   // const apiUrl = "http://localhost:4000/api/v1/saveEvent/studentEvents";
+  //   //   // axios
+  //   //   // .post(apiUrl, {
+  //   //   //   headers: {
+  //   //   //     'Content-Type': 'application/json',
+  //   //   //   },
+  //   //   //   googleEventId: event.googleEventId,
+  //   //   //   userId: user._id,
+  //   //   //   summary: event.eventName,
+  //   //   //   description: event.eventDescription,
+  //   //   //   startDateTime: event.startDate.toISOString(),
+  //   //   //   endDateTime: event.endDate.toISOString(),
+  //   //   //   alumni: event.alumni._id,
+  //   //   // })
+  //   //   // .then(() => {
+  //   //   //   // setApiResponse(response.data);
+  //   //   //   // console.log(response.data);
+  //   //   //   // if (response.status == 201) {
+  //   //   //   //   alert("Event created and saved, check your Google Calendar!");
+  //   //   //   //   // navigate("/");
+  //   //   //   // } else {
+  //   //   //   //   // Handle errors while saving to MongoDB
+  //   //   //   //   console.error('Failed to save event in the database:', response.status);
+  //   //   //   //   const errorData = response.json();
+  //   //   //   //   console.error('Error details:', errorData);
+  //   //   //   // }
+  //   //   // })
+  //   //   // .catch((error) => {
+  //   //   //   // Handle errors while saving to MongoDB
+  //   //   //   // console.error('Failed to save event in the database:', response.status);
+  //   //   //   // const errorData = res.json();
+  //   //   //   console.error('Error details:', error);
+  //   //   // });
+  //   // } else {
+  //   //   const attendeeIndex = updatedEvent.attendees.indexOf(user);
+  //   //   updatedEvent.attendees.splice(attendeeIndex, 1);
+  //   // }
+    
+  //   const bookingStudent = user;
+
+  //   // Update the event's attendees
+  //   const updatedEvent = { ...event };
+
+  //   // Check if attendees array exists, if not create it
+  //   if (!updatedEvent.attendees) {
+  //     updatedEvent.attendees = [];
+  //   }
+
+  //   // Check if the booking student is not already in the attendees list
+  //   const isStudentAlreadyAttendee = updatedEvent.attendees.some(
+  //     (attendee) => attendee.toString() === bookingStudent._id.toString()
+  //   );
+
+  //   if (!isStudentAlreadyAttendee) {
+  //     // Add the booking student to the attendees list
+  //     updatedEvent.attendees.push(bookingStudent);
+  //     console.log("updatedEvent", updatedEvent);
+  //     // Update event in the database or Google Calendar
+  //     try {
+  //       const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+  //       const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
+
+  //       const response = await axios.post(apiUrl, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         event: updatedEvent,
+  //       });
+
+  //       if (response.status === 200) {
+  //         console.log("Event updated successfully in the database!");
+  //         // Update the event in the local state as well, if required
+  //         // setEvents([...events]); // Assuming events state exists
+  //       } else {
+  //         console.error(
+  //           "Failed to update event in the database:",
+  //           response.status
+  //         );
+  //       }
+  //       // Toggle the meeting status for this specific event
+  //       const newMeetingStatus = [...meetingStatus];
+  //       newMeetingStatus[index] = !isMeetingFixed;
+  //       setMeetingStatus(newMeetingStatus);
+    
+  //       // Show appropriate alert based on meeting status
+  //       if (!isMeetingFixed) {
+  //         alert("Meeting successfully fixed with " + props.cardUser.name);
+  //       } else {
+  //         alert("Meeting successfully cancelled with " + props.cardUser.name);
+  //       }
+
+  //       console.log(typeof event.endDateTime);
+  //       socket.emit("fixMeeting", {
+  //         receiverId: props.cardUser._id,
+  //         senderId: user._id,
+  //         senderName: user.name,
+  //         messageType: "Meeting",
+  //         message: `${new Date(
+  //           new Date(event.startDateTime).getTime()
+  //         ).toLocaleString([], {
+  //           dateStyle: "long",
+  //           timeStyle: "short",
+  //         })}, has been booked`,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error updating event:", error);
+  //     }
+  //   }
+  // };
+
+  // const cancelMeeting = async (event, index) => {
+  //   try {
+  //     // Update the event's attendees by removing the current user
+  //     const updatedEvent = { ...event };
+  //     updatedEvent.attendees = updatedEvent.attendees.filter(
+  //       (attendee) => attendee !== user._id
+  //     );
+  
+  //     // Update event in the database or Google Calendar
+  //     const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+  //     const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
+  
+  //     const response = await axios.post(apiUrl, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       event: updatedEvent,
+  //     });
+  
+  //     if (response.status === 200) {
+  //       console.log("Event updated successfully in the database!");
+  //       // Update the event in the local state as well, if required
+  //       const updatedEvents = [...events];
+  //       updatedEvents[index] = updatedEvent;
+  //       setEvents(updatedEvents);
+  //       // Update the meeting status
+  //       const newMeetingStatus = [...meetingStatus];
+  //       newMeetingStatus[index] = false;
+  //       setMeetingStatus(newMeetingStatus);
+  //       alert("Meeting successfully cancelled with " + props.cardUser.name);
+  //       socket.emit("fixMeeting", {
+  //         receiverId: props.cardUser._id,
+  //         senderId: user._id,
+  //         senderName: user.name,
+  //         messageType: "Meeting",
+  //         message: `Your meeting with ${user.name} has been cancelled`,
+  //       });
+  //     } else {
+  //       console.error("Failed to update event in the database:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error cancelling meeting:", error);
+  //   }
+  // };
+
+  // const fixMeeting = async (event, index) => {
+  //   // Check if the current user is already an attendee
+  //   const isUserAttendee = event.attendees.some(
+  //     (attendee) => attendee._id === user._id
+  //   );
+  
+  //   // Check if the meeting is already fixed
+  //   if (!isUserAttendee) {
+  //     try {
+  //       const updatedEvent = { ...event };
+  //       updatedEvent.attendees.push({ _id: user._id, email: user.email });
+  
+  //       // Make an API call to update the event in the database
+  //       const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+  //       const apiUrl = `${baseUrl}?eventId=${updatedEvent._id}`;
+  
+  //       const response = await axios.post(apiUrl, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         event: updatedEvent,
+  //       });
+  
+  //       if (response.status === 200) {
+  //         const updatedEvents = [...events];
+  //         updatedEvents[index] = updatedEvent;
+  //         setEvents(updatedEvents);
+  
+  //         // Update the meeting status
+  //         const newMeetingStatus = [...meetingStatus];
+  //         newMeetingStatus[index] = true;
+  //         setMeetingStatus(newMeetingStatus);
+  
+  //         alert("Meeting successfully fixed with " + props.cardUser.name);
+  //         // Emit socket message or perform any other necessary action
+  //       } else {
+  //         console.error("Failed to update event in the database:", response.status);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fixing meeting:", error);
+  //     }
+  //   } else {
+  //     // alert("You are already part of this meeting!");
+  //     const newMeetingStatus = [...meetingStatus];
+  //     newMeetingStatus[index] = true;
+  //     setMeetingStatus(newMeetingStatus);
+  //   }
+  // };
+  
+  // const cancelMeeting = async (event, index) => {
+  //   try {
+  //     const updatedEvent = { ...event };
+  //     updatedEvent.attendees = updatedEvent.attendees.filter(
+  //       (attendee) => attendee._id !== user._id
+  //     );
+  
+  //     // Make an API call to update the event in the database
+  //     const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+  //     const apiUrl = `${baseUrl}?eventId=${updatedEvent._id}`;
+  
+  //     const response = await axios.post(apiUrl, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       event: updatedEvent,
+  //     });
+  
+  //     if (response.status === 200) {
+  //       const updatedEvents = [...events];
+  //       updatedEvents[index] = updatedEvent;
+  //       setEvents(updatedEvents);
+  
+  //       // Update the meeting status
+  //       const newMeetingStatus = [...meetingStatus];
+  //       newMeetingStatus[index] = false;
+  //       setMeetingStatus(newMeetingStatus);
+  
+  //       alert("Meeting successfully cancelled with " + props.cardUser.name);
+  //       // Emit socket message or perform any other necessary action
+  //     } else {
+  //       console.error("Failed to update event in the database:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error cancelling meeting:", error);
+  //   }
+  // };
+  
 
   const cardStyle = {
     maxWidth: 300,
@@ -387,7 +654,7 @@ const UserCard = (props) => {
           <p>Summary: {event.summary}</p>
           <p>Description: {event.description}</p>
           {/* Add a IconButton to fix a meeting for this slot */}
-          {event.attendees && event.attendees.includes(user._id) ? (
+          {event.attendees && event.attendees.some((attendee) => attendee?._id === user._id.toString()) ? (
             <Button
               variant="contained"
               color="secondary"
