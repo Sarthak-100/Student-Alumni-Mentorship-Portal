@@ -8,11 +8,12 @@ import {
   TextField,
   Grid,
   Stack,
-  Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUserContext } from "../context/UserContext";
+import EditIcon from "@mui/icons-material/Edit";
+
 import axios from "axios";
 
 // Custom Styles
@@ -42,12 +43,11 @@ const ElegantTypography = styled(Typography)`
   }
 `;
 
-const ElegantIconButton = styled(IconButton)`
+const EditProfileIconButton = styled(IconButton)`
   background-color: #1976d2;
   color: #fff;
-  padding: 0.8rem 1.5rem;
-  border-radius: 5px;
-  font-weight: 500;
+  padding: 0.8rem;
+  border-radius: 50%;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
@@ -170,13 +170,14 @@ const AlumniProfilePage = () => {
             )}
           </Stack>
 
-          <ElegantIconButton
+          
+          <EditProfileIconButton
             variant="contained"
             color="primary"
             onClick={editMode ? saveProfile : toggleEditMode}
           >
-            {editMode ? "Save Profile" : "Edit Profile"}
-          </ElegantIconButton>
+            <EditIcon />
+          </EditProfileIconButton>
         </ProfileHeader>
 
         {!editMode && (
