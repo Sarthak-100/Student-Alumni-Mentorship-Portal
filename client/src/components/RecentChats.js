@@ -40,6 +40,11 @@ const RecentChats = () => {
         );
         const conversations = conversationsResponse.data;
 
+        // Sort conversations by createdAt timestamp in descending order (most recent first)
+        conversations.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
         const userIds = conversations.map((conv) =>
           conv.members.find(
             (memberId) => memberId !== user._id // Get the other user's ID
