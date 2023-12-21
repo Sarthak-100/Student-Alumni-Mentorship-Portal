@@ -53,7 +53,7 @@ const PreviousChats = () => {
                 setConversations(response.data);
                 // setConversationsTemp(response.data);
                 // await setConversationValue(dictionaryWithElement);
-                setReceiverIdValue(null);
+                // setReceiverIdValue(null);
               } else {
                 conv = {
                   _id: null,
