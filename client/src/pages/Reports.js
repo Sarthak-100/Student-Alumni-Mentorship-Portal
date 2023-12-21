@@ -19,7 +19,11 @@ const Reports = ({ reloadReportNotificationPage }) => {
           }
         );
         console.log(response);
-        setReports(response.data);
+        const reportsTemp = response.data;
+        reportsTemp.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setReports(reportsTemp);
       } catch (error) {
         console.error("API Error:", error);
       }

@@ -26,7 +26,11 @@ const Notifications = ({ reloadNotificationPage }) => {
           )
           .then((response) => {
             console.log(response);
-            setNotifications(response.data);
+            const notificationsTemp = response.data;
+            notificationsTemp.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setNotifications(notificationsTemp);
           })
           .catch((error) => {
             console.error("API Error:", error);
