@@ -328,24 +328,23 @@ const UserCard = (props) => {
       </CardActions>
           {events.length > 0 && (
           <div style={{ margin: "20px auto", maxWidth: "300px" }}>
-            <Typography
-  variant="h6"
-  style={{
-    textAlign: "center",
-    position: 'relative',
-    display: 'inline-block',
-    padding: '8px 16px',
-    background: '#FFFF00', // Pink background color
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-    marginBottom: '25px',
-    marginLeft: "45px", // Adding some margin below the text
-    margin: '0 auto',
-  }}
->
-  Upcoming Events
-  {/* The pedestal effect has been removed */}
-</Typography>
+              <Typography
+                variant="h6"
+                style={{
+                  textAlign: "center",
+                  position: 'relative',
+                  display: 'inline-block',
+                  padding: '8px 16px',
+                  background: '#FFFF00', // Pink background color
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '8px',
+                  marginBottom: '25px',
+                  marginLeft: "45px", // Adding some margin below the text
+                  margin: '0 auto',
+                }}
+              >
+              Upcoming Events
+            </Typography>
             <ul>
             {events.map((event, index) => (
               <li key={index}>
