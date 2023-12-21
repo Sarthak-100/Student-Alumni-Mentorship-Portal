@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
 import IconButton from "@mui/material/IconButton";
 
-const Notifications = () => {
+const Notifications = ({ reloadNotificationPage }) => {
   const [notifications, setNotifications] = useState([]);
   const { user } = useUserContext();
   const { setNotificationsNoValue } = useNotificationsNoContext();
@@ -38,7 +38,7 @@ const Notifications = () => {
       }
     };
     getNotifications();
-  }, []);
+  }, [reloadNotificationPage]);
 
   return (
     <div>

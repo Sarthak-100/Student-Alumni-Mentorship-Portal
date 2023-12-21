@@ -135,6 +135,10 @@ const Layout = () => {
   const { clearNotification, setClearNotificationValue } =
     useClearNotificationContext();
 
+  const [reloadNotificationPage, setReloadNotificationPage] = useState(0);
+  const [reloadReportNotificationPage, setReloadReportNotificationPage] =
+    useState(0);
+
   // Function to fetch the user profile
   useEffect(() => {
     const getMyProfile = async () => {
@@ -319,7 +323,11 @@ const Layout = () => {
             .catch((error) => {
               console.error("API Error:", error);
             });
-          increment();
+          if (window.location.pathname === "/notifications") {
+            setReloadNotificationPage((prevReload) => prevReload + 1);
+          } else {
+            increment();
+          }
         } catch (error) {
           console.log(error);
         }
@@ -351,7 +359,11 @@ const Layout = () => {
             .catch((error) => {
               console.error("API Error:", error);
             });
-          increment();
+          if (window.location.pathname === "/notifications") {
+            setReloadNotificationPage((prevReload) => prevReload + 1);
+          } else {
+            increment();
+          }
         } catch (error) {
           console.log(error);
         }
@@ -385,7 +397,11 @@ const Layout = () => {
             .catch((error) => {
               console.error("API Error:", error);
             });
-          increment();
+          if (window.location.pathname === "/notifications") {
+            setReloadNotificationPage((prevReload) => prevReload + 1);
+          } else {
+            increment();
+          }
         } catch (error) {
           console.log(error);
         }
@@ -393,13 +409,25 @@ const Layout = () => {
     });
     socket.on("reportNotificationAdmin", async (data) => {
       console.log("reportNotificationAdmin");
-      reportedNoContext.increment();
+      if (window.location.pathname === "/reports") {
+        setReloadReportNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        reportedNoContext.increment();
+      }
     });
     socket.on("reportNotificationUser", async (data) => {
-      increment();
+      if (window.location.pathname === "/notifications") {
+        setReloadNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        increment();
+      }
     });
     socket.on("getFixMeetingNotification", async (data) => {
-      increment();
+      if (window.location.pathname === "/notifications") {
+        setReloadNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        increment();
+      }
     });
     return () => {
       socket.off("getMessageNotification");
@@ -591,8 +619,22 @@ const Layout = () => {
               <Route path="/filterStudent" element={<FilterStudent />} />
               <Route path="/stats" element={<Admin_Charts />} />
               <Route path="/calendar" element={<Calendar />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/reports" element={<Reports />} />
+              <Route
+                path="/notifications"
+                element={
+                  <Notifications
+                    reloadNotificationPage={reloadNotificationPage}
+                  />
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <Reports
+                    reloadReportNotificationPage={reloadReportNotificationPage}
+                  />
+                }
+              />
               <Route path="/createProfile" element={<CreateProfile />} />
             </Routes>
           </Container>
