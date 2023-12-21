@@ -13,6 +13,7 @@ import { styled } from "@mui/system";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUserContext } from "../context/UserContext";
 import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
 
 import axios from "axios";
 
@@ -170,14 +171,23 @@ const AlumniProfilePage = () => {
             )}
           </Stack>
 
-          
-          <EditProfileIconButton
-            variant="contained"
-            color="primary"
-            onClick={editMode ? saveProfile : toggleEditMode}
-          >
-            <EditIcon />
-          </EditProfileIconButton>
+          {editMode ? (
+            <EditProfileIconButton
+              variant="contained"
+              color="primary"
+              onClick={saveProfile}
+            >
+              <SaveIcon /> {/* Render Save Icon when in edit mode */}
+            </EditProfileIconButton>
+          ) : (
+            <EditProfileIconButton
+              variant="contained"
+              color="primary"
+              onClick={toggleEditMode}
+            >
+              <EditIcon /> {/* Render Edit Icon when not in edit mode */}
+            </EditProfileIconButton>
+          )}
         </ProfileHeader>
 
         {!editMode && (
@@ -237,12 +247,16 @@ const AlumniProfilePage = () => {
                 onChange={(e) => handleInputChange("city", e.target.value)}
                 fullWidth
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 label="State"
                 value={editedValues.state}
                 onChange={(e) => handleInputChange("state", e.target.value)}
                 fullWidth
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 label="Country"
                 value={editedValues.country}

@@ -80,4 +80,26 @@ const filter = async (req, res) => {
   }
 };
 
-export { values, filter, prefix };
+const getAlumniNameById = async (req, res) => {
+  try {
+    const { alumniId } = req.query; // Change to req.query instead of req.params
+
+    // Query the database to find the alumni's name by ID
+    const alumni = await Alumni.findById(alumniId);
+
+    if (!alumni) {
+      return res.status(404).json({ error: 'Alumni not found' });
+    }
+
+    // Extract the name from the retrieved alumni data
+    const alumniName = alumni.name;
+
+    res.status(200).json({ alumniName });
+    return alumniName;
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching the alumni name.' });
+  }
+};
+
+
+export { values, filter, prefix , getAlumniNameById};
