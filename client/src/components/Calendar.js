@@ -693,16 +693,19 @@ const Calendar = () => {
                 <Typography variant="h6" sx={{ marginBottom: 3 }}>
                   Past Meetings
                 </Typography>
-                <Grid container spacing={3}>
-                  {pastMeetings && pastMeetings.events ? (
-                    pastMeetings.events.map((meeting) => (
-                      <Grid item key={meeting._id} xs={12} sm={6} md={4} lg={3}>
+                {pastMeetings &&
+                pastMeetings.events &&
+                pastMeetings.events.length > 0 ? (
+                  <Grid container spacing={3}>
+                    {pastMeetings.events.map((meeting) => (
+                      <Grid key={meeting._id} item xs={12} sm={6} md={4} lg={3}>
                         <Card
                           variant="outlined"
                           sx={{ minWidth: 280, width: "100%" }}
                         >
                           <CardContent>
                             <Typography variant="subtitle1" gutterBottom>
+                              <strong>Alumni: </strong>
                               {meeting.alumniName}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
@@ -714,17 +717,20 @@ const Calendar = () => {
                               <strong>Start Time:</strong>{" "}
                               {new Date(meeting.startDateTime).toLocaleString()}
                               <br />
+                              <strong>End Time:</strong>{" "}
+                              {new Date(meeting.endDateTime).toLocaleString()}
+                              <br />
                             </Typography>
                           </CardContent>
                         </Card>
                       </Grid>
-                    ))
-                  ) : (
-                    <Typography variant="body1">
-                      No past meetings available
-                    </Typography>
-                  )}
-                </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Typography variant="body1">
+                    No past meetings available
+                  </Typography>
+                )}
               </div>
             )}
           </>
