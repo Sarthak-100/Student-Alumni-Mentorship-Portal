@@ -266,30 +266,13 @@ const Calendar = () => {
   // }
 
   async function createCalendarEvent() {
+    // Check if start time is before end time
+    if (startDate > endDate) {
+      alert('Invalid event, start time must be before end time');
+      return;
+    }
+
     console.log("Creating calendar event");
-  
-    // const event = {
-    //   calendarId: "primary",
-    //   summary: eventName,
-    //   description: eventDescription,
-    //   start: {
-    //     dateTime: startDate.toISOString(),
-    //     timeZone: "Asia/Kolkata",
-    //   },
-    //   end: {
-    //     dateTime: endDate.toISOString(),
-    //     timeZone: "Asia/Kolkata",
-    //   },
-    //   attendees: [], // Initially empty, to be populated when other users book slots
-    //   reminders: {
-    //     useDefault: false,
-    //     overrides: [
-    //       { method: "email", minutes: 24 * 60 },
-    //       { method: "popup", minutes: 10 },
-    //     ],
-    //   },
-    // };
-  
     try {
       // Save event details in the database without creating it in Google Calendar
       const response = await axios.post("http://localhost:4000/api/v1/saveEvent/details", {
@@ -318,10 +301,6 @@ const Calendar = () => {
   }
   
   async function syncCalendar() {
-    // console.log("in sync calendar", effectCount, "session", session, session?.provider_token);
-    // setEffectCount((prevCount) => prevCount + 1);
-    // console.log("---------effect count-------", effectCount);
-    // if (effectCount === 0) { 
     if (session !== null && session?.provider_token !== undefined) {
       try {
         const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
@@ -543,26 +522,26 @@ const Calendar = () => {
               <>
                 {session && session?.provider_token !== undefined ?
                   <>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={4}>
                   <Grid item xs={12}>
-                    <Typography variant="h5">
-                      Hey {user?.name}, mark your calendar here
+                    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                      Hey {user?.name}, mark your availability here
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant="body1">Start of your event</Typography>
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>Event Start Time</Typography>
                     <DatePicker selected={startDate} onChange={(date) => setStart(date)} showTimeSelect dateFormat="Pp" />
                   </Grid>
                     
                   <Grid item xs={12}>
-                    <Typography variant="body1">End of your event</Typography>
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>Event End Time</Typography>
                   
                     {/* <input type="text" onChange={(e) => setStart(new Date(e.target.value))} /> */}
                     <DatePicker selected={endDate} onChange={(date) => setEnd(date)} showTimeSelect dateFormat="Pp" />
                     {/* <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} /> */}
                     </Grid>
                     <Grid item xs={12}>
-                    <Typography variant="body1">Event name</Typography>
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>Event Name</Typography>
                     <TextField
                       type="text"
                       value={eventName}
@@ -570,7 +549,9 @@ const Calendar = () => {
                     />
                     </Grid>
                     <Grid item xs={12}>
-                    <Typography variant="body1">Event description</Typography>
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                      Event Description <span style={{ fontWeight: 'normal' }}>(optional)</span>
+                    </Typography>
                     <TextField
                       type="text"
                       value={eventDescription}
