@@ -343,7 +343,7 @@ const Calendar = () => {
             // console.log("event", event, event.attendees.length, event.attendees);
             // Check if this event has attendees booked
             if (event.attendees && event.attendees.length > 0) {
-              // console.log("id", event.googleEventId === null);
+              console.log("checking event creation", event.googleEventId, event.googleEventId === null);
               if (event.googleEventId === undefined || event.googleEventId === null) {
                 console.log("Creating calendar event");
 
@@ -385,8 +385,8 @@ const Calendar = () => {
                     }
                   );
                   if (response.ok) {
-                    console.log("Event created in google calendar");
                     const eventData = await response.json();
+                    console.log("Event created in google calendar", eventData);
                     const googleEventId = eventData.id;
                     const updatedEvent = { ...event };
                     updatedEvent.googleEventId = googleEventId;

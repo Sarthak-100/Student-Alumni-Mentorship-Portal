@@ -177,8 +177,8 @@ const UserCard = (props) => {
     try {
       // Update the event's attendees by removing the current user
       const updatedEvent = { ...event };
-    
       updatedEvent.attendees = [];
+      console.log("event before cancellation", event);
       for (let i = 0; i < event.attendees.length; i++) {
         if (event.attendees[i]._id.toString() !== user._id.toString()) {
           updatedEvent.attendees.push(event.attendees[i]);
