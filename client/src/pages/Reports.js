@@ -4,7 +4,7 @@ import Report from "../components/Report";
 import { format } from "timeago.js";
 import { useReportedNoContext } from "../context/ReportedNoContext";
 
-const Reports = () => {
+const Reports = ({ reloadReportNotificationPage }) => {
   const [reports, setReports] = useState([]);
 
   const { reportedNo, setReportedNoValue, decrement } = useReportedNoContext();
@@ -25,7 +25,7 @@ const Reports = () => {
       }
     };
     getReports();
-  }, []);
+  }, [reloadReportNotificationPage]);
 
   const handleReportResolved = (resolvedReportId) => {
     setReports((prevReports) =>
