@@ -74,15 +74,20 @@ export const setStudentEventDetails = async (req, res) => {
 export const getEventDetails = async (req, res) => {
     const { userId } = req.query;
     try {
-        // console.log("userId", userId);
-        const events = await Event.find({ "alumni": userId });
-        // console.log("events", events);
+        const currentDate = new Date();
+
+        //Fetch events where endTime is greater than the current time
+        const events = await Event.find({
+            alumni: userId,
+            endDateTime: { $gte: currentDate }, // Filter based on endTime being greater than the current time
+        });
+        
         res.status(200).json({ events });
-    } catch(error) {
-        console.error('Error fetching event details:', error);
-        res.status(500).json({ error: 'An error occurred while fetching event details' });
+    } catch (error) {
+      console.error('Error fetching event details:', error);
+      res.status(500).json({ error: 'An error occurred while fetching event details' });
     }
-}
+};
 
 export const updateEventDetails = async (req, res) => {
     try {
