@@ -326,69 +326,73 @@ const UserCard = (props) => {
           <TodayIcon />
         </IconButton>
       </CardActions>
-      {events.length > 0 && (
-        <div style={{ margin: "20px auto", maxWidth: "300px" }}>
-          <Typography variant="h6" style={{ textAlign: "center" }}>
-            Events
-          </Typography>
-          <ul>
-
-          {events.map((event, index) => (
-        <li key={index}>
-          {/* Displaying start date with time */}
-          <p>
-            Start Date/Time:{" "}
-            {new Date(
-              new Date(event.startDateTime).getTime()
-            ).toLocaleString([], {
-              dateStyle: "long",
-              timeStyle: "short",
-            })}
-          </p>
-          {/* Displaying end date with time */}
-          <p>
-            End Date/Time:{" "}
-            {new Date(
-              new Date(event.endDateTime).getTime()
-            ).toLocaleString([], {
-              dateStyle: "long",
-              timeStyle: "short",
-            })}
-          </p>
-          <p>Summary: {event.summary}</p>
-          <p>Description: {event.description}</p>
-          {/* Add a IconButton to fix a meeting for this slot */}
-          {event.attendees && event.attendees.some((attendee) => attendee?._id === user._id.toString()) ? (
-            <Button
-              variant="contained"
-              color="secondary"
-              style={{ backgroundColor: '#b71c1c', color: '#fff' }}
-              onClick={() => cancelMeeting(event, index)}
-            >
-              Cancel Meeting
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ backgroundColor: '#4caf50', color: '#fff' }}
-              onClick={() => fixMeeting(event, index)}
-            >
-                Fix Meeting  
-            </Button>
-          )}
-          {/* {!meetingStatus[index] ? (
-            <IconButton onClick={() => fixMeeting(event, index)}>Fix Meeting</IconButton>
-          ) : (
-            <IconButton onClick={() => fixMeeting(event, index)}>Cancel Meeting</IconButton>
-          )} */}
-        </li>
-      ))}
-
-        </ul>
+          {events.length > 0 && (
+          <div style={{ margin: "20px auto", maxWidth: "300px" }}>
+            <Typography
+  variant="h6"
+  style={{
+    textAlign: "center",
+    position: 'relative',
+    display: 'inline-block',
+    padding: '8px 16px',
+    background: '#FFFF00', // Pink background color
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    marginBottom: '25px',
+    marginLeft: "45px", // Adding some margin below the text
+    margin: '0 auto',
+  }}
+>
+  Upcoming Events
+  {/* The pedestal effect has been removed */}
+</Typography>
+            <ul>
+            {events.map((event, index) => (
+              <li key={index}>
+                {/* Displaying start date with time */}
+                <p>
+                  Start Date/Time:{" "}
+                  {new Date(event.startDateTime).toLocaleString([], {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                  })}
+                </p>
+                {/* Displaying end date with time */}
+                <p>
+                  End Date/Time:{" "}
+                  {new Date(event.endDateTime).toLocaleString([], {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                  })}
+                </p>
+                <p>Summary: {event.summary}</p>
+                {event.description && <p>Description: {event.description}</p>}
+                {/* Render the meeting fixing/cancelation buttons */}
+                {/* Add a IconButton to fix a meeting for this slot */}
+                {event.attendees && event.attendees.some((attendee) => attendee?._id === user._id.toString()) ? (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    style={{ backgroundColor: '#b71c1c', color: '#fff' }}
+                    onClick={() => cancelMeeting(event, index)}
+                  >
+                    Cancel Meeting
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#4caf50', color: '#fff' }}
+                    onClick={() => fixMeeting(event, index)}
+                  >
+                    Fix Meeting
+                  </Button>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-
       {/* Display the profile dialog */}
       {/* Display the user's profile */}
       {selectedUser && (

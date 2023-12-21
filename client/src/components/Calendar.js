@@ -525,7 +525,7 @@ const Calendar = () => {
                     <Grid container spacing={4}>
                   <Grid item xs={12}>
                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                      Hey {user?.name}, mark your availability here
+                      Hey! {user?.name}, mark your availability here
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
