@@ -146,27 +146,28 @@ const AlumniProfilePage = () => {
               sx={{ width: 150, height: 150 }}
             />
           )}
-          <Stack direction="column" spacing={1}>
-            <ElegantTypography variant="h4" component="h2">
+          <Stack direction="column" spacing={1} alignItems="center">
+            <ElegantTypography variant="h4" component="h2" style={{ fontSize: '35px' }}>
               {userContext.user.name}
             </ElegantTypography>
             {!editMode && (
               <Grid container spacing={1}>
+                <Grid item xs={12}>
+                  <ElegantTypography style={{ fontSize: '20px', textAlign: 'center' }}>
+                    <b>Email</b>: {user.email}
+                  </ElegantTypography>
+                </Grid>
                 <Grid item xs={6}>
-                  <ElegantTypography>
+                  <ElegantTypography style={{ fontSize: '20px', textAlign: 'center' }}>
                     <b>Specialization </b>: {userContext.user.branch}
                   </ElegantTypography>
                 </Grid>
                 <Grid item xs={6}>
-                  <ElegantTypography>
+                  <ElegantTypography style={{ fontSize: '20px', textAlign: 'center' }}>
                     <b>Batch</b>: {userContext.user.batch}
                   </ElegantTypography>
                 </Grid>
-                <Grid item xs={12}>
-                  <ElegantTypography>
-                    <b>Email</b>: {user.email}
-                  </ElegantTypography>
-                </Grid>
+                
               </Grid>
             )}
           </Stack>
@@ -176,6 +177,7 @@ const AlumniProfilePage = () => {
               variant="contained"
               color="primary"
               onClick={saveProfile}
+              title="Save Profile"
             >
               <SaveIcon /> {/* Render Save Icon when in edit mode */}
             </EditProfileIconButton>
@@ -184,6 +186,7 @@ const AlumniProfilePage = () => {
               variant="contained"
               color="primary"
               onClick={toggleEditMode}
+              title="Edit Profile"
             >
               <EditIcon /> {/* Render Edit Icon when not in edit mode */}
             </EditProfileIconButton>
@@ -197,23 +200,28 @@ const AlumniProfilePage = () => {
               <ElegantTypography variant="h6" className="bold">
                 Work
               </ElegantTypography>
-              <ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
                 <b>Role</b>: {editedValues.role}
               </ElegantTypography>
-              <ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
                 <b>Organization</b>: {editedValues.organization}
               </ElegantTypography>
             </Grid>
 
             {/* Location Section */}
             <Grid item xs={12} md={6}>
-              <ElegantTypography variant="h6" className="bold">
+              <ElegantTypography variant="h6" className="bold" style={{ fontSize: '20px' }}>
                 Location
               </ElegantTypography>
-              <ElegantTypography>
-                {editedValues.city},{editedValues.state}
+              <ElegantTypography style={{ fontSize: '20px' }}>
+                <b>City</b>: {editedValues.city}
               </ElegantTypography>
-              <ElegantTypography>{editedValues.country}</ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
+                <b>State</b>: {editedValues.state}
+              </ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
+                <b>Country</b>: {editedValues.country}
+              </ElegantTypography>
             </Grid>
           </Grid>
         )}
@@ -221,12 +229,16 @@ const AlumniProfilePage = () => {
         {editMode && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <ElegantTypography variant="h6">Work</ElegantTypography>
+            <ElegantTypography>Work</ElegantTypography>
               <TextField
                 label="Role"
                 value={editedValues.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
+                style={{ marginTop: '20px' }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -236,16 +248,23 @@ const AlumniProfilePage = () => {
                 onChange={(e) =>
                   handleInputChange("organization", e.target.value)
                 }
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12}>
-              <ElegantTypography variant="h6">Location</ElegantTypography>
+            <ElegantTypography>Location</ElegantTypography>
               <TextField
                 label="City"
                 value={editedValues.city}
                 onChange={(e) => handleInputChange("city", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
+                style={{ marginTop: '20px' }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -254,6 +273,9 @@ const AlumniProfilePage = () => {
                 value={editedValues.state}
                 onChange={(e) => handleInputChange("state", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -262,6 +284,9 @@ const AlumniProfilePage = () => {
                 value={editedValues.country}
                 onChange={(e) => handleInputChange("country", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
               />
             </Grid>
           </Grid>
