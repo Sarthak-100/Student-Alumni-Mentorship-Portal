@@ -139,11 +139,16 @@ export const deleteEvents = async (req, res) => {
 }
 
 export const getPastEvents = async (req, res) => {
+    const currentDate = new Date();
     try {
         const { userId } = req.query;
         console.log("userId", userId, req.query);
 
-        const events = await Event.find({ 'attendees._id': userId });
+        const events = await Event.find(
+            { 'attendees._id': userId,
+            endDateTime: { $lt: currentDate },
+            }
+        );
 
         console.log("past events", events);
         res.status(200).json({ events });
