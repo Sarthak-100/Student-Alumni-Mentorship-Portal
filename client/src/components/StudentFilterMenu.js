@@ -5,7 +5,7 @@ import {
   Box,
   Typography,
   Divider,
-  IconButton,
+  Button,
   TextField,
   MenuItem,
 } from "@mui/material";
@@ -116,13 +116,13 @@ const StudentFilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
 
 
         <Box p={2} display="flex" justifyContent="flex-end">
-          <IconButton variant="contained" style={{ marginRight: '8px' }} onClick={handleApplyFilters}>
+          <Button variant="contained" style={{ marginRight: '8px' }} onClick={handleApplyFilters}>
             Apply Filters
-          </IconButton>
+          </Button>
 
-          <IconButton variant="outlined" size="small" onClick={handleClearFilters}>
+          <Button variant="outlined" size="small" onClick={handleClearFilters}>
             Clear Filters
-          </IconButton>
+          </Button>
         </Box>
 
         {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (

@@ -4,7 +4,7 @@ const eventSchema = new mongoose.Schema({
     // Define the structure of each event
     googleEventId: {
         type: String,
-        required: true,
+        required: false,
     },
     alumni: {
         type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +16,7 @@ const eventSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: true,
+        required: false,
     },
     startDateTime: {
         type: Date,
@@ -27,8 +27,15 @@ const eventSchema = new mongoose.Schema({
         required: true,
     },
     attendees: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Student' // Reference to the Student model
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Student', // Reference to the Student model
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        }
     }]
 });
 

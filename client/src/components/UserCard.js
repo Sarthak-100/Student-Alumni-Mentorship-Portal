@@ -93,12 +93,11 @@ const UserCard = (props) => {
 
   const fixMeeting = async (event, index) => {
     console.log("fixMeeting", event);
-    // const updatedEvent = { ...event };
-
-    // Check the current status for this event
-    const isMeetingFixed = meetingStatus[index];
-
-    const bookingStudent = user;
+    
+    const bookingStudent = {
+      _id: user._id,
+      email: user.email,
+    };
 
     // Update the event's attendees
     const updatedEvent = { ...event };
@@ -109,19 +108,19 @@ const UserCard = (props) => {
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
     }
-
-    //     if (!isMeetingFixed) {
-    //       updatedEvent.attendees.push(user);
-    //     } else {
-    //       const attendeeIndex = updatedEvent.attendees.indexOf(user);
-    //       updatedEvent.attendees.splice(attendeeIndex, 1);
-    //     }
-
-    // Update event in the database or Google Calendar
+    console.log("updatedEvent ok", updatedEvent.attendees[0]?._id, "bookingStudent ok", bookingStudent?._id.toString(), updatedEvent.attendees[0]?._id ===
+    bookingStudent?._id.toString());
+    console.log("Booking Student:", bookingStudent);
+    console.log(
+      "Comparing IDs:",
+      updatedEvent.attendees?.map((attendee) => attendee?._id),
+      // bookingStudent?._id.toString(), "ok", typeof bookingStudent?._id, typeof updatedEvent.attendees?.map((attendee) => attendee?._id.toString())
+    );
     // Check if the booking student is not already in the attendees list
     const isStudentAlreadyAttendee = updatedEvent.attendees.some(
-      (attendee) => attendee.toString() === bookingStudent._id.toString()
+      (attendee) => attendee._id === bookingStudent._id.toString()
     );
+    console.log("isStudentAlreadyAttendee", isStudentAlreadyAttendee);
 
     if (!isStudentAlreadyAttendee) {
       // Add the booking student to the attendees list
@@ -150,15 +149,10 @@ const UserCard = (props) => {
         }
         // Toggle the meeting status for this specific event
         const newMeetingStatus = [...meetingStatus];
-        newMeetingStatus[index] = !isMeetingFixed;
+        newMeetingStatus[index] = true;
         setMeetingStatus(newMeetingStatus);
 
-        // Show appropriate alert based on meeting status
-        if (!isMeetingFixed) {
-          alert("Meeting successfully fixed with " + props.cardUser.name);
-        } else {
-          alert("Meeting successfully cancelled with " + props.cardUser.name);
-        }
+        alert("Meeting successfully fixed with " + props.cardUser.name);
 
         console.log(typeof event.endDateTime);
         socket.emit("fixMeeting", {
@@ -183,10 +177,15 @@ const UserCard = (props) => {
     try {
       // Update the event's attendees by removing the current user
       const updatedEvent = { ...event };
-      updatedEvent.attendees = updatedEvent.attendees.filter(
-        (attendee) => attendee !== user._id
-      );
+      updatedEvent.attendees = [];
+      console.log("event before cancellation", event);
+      for (let i = 0; i < event.attendees.length; i++) {
+        if (event.attendees[i]._id.toString() !== user._id.toString()) {
+          updatedEvent.attendees.push(event.attendees[i]);
+        }
+      }
 
+      console.log("updatedEvent after cancellation", updatedEvent);
       // Update event in the database or Google Calendar
       const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
       const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
@@ -204,6 +203,7 @@ const UserCard = (props) => {
         const updatedEvents = [...events];
         updatedEvents[index] = updatedEvent;
         setEvents(updatedEvents);
+
         // Update the meeting status
         const newMeetingStatus = [...meetingStatus];
         newMeetingStatus[index] = false;
@@ -216,6 +216,7 @@ const UserCard = (props) => {
           messageType: "Meeting",
           message: `Your meeting with ${user.name} has been cancelled`,
         });
+
       } else {
         console.error(
           "Failed to update event in the database:",
@@ -223,27 +224,6 @@ const UserCard = (props) => {
         );
       }
 
-      // Toggle the meeting status for this specific event
-      const newMeetingStatus = [...meetingStatus];
-      newMeetingStatus[index] = false;
-      setMeetingStatus(newMeetingStatus);
-
-      alert("Meeting successfully cancelled with " + props.cardUser.name);
-
-      console.log(typeof event.endDateTime);
-
-      socket.emit("fixMeeting", {
-        receiverId: props.cardUser._id,
-        senderId: user._id,
-        senderName: user.name,
-        messageType: "Meeting",
-        message: `${new Date(
-          new Date(event.startDateTime).getTime()
-        ).toLocaleString([], {
-          dateStyle: "long",
-          timeStyle: "short",
-        })}, has been booked`,
-      });
     } catch (error) {
       console.error("Error cancelling meeting:", error);
     }
@@ -346,20 +326,32 @@ const UserCard = (props) => {
           <TodayIcon />
         </IconButton>
       </CardActions>
-      {events.length > 0 && (
-        <div style={{ margin: "20px auto", maxWidth: "300px" }}>
-          <Typography variant="h6" style={{ textAlign: "center" }}>
-            Events
-          </Typography>
-          <ul>
+          {events.length > 0 && (
+          <div style={{ margin: "20px auto", maxWidth: "300px" }}>
+              <Typography
+                variant="h6"
+                style={{
+                  textAlign: "center",
+                  position: 'relative',
+                  display: 'inline-block',
+                  padding: '8px 16px',
+                  background: '#FFFF00', // Pink background color
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '8px',
+                  marginBottom: '25px',
+                  marginLeft: "45px", // Adding some margin below the text
+                  margin: '0 auto',
+                }}
+              >
+              Upcoming Events
+            </Typography>
+            <ul>
             {events.map((event, index) => (
               <li key={index}>
                 {/* Displaying start date with time */}
                 <p>
                   Start Date/Time:{" "}
-                  {new Date(
-                    new Date(event.startDateTime).getTime()
-                  ).toLocaleString([], {
+                  {new Date(event.startDateTime).toLocaleString([], {
                     dateStyle: "long",
                     timeStyle: "short",
                   })}
@@ -367,21 +359,20 @@ const UserCard = (props) => {
                 {/* Displaying end date with time */}
                 <p>
                   End Date/Time:{" "}
-                  {new Date(
-                    new Date(event.endDateTime).getTime()
-                  ).toLocaleString([], {
+                  {new Date(event.endDateTime).toLocaleString([], {
                     dateStyle: "long",
                     timeStyle: "short",
                   })}
                 </p>
                 <p>Summary: {event.summary}</p>
-                <p>Description: {event.description}</p>
+                {event.description && <p>Description: {event.description}</p>}
+                {/* Render the meeting fixing/cancelation buttons */}
                 {/* Add a IconButton to fix a meeting for this slot */}
-                {event.attendees && event.attendees.includes(user._id) ? (
+                {event.attendees && event.attendees.some((attendee) => attendee?._id === user._id.toString()) ? (
                   <Button
                     variant="contained"
                     color="secondary"
-                    style={{ backgroundColor: "#b71c1c", color: "#fff" }}
+                    style={{ backgroundColor: '#b71c1c', color: '#fff' }}
                     onClick={() => cancelMeeting(event, index)}
                   >
                     Cancel Meeting
@@ -390,23 +381,17 @@ const UserCard = (props) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    style={{ backgroundColor: "#4caf50", color: "#fff" }}
+                    style={{ backgroundColor: '#4caf50', color: '#fff' }}
                     onClick={() => fixMeeting(event, index)}
                   >
                     Fix Meeting
                   </Button>
                 )}
-                {/* {!meetingStatus[index] ? (
-            <IconButton onClick={() => fixMeeting(event, index)}>Fix Meeting</IconButton>
-          ) : (
-            <IconButton onClick={() => fixMeeting(event, index)}>Cancel Meeting</IconButton>
-          )} */}
               </li>
             ))}
           </ul>
         </div>
       )}
-
       {/* Display the profile dialog */}
       {/* Display the user's profile */}
       {selectedUser && (

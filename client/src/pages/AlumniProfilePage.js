@@ -8,11 +8,13 @@ import {
   TextField,
   Grid,
   Stack,
-  Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUserContext } from "../context/UserContext";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+
 import axios from "axios";
 
 // Custom Styles
@@ -42,12 +44,11 @@ const ElegantTypography = styled(Typography)`
   }
 `;
 
-const ElegantIconButton = styled(IconButton)`
+const EditProfileIconButton = styled(IconButton)`
   background-color: #1976d2;
   color: #fff;
-  padding: 0.8rem 1.5rem;
-  border-radius: 5px;
-  font-weight: 500;
+  padding: 0.8rem;
+  border-radius: 50%;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
@@ -145,38 +146,51 @@ const AlumniProfilePage = () => {
               sx={{ width: 150, height: 150 }}
             />
           )}
-          <Stack direction="column" spacing={1}>
-            <ElegantTypography variant="h4" component="h2">
+          <Stack direction="column" spacing={1} alignItems="center">
+            <ElegantTypography variant="h4" component="h2" style={{ fontSize: '35px' }}>
               {userContext.user.name}
             </ElegantTypography>
             {!editMode && (
               <Grid container spacing={1}>
+                <Grid item xs={12}>
+                  <ElegantTypography style={{ fontSize: '20px', textAlign: 'center' }}>
+                    <b>Email</b>: {user.email}
+                  </ElegantTypography>
+                </Grid>
                 <Grid item xs={6}>
-                  <ElegantTypography>
+                  <ElegantTypography style={{ fontSize: '20px', textAlign: 'center' }}>
                     <b>Specialization </b>: {userContext.user.branch}
                   </ElegantTypography>
                 </Grid>
                 <Grid item xs={6}>
-                  <ElegantTypography>
+                  <ElegantTypography style={{ fontSize: '20px', textAlign: 'center' }}>
                     <b>Batch</b>: {userContext.user.batch}
                   </ElegantTypography>
                 </Grid>
-                <Grid item xs={12}>
-                  <ElegantTypography>
-                    <b>Email</b>: {user.email}
-                  </ElegantTypography>
-                </Grid>
+                
               </Grid>
             )}
           </Stack>
 
-          <ElegantIconButton
-            variant="contained"
-            color="primary"
-            onClick={editMode ? saveProfile : toggleEditMode}
-          >
-            {editMode ? "Save Profile" : "Edit Profile"}
-          </ElegantIconButton>
+          {editMode ? (
+            <EditProfileIconButton
+              variant="contained"
+              color="primary"
+              onClick={saveProfile}
+              title="Save Profile"
+            >
+              <SaveIcon /> {/* Render Save Icon when in edit mode */}
+            </EditProfileIconButton>
+          ) : (
+            <EditProfileIconButton
+              variant="contained"
+              color="primary"
+              onClick={toggleEditMode}
+              title="Edit Profile"
+            >
+              <EditIcon /> {/* Render Edit Icon when not in edit mode */}
+            </EditProfileIconButton>
+          )}
         </ProfileHeader>
 
         {!editMode && (
@@ -186,23 +200,28 @@ const AlumniProfilePage = () => {
               <ElegantTypography variant="h6" className="bold">
                 Work
               </ElegantTypography>
-              <ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
                 <b>Role</b>: {editedValues.role}
               </ElegantTypography>
-              <ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
                 <b>Organization</b>: {editedValues.organization}
               </ElegantTypography>
             </Grid>
 
             {/* Location Section */}
             <Grid item xs={12} md={6}>
-              <ElegantTypography variant="h6" className="bold">
+              <ElegantTypography variant="h6" className="bold" style={{ fontSize: '20px' }}>
                 Location
               </ElegantTypography>
-              <ElegantTypography>
-                {editedValues.city},{editedValues.state}
+              <ElegantTypography style={{ fontSize: '20px' }}>
+                <b>City</b>: {editedValues.city}
               </ElegantTypography>
-              <ElegantTypography>{editedValues.country}</ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
+                <b>State</b>: {editedValues.state}
+              </ElegantTypography>
+              <ElegantTypography style={{ fontSize: '20px' }}>
+                <b>Country</b>: {editedValues.country}
+              </ElegantTypography>
             </Grid>
           </Grid>
         )}
@@ -210,12 +229,16 @@ const AlumniProfilePage = () => {
         {editMode && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <ElegantTypography variant="h6">Work</ElegantTypography>
+            <ElegantTypography>Work</ElegantTypography>
               <TextField
                 label="Role"
                 value={editedValues.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
+                style={{ marginTop: '20px' }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -225,28 +248,45 @@ const AlumniProfilePage = () => {
                 onChange={(e) =>
                   handleInputChange("organization", e.target.value)
                 }
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12}>
-              <ElegantTypography variant="h6">Location</ElegantTypography>
+            <ElegantTypography>Location</ElegantTypography>
               <TextField
                 label="City"
                 value={editedValues.city}
                 onChange={(e) => handleInputChange("city", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
+                style={{ marginTop: '20px' }}
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 label="State"
                 value={editedValues.state}
                 onChange={(e) => handleInputChange("state", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 label="Country"
                 value={editedValues.country}
                 onChange={(e) => handleInputChange("country", e.target.value)}
                 fullWidth
+                InputProps={{
+                  style: { height: '45px' }, // Adjust the height here
+                }}
               />
             </Grid>
           </Grid>
