@@ -43,7 +43,7 @@ app.use("/api/v1/saveEvent", eventRouter);
 app.use("/api/v1/fetchSlots", eventRouter);
 app.use("/api/v1/updateEvent", eventRouter);
 app.use("/api/v1/getEvent", eventRouter);
-app.use("/api/v1/removePastEvents", eventRouter);
 app.use("/api/v1/fetchPastMeetings", eventRouter);
+app.use("/api/v1/deleteEvent", eventRouter);
 
 export default app;
