@@ -72,7 +72,7 @@ const UserChats = (props) => {
       <img className="img" src={user?.img} alt="user" />
       <div className="chatInfo">
         <span className="span">{user?.name}</span>
-        <p className="lastMessage">{""}</p>
+        <p className="lastMessage">{props.conversation.lastMessage}</p>
       </div>
     </div>
   );
