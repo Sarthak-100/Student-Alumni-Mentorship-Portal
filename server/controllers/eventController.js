@@ -105,45 +105,67 @@ export const updateEventDetails = async (req, res) => {
     }
 }
 
-export const deleteEvents = async (req, res) => {
-    try {
-        const { userId } = req.query;
-        // console.log("userId", userId, req.query);
+// export const deletePastEvents = async (req, res) => {
+//     try {
+//         const { userId } = req.query;
+//         // console.log("userId", userId, req.query);
 
-        //delete all events of this user which have been past
-        const events = await Event.find({ "alumni": userId });
-        console.log("events", events);
+//         //delete all events of this user which have been past
+//         const events = await Event.find({ "alumni": userId });
+//         console.log("events", events);
         
-        if (events.length > 0) {
-            // Get current date and time
-            const currentDate = dayjs();
+//         if (events.length > 0) {
+//             // Get current date and time
+//             const currentDate = dayjs();
 
-            // Filter events that are in the past based on their endDateTime
-            console.log("currentDate", currentDate, dayjs(events[0].endDateTime));
-            const pastEvents = events.filter(event => dayjs(event.endDateTime) < currentDate);
-            console.log("pastEvents", pastEvents);
+//             // Filter events that are in the past based on their endDateTime
+//             console.log("currentDate", currentDate, dayjs(events[0].endDateTime));
+//             const pastEvents = events.filter(event => dayjs(event.endDateTime) < currentDate);
+//             console.log("pastEvents", pastEvents);
 
-            // Extract event IDs of past events
-            const eventIdsToDelete = pastEvents.map(event => event._id);
-            console.log("eventIdsToDelete", eventIdsToDelete);
+//             // Extract event IDs of past events
+//             const eventIdsToDelete = pastEvents.map(event => event._id);
+//             console.log("eventIdsToDelete", eventIdsToDelete);
 
-            // Delete past events from the database
-            await Event.deleteMany({ _id: { $in: eventIdsToDelete } });
+//             // Delete past events from the database
+//             await Event.deleteMany({ _id: { $in: eventIdsToDelete } });
 
-            res.status(200).json({ message: 'Past events deleted successfully' });
+//             res.status(200).json({ message: 'Past events deleted successfully' });
+//         }
+//     } catch(error) {
+//         console.error('Error deleting events:', error);
+//         res.status(500).json({ error: 'An error occurred while deleting events' });
+//     }
+// }
+
+export const deleteEvent = async (req, res) => {
+    try {
+        const { eventId } = req.query;
+
+        const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+        if (!deletedEvent) {
+            return res.status(404).json({ error: 'Event not found' });
         }
-    } catch(error) {
-        console.error('Error deleting events:', error);
-        res.status(500).json({ error: 'An error occurred while deleting events' });
+
+        res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the event' });
     }
-}
+};
 
 export const getPastEvents = async (req, res) => {
+    const currentDate = new Date();
     try {
         const { userId } = req.query;
         console.log("userId", userId, req.query);
 
-        const events = await Event.find({ 'attendees._id': userId });
+        const events = await Event.find(
+            { 'attendees._id': userId,
+            endDateTime: { $lt: currentDate },
+            }
+        );
 
         console.log("past events", events);
         res.status(200).json({ events });

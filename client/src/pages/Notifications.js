@@ -69,7 +69,7 @@ const Notifications = ({ reloadNotificationPage }) => {
               fontSize: "24px",
             }}
           >
-            All Notifications seen!
+            No unseen notifications!
           </p>
         </div>
       )}

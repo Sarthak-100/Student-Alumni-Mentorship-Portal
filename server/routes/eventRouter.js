@@ -1,5 +1,7 @@
 import express from 'express';
-import { setEventDetails, setStudentEventDetails, getEventDetails, updateEventDetails, deleteEvents, getPastEvents } from '../controllers/eventController.js';
+import { setEventDetails, setStudentEventDetails, getEventDetails, 
+    updateEventDetails, deleteEvent, getPastEvents
+} from '../controllers/eventController.js';
 
 const eventRouter = express.Router();
 
@@ -9,7 +11,7 @@ eventRouter.post('/details', setEventDetails);
 eventRouter.post('/studentEvents', setStudentEventDetails);
 eventRouter.get('/details', getEventDetails);
 eventRouter.post('/update', updateEventDetails);
-eventRouter.post('/delete', deleteEvents);
 eventRouter.get('/meetings', getPastEvents);
+eventRouter.delete('/details', deleteEvent);
 
 export default eventRouter;
