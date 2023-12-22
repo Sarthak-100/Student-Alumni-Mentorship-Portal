@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Student } from "../models/userModel.js";
 
-const student_values = async (req, res) => {
+const studentValues = async (req, res) => {
   try {
     const branches = await Student.distinct("branch");
     const batches = await Student.distinct("batch");
@@ -16,7 +16,7 @@ const student_values = async (req, res) => {
   }
 };
 
-const student_prefix = async (req, res) => {
+const studentPrefix = async (req, res) => {
   try {
     const result = await Student.find({
       name: { $regex: "^" + req.query.prefix, $options: "i" },
@@ -32,7 +32,7 @@ const student_prefix = async (req, res) => {
   }
 };
 
-const student_filter = async (req, res) => {
+const studentFilter = async (req, res) => {
   try {
     const { batch, branch } = req.query;
     const filters = {};
@@ -57,4 +57,25 @@ const student_filter = async (req, res) => {
   }
 };
 
-export { student_values, student_prefix, student_filter };
+const getStudentNameById = async (req, res) => {
+  try {
+    const { studentId } = req.query; // Change to req.query instead of req.params
+
+    // Query the database to find the alumni's name by ID
+    const student = await Student.findById(studentId);
+
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Extract the name from the retrieved student data
+    const studentName = student.name;
+
+    res.status(200).json({ studentName });
+    return studentName;
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching the student name.' });
+  }
+}
+
+export { studentFilter, studentPrefix, studentValues, getStudentNameById };

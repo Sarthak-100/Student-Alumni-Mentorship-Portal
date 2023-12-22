@@ -1,14 +1,16 @@
 import express from "express";
 import {
-    student_filter,
-    student_prefix,
-    student_values,
+    studentFilter,
+    studentPrefix,
+    studentValues,
+    getStudentNameById,
   } from "../controllers/filterStudentController.js";
 
   const filterStudentRouter = express.Router();
 
-  filterStudentRouter.get("/student_filter", student_filter);
-  filterStudentRouter.get("/student_prefix", student_prefix);
-  filterStudentRouter.get("/student_values", student_values);
+  filterStudentRouter.get("/student_filter", studentFilter);
+  filterStudentRouter.get("/student_prefix", studentPrefix);
+  filterStudentRouter.get("/student_values", studentValues);
+  filterStudentRouter.get('/getStudentNameById', getStudentNameById);
 
   export default filterStudentRouter;

@@ -46,6 +46,18 @@ const Calendar = () => {
     }
   };
 
+  const fetchStudentNameById = async (studentId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/v1/filter-student/getStudentNameById?studentId=${studentId}`
+      );
+      return response.data.studentName;
+    } catch (error) {
+      console.error("Error fetching student name:", error);
+      return ""; // Return an empty string if there's an error
+    }
+  };
+
   const handleShowPastMeetings = async () => {
     console.log("in past meetings", user._id);
     try {
@@ -415,7 +427,27 @@ const Calendar = () => {
   
       if (response.status === 200) {
         const events = response.data.events;
-        setUpcomingEvents(events);
+        //add attendee name with the event
+        const eventsWithAttendeeNames = await Promise.all(
+          events.map(async (event) => {
+            const attendeeNames = await Promise.all(
+              event.attendees.map(async (attendee) => {
+                // if (attendee.userType === "student") {
+                //   const studentName = await fetchStudentNameById(attendee.userId);
+                //   return { ...attendee, name: studentName };
+                // } else {
+                //   const alumniName = await fetchAlumniNameById(attendee.userId);
+                //   return { ...attendee, name: alumniName };
+                // }
+                const studentName = await fetchStudentNameById(attendee._id);
+                return { ...attendee, name: studentName };
+              })
+            );
+            return { ...event, attendees: attendeeNames };
+          }
+        ));
+        console.log("events", eventsWithAttendeeNames);
+        setUpcomingEvents(eventsWithAttendeeNames);
       } else {
         console.error("Failed to fetch upcoming events:", response.status);
       }
@@ -581,7 +613,7 @@ const Calendar = () => {
                             <p>Attendees:</p>
                             <ul>
                               {event.attendees.map((attendee, index) => (
-                                <li key={index}>{attendee.email}</li>
+                                <li key={index}>{attendee.name} ({attendee.email})</li>
                               ))}
                             </ul>
                           </div>
