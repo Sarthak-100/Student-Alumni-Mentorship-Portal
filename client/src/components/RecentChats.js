@@ -42,7 +42,7 @@ const RecentChats = () => {
 
         // Sort conversations by createdAt timestamp in descending order (most recent first)
         conversations.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         );
 
         const userIds = conversations.map((conv) =>
