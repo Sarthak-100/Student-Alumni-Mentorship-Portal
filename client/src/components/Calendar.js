@@ -581,7 +581,7 @@ const Calendar = () => {
                             <p>Attendees:</p>
                             <ul>
                               {event.attendees.map((attendee, index) => (
-                                <li key={index}>{attendee}</li>
+                                <li key={index}>{attendee.email}</li>
                               ))}
                             </ul>
                           </div>
