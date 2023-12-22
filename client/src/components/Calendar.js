@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
+import MeetingCard from "./MeetingCard";
 
 const Calendar = () => {
   const [startDate, setStart] = useState(new Date());
@@ -424,7 +425,7 @@ const Calendar = () => {
       const userId = user._id;
       const apiUrl = `${baseUrl}?userId=${userId}`;
       const response = await axios.get(apiUrl);
-  
+
       if (response.status === 200) {
         const events = response.data.events;
         //add attendee name with the event
@@ -444,8 +445,8 @@ const Calendar = () => {
               })
             );
             return { ...event, attendees: attendeeNames };
-          }
-        ));
+          })
+        );
         console.log("events", eventsWithAttendeeNames);
         setUpcomingEvents(eventsWithAttendeeNames);
       } else {
@@ -462,10 +463,10 @@ const Calendar = () => {
       const deleteResponse = await axios.delete(
         `http://localhost:4000/api/v1/deleteEvent/details?eventId=${eventId}`
       );
-  
+
       if (deleteResponse.status === 200) {
         console.log("Event deleted from the database");
-  
+
         // if (googleEventId) {
         //   // Delete event from Google Calendar if it has a googleEventId
         //   const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
@@ -476,7 +477,7 @@ const Calendar = () => {
         //       "Content-Type": "application/json",
         //     },
         //   });
-  
+
         //   if (googleDeleteResponse.ok) {
         //     console.log("Event deleted from Google Calendar");
         //   } else {
@@ -486,7 +487,7 @@ const Calendar = () => {
         //     );
         //   }
         // }
-  
+
         // Update the state to remove the deleted event from the UI
         setUpcomingEvents((prevEvents) =>
           prevEvents.filter((event) => event._id !== eventId)
@@ -607,28 +608,35 @@ const Calendar = () => {
                           })}
                         </p>
                         <p>Summary: {event.summary}</p>
-                        {event.description && <p>Description: {event.description}</p>}
+                        {event.description && (
+                          <p>Description: {event.description}</p>
+                        )}
                         {event.attendees && event.attendees.length > 0 && (
                           <div>
                             <p>Attendees:</p>
                             <ul>
                               {event.attendees.map((attendee, index) => (
-                                <li key={index}>{attendee.name} ({attendee.email})</li>
+                                <li key={index}>
+                                  {attendee.name} ({attendee.email})
+                                </li>
                               ))}
                             </ul>
                           </div>
                         )}
-                        {event.attendees.length === 0 && <p> Attendees: None</p>}
+                        {event.attendees.length === 0 && (
+                          <p> Attendees: None</p>
+                        )}
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={() => deleteEvent(event._id, event.googleEventId)}
+                          onClick={() =>
+                            deleteEvent(event._id, event.googleEventId)
+                          }
                         >
                           Delete
                         </Button>
                       </div>
                     ))}
-
                   </Grid>
                 </Grid>
               </>
@@ -661,31 +669,8 @@ const Calendar = () => {
                 pastMeetings.events.length > 0 ? (
                   <Grid container spacing={3}>
                     {pastMeetings.events.map((meeting) => (
-                      <Grid key={meeting._id} item xs={12} sm={6} md={4} lg={3}>
-                        <Card
-                          variant="outlined"
-                          sx={{ minWidth: 280, width: "100%" }}
-                        >
-                          <CardContent>
-                            <Typography variant="subtitle1" gutterBottom>
-                              <strong>Alumni: </strong>
-                              {meeting.alumniName}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              <strong>Summary:</strong> {meeting.summary}
-                              <br />
-                              <strong>Description:</strong>{" "}
-                              {meeting.description}
-                              <br />
-                              <strong>Start Time:</strong>{" "}
-                              {new Date(meeting.startDateTime).toLocaleString()}
-                              <br />
-                              <strong>End Time:</strong>{" "}
-                              {new Date(meeting.endDateTime).toLocaleString()}
-                              <br />
-                            </Typography>
-                          </CardContent>
-                        </Card>
+                      <Grid key={meeting._id} item xs={12}>
+                        <MeetingCard meeting={meeting} />
                       </Grid>
                     ))}
                   </Grid>
