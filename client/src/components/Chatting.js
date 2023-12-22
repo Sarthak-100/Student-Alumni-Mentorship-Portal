@@ -174,7 +174,7 @@ const Chatting = () => {
       );
 
       try {
-        if (receiverIdTemp === receiverId) {
+        if (messages.length === 0) {
           await axios
             .post(
               `http://localhost:4000/api/v1/conversations/newConversation`,
@@ -207,7 +207,8 @@ const Chatting = () => {
 
       const receiverName = chattedUsers[receiverIdTemp]?.name;
 
-      if (receiverIdTemp === receiverId) {
+      // if (receiverIdTemp === receiverId) {
+      if (messages.length === 0) {
         socket.emit("newConversation&Message", {
           senderId: user._id,
           // senderId: user.email,
@@ -215,7 +216,6 @@ const Chatting = () => {
           receiverId: receiverIdTemp,
           text: newMessage,
         });
-        setReceiverIdValue(null);
       } else {
         socket.emit("sendMessage", {
           // senderId: user.email,
@@ -239,6 +239,7 @@ const Chatting = () => {
       } catch (error) {
         console.log(error);
       }
+      // setReceiverIdValue(null);
     } else {
       setShowBlockingPrompt(true);
     }
