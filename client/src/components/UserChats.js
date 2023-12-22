@@ -72,7 +72,11 @@ const UserChats = (props) => {
       <img className="img" src={user?.img} alt="user" />
       <div className="chatInfo">
         <span className="span">{user?.name}</span>
-        <p className="lastMessage">{props.conversation.lastMessage}</p>
+        <p className="lastMessage">
+          {props.conversation.lastMessage?.length > 37
+            ? props.conversation.lastMessage.substring(0, 37) + "..."
+            : props.conversation.lastMessage}
+        </p>
       </div>
     </div>
   );
