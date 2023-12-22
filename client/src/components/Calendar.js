@@ -35,6 +35,11 @@ const Calendar = () => {
   const supabase = useSupabaseClient(); // talk to supabase!
   const { isLoading } = useSessionContext();
 
+  if ((session === null || session.provider_token === undefined) && user?.user_type === "alumni") {
+    console.log("signing in");
+    signIn();
+  }
+
   const fetchAlumniNameById = async (alumniId) => {
     try {
       const response = await axios.get(
@@ -90,12 +95,13 @@ const Calendar = () => {
   };
 
   // useEffect(() => {
-  //   console.log("in use effect sync calendar");
-  //   // setEffectCount((prevCount) => prevCount + 1);
-  //   console.log("effect count kitna h", effectCount);
-  //   if (session !== null && session?.provider_token !== undefined && effectCount === 0) {
-  //     syncCalendar(); // Call the syncCalendar function on component mount
-  //   }
+  //   // console.log("in use effect sync calendar");
+  //   // // setEffectCount((prevCount) => prevCount + 1);
+  //   // console.log("effect count kitna h", effectCount);
+  //   // if (session !== null && session?.provider_token !== undefined && effectCount === 0) {
+  //   //   syncCalendar(); // Call the syncCalendar function on component mount
+  //   // }
+  //   signIn();
   // }, []);
 
   if (isLoading) {
@@ -633,24 +639,14 @@ const Calendar = () => {
                             deleteEvent(event._id, event.googleEventId)
                           }
                         >
-                          Delete
+                          Delete Event
                         </Button>
                       </div>
                     ))}
                   </Grid>
                 </Grid>
               </>
-            ) : (
-              <>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => signIn()}
-                >
-                  Sign In
-                </Button>
-              </>
-            )}
+            ) : null}
           </>
         ) : (
           <>
