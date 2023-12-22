@@ -121,7 +121,14 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   return (
     <div className="previousChats">
       {conversations.map((c) => (
-        <div onClick={() => setConversationValue(c)}>
+        <div
+          style={{
+            backgroundColor:
+              conversation?._id === c._id ? "#2f2d52" : "transparent",
+            // color: conversation === c ? "white" : "inherit",
+          }}
+          onClick={() => setConversationValue(c)}
+        >
           <UserChats conversation={c} currentUser={user} />
         </div>
       ))}
