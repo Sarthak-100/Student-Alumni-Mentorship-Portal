@@ -9,11 +9,11 @@ import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 
-const PreviousChats = () => {
+const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   const [conversations, setConversations] = useState([]);
   // const { loadConversations } = useLoadConversationsContext();
 
-  const [loadConversations, setLoadConversations] = useState(null);
+  // const [loadConversations, setLoadConversations] = useState(null);
 
   const { user } = useUserContext();
 
@@ -42,15 +42,19 @@ const PreviousChats = () => {
           )
           .then((response) => {
             console.log(response);
+            const conversationsTemp = response.data;
+            conversationsTemp.sort(
+              (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+            );
             if (receiverId) {
-              const dictionaryWithElement = response.data.find((dict) =>
+              const dictionaryWithElement = conversationsTemp.find((dict) =>
                 dict?.members.includes(receiverId)
               );
               let conv;
               console.log("dictionaryWithElement", dictionaryWithElement);
               console.log("receiverId", receiverId);
               if (dictionaryWithElement) {
-                setConversations(response.data);
+                setConversations(conversationsTemp);
                 // setConversationsTemp(response.data);
                 // await setConversationValue(dictionaryWithElement);
                 // setReceiverIdValue(null);
@@ -59,7 +63,7 @@ const PreviousChats = () => {
                   _id: null,
                   members: [user?._id, receiverId],
                 };
-                setConversations([conv, ...response.data]);
+                setConversations([conv, ...conversationsTemp]);
                 // setConversationsTemp([conv, ...response.data]);
                 // setConversationValue(conv);
                 // setConversations((prevConversations) => [
@@ -70,7 +74,7 @@ const PreviousChats = () => {
               // console.log("------------+++++++++", conv);
               // setConversationValue(conv);
             } else {
-              setConversations(response.data);
+              setConversations(conversationsTemp);
               // setConversationsTemp(response.data);
             }
           })

@@ -3,12 +3,15 @@ import Navbar from "./Navbar";
 import Search from "./Search";
 import PreviousChats from "./PreviousChats";
 
-const Sidebar = () => {
+const Sidebar = ({ loadConversations, setLoadConversations }) => {
   return (
     <div className="Sidebar">
       <Navbar />
       {/* <Search /> */}
-      <PreviousChats />
+      <PreviousChats
+        loadConversations={loadConversations}
+        setLoadConversations={setLoadConversations}
+      />
     </div>
   );
 };

@@ -30,7 +30,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-const Chatting = () => {
+const Chatting = ({ setLoadConversations }) => {
   const [id, setid] = useState("");
 
   const [messages, setMessages] = useState([]);
@@ -239,7 +239,31 @@ const Chatting = () => {
       } catch (error) {
         console.log(error);
       }
-      // setReceiverIdValue(null);
+
+      try {
+        await axios
+          .put(
+            `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${conversation?._id}`,
+            {
+              lastMessage: newMessage,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            // setBlockedValue(!blocked);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+      setLoadConversations(
+        (prevLoadConversations) => prevLoadConversations + 1
+      );
     } else {
       setShowBlockingPrompt(true);
     }
