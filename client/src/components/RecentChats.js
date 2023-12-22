@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import { useChattedUsersContext } from "../context/ChattedUsers";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useReceiverIdContext } from "../context/ReceiverIdContext";
 
 const ChatCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -30,6 +32,10 @@ const ChatTime = styled(Typography)(({ theme }) => ({
 const RecentChats = () => {
   const [chats, setChats] = useState([]);
   const { user } = useUserContext();
+
+  const { setReceiverIdValue } = useReceiverIdContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -65,6 +71,7 @@ const RecentChats = () => {
         // Combine user names and chat times from conversations
         const chatsWithTime = conversations.map((conv, index) => ({
           user: usersNames[index],
+          userId: userIds[index],
           time: new Date(conv.createdAt).toLocaleString(), // Use chat time from API
         }));
 
@@ -77,20 +84,47 @@ const RecentChats = () => {
     fetchChats();
   }, []); // Empty dependency array to run the effect only once
 
+  const handleChatButton = async (e) => {
+    console.log("WWWWWWW", e.target.value);
+    await setReceiverIdValue(e.target.value);
+    navigate("/chat/welcome");
+  };
+
   return (
     <div>
       {chats.length > 0 ? (
         chats.map((chat, index) => (
-          <ChatCard key={index}>
-            <CardContent>
-              <ChatUser variant="subtitle1">
-                {chat.user} {/* Displaying user's name */}
-              </ChatUser>
-              <ChatTime variant="caption">
-                {chat.time} {/* Displaying chat time */}
-              </ChatTime>
-            </CardContent>
-          </ChatCard>
+          <>
+            <ChatCard
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <CardContent>
+                <ChatUser variant="subtitle1">
+                  {chat.user} {/* Displaying user's name */}
+                </ChatUser>
+                <ChatTime variant="caption">
+                  {chat.time} {/* Displaying chat time */}
+                </ChatTime>
+              </CardContent>
+              <Button
+                style={{
+                  textTransform: "none",
+                  marginBottom: "5px",
+                }}
+                variant="contained"
+                onClick={handleChatButton}
+                value={chat.userId}
+              >
+                Chat
+              </Button>
+            </ChatCard>
+          </>
         ))
       ) : (
         <Typography variant="body1">No recent chats</Typography>
