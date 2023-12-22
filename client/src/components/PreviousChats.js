@@ -109,6 +109,9 @@ const PreviousChats = () => {
     if (conversation) {
       navigate("chatting");
     }
+    if (receiverId !== null && conversation?._id === null) {
+      setReceiverIdValue(null);
+    }
   }, [conversation]);
 
   return (
