@@ -72,7 +72,7 @@ const RecentChats = () => {
         const chatsWithTime = conversations.map((conv, index) => ({
           user: usersNames[index],
           userId: userIds[index],
-          time: new Date(conv.createdAt).toLocaleString(), // Use chat time from API
+          time: new Date(conv.updatedAt).toLocaleString(), // Use chat time from API
         }));
 
         setChats(chatsWithTime.slice(0, 2)); // Limit to first 2 chats

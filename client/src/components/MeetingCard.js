@@ -32,11 +32,9 @@ const MeetingCard = ({ meeting }) => {
   return (
     <Card variant="outlined" sx={{ width: "100%", ...cardStyle }}>
       <CardContent>
-        <Typography variant="h6" gutterBottom style={headerStyle}>
-          <strong>Alumni: </strong>
-          {meeting.alumniName}
-        </Typography>
         <Typography variant="body1" color="text.secondary" style={bodyStyle}>
+          <strong>Alumni:</strong> {meeting.alumniName}
+          <br />
           <strong>Summary:</strong> {meeting.summary}
           <br />
           <strong>Description:</strong> {meeting.description}
@@ -47,18 +45,7 @@ const MeetingCard = ({ meeting }) => {
           <strong>End Time:</strong>{" "}
           {new Date(meeting.endDateTime).toLocaleString()}
           <br />
-          <small style={footerStyle}>{format(meeting.createdAt)}</small>
         </Typography>
-        <Button
-          style={{
-            textTransform: "none",
-            marginTop: "12px", // Increased top margin for button
-          }}
-          variant="contained"
-          // Add onClick functionality if needed
-        >
-          Action
-        </Button>
       </CardContent>
     </Card>
   );
