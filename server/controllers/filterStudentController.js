@@ -59,16 +59,14 @@ const studentFilter = async (req, res) => {
 
 const getStudentNameById = async (req, res) => {
   try {
-    const { studentId } = req.query; // Change to req.query instead of req.params
+    const { studentId } = req.query;
 
-    // Query the database to find the alumni's name by ID
     const student = await Student.findById(studentId);
 
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    // Extract the name from the retrieved student data
     const studentName = student.name;
 
     res.status(200).json({ studentName });
