@@ -51,6 +51,7 @@ import { useClearNotificationContext } from "../context/ClearNotificationContext
 import { useReportedNoContext } from "../context/ReportedNoContext";
 import Calendar from "./Calendar.js";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
+import LogoutIconButton from './LogoutButton';
 import Reports from "../pages/Reports.js";
 import { set } from "lodash";
 import CreateProfile from "../pages/CreateProfile";
@@ -540,6 +541,7 @@ const Layout = () => {
                 <AccountCircleIcon />
               </IconButton>
             </Link>
+            <LogoutIconButton />
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
