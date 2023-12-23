@@ -23,10 +23,8 @@ const Calendar = () => {
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [apiResponse, setApiResponse] = useState({});
-  const [showContent, setShowContent] = useState(false);
   const { user } = useUserContext();
   const [pastMeetings, setPastMeetings] = useState([]);
-  const [showPastMeetings, setShowPastMeetings] = useState(false);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   // const [effectCount, setEffectCount] = useState(0);
 
@@ -84,8 +82,6 @@ const Calendar = () => {
         );
 
         setPastMeetings({ ...pastMeetings, events: meetingsWithAlumniNames });
-        setShowPastMeetings(true);
-        setShowContent(true);
       } else {
         console.error("Failed to fetch past meetings:", response.status);
       }
@@ -93,6 +89,12 @@ const Calendar = () => {
       console.error("Error fetching past meetings:", error);
     }
   };
+
+  useEffect(() => {
+    // Fetch past meetings when component mounts
+    handleShowPastMeetings();
+  }, []); // Run this effect only once on component mount
+
 
   // useEffect(() => {
   //   // console.log("in use effect sync calendar");
@@ -650,12 +652,8 @@ const Calendar = () => {
           </>
         ) : (
           <>
-            {!showContent && (
-              <Button variant="contained" onClick={handleShowPastMeetings}>
-                Show Past Meetings
-              </Button>
-            )}
-            {showContent && showPastMeetings && (
+            
+            {(
               <div>
                 <Typography variant="h6" sx={{ marginBottom: 3 }}>
                   Past Meetings
