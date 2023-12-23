@@ -9,26 +9,31 @@ import {
   CardActions,
   IconButton,
   Grid,
+  Button,
 } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import TodayIcon from "@mui/icons-material/Today";
 import { useNavigate } from "react-router-dom";
-
+import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import axios from "axios";
 import { useSocketContext } from "../context/SocketContext";
 import Calendar from "react-calendar";
-import { width } from "@mui/system";
-import TodayIcon from "@mui/icons-material/Today";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
+  const { user } = useUserContext();
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [slots, setSlots] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [meetingFixed, setMeetingFixed] = useState(false);
+  const [meetingStatus, setMeetingStatus] = useState([]);
+  const { socket } = useSocketContext();
 
-  
   const handleChat = async () => {
     // console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
     await setReceiverIdValue(props.cardUser._id);
@@ -47,9 +52,8 @@ const UserCard = (props) => {
     setOpenProfile(true); // Open the profile dialog
   };
 
-
   const showCalendar = () => {
-    props.setUserCardContainerWidth("600px");
+    props.setSelectedUserCalenderDisplay(props.cardUser._id);
     try {
       //fetch availability slots of this alumni from database
       const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
@@ -231,7 +235,6 @@ const UserCard = (props) => {
       console.error("Error cancelling meeting:", error);
     }
   };
-
 
   const cardStyle = {
     // minWidth: 300,
