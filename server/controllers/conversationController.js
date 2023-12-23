@@ -4,6 +4,10 @@ import mongoose from "mongoose";
 export const newConversation = async (req, res, next) => {
   const newConversation = new Conversation({
     members: [req.body.senderId, req.body.receiverId],
+    unseenMessages: {
+      [String(req.body.senderId)]: 0,
+      [String(req.body.receiverId)]: 0,
+    },
   });
 
   try {
@@ -24,8 +28,6 @@ export const getConversations = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 export const updateConversation = async (req, res, next) => {
   try {
@@ -51,7 +53,9 @@ export const conversationsByDate = async (req, res, next) => {
     let pipeline = [
       {
         $project: {
-          yearMonthDay: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          yearMonthDay: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
         },
       },
       {
@@ -91,8 +95,6 @@ export const conversationsByDate = async (req, res, next) => {
   }
 };
 
-
-
 // export const findConversation = async (req, res, next) => {
 //   try {
 //     const conversation = await Conversation.findOne({
@@ -113,4 +115,3 @@ export const conversationsByDate = async (req, res, next) => {
 //     next(error);
 //   }
 // };
-
