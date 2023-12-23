@@ -339,31 +339,23 @@ const Layout = () => {
         window.location.pathname !== "/chat/chatting"
       ) {
         try {
+          data.conversation.unseenMessages[userContext.user._id] += 1;
           await axios
-            .post(
-              `http://localhost:4000/api/v1/notifications/newNotification`,
+            .put(
+              `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
               {
-                receiverId: userContext.user?._id,
-                senderId: data.senderId,
-                senderName: data.senderName,
-                messageType: "message",
-                message: data.text,
+                unseenMessages: data.conversation.unseenMessages,
               },
               {
                 withCredentials: true,
               }
             )
             .then((response) => {
-              console.log("CREATED NOTIFICATION");
+              messageNotificationsNoContext.increment(1);
             })
             .catch((error) => {
-              console.error("API Error:", error);
+              console.log(error);
             });
-          if (window.location.pathname === "/notifications") {
-            setReloadNotificationPage((prevReload) => prevReload + 1);
-          } else {
-            increment();
-          }
         } catch (error) {
           console.log(error);
         }
@@ -375,31 +367,23 @@ const Layout = () => {
         window.location.pathname !== "/chat/chatting"
       ) {
         try {
+          data.conversation.unseenMessages[userContext.user._id] += 1;
           await axios
-            .post(
-              `http://localhost:4000/api/v1/notifications/newNotification`,
+            .put(
+              `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
               {
-                receiverId: userContext.user._id,
-                senderId: data.senderId,
-                senderName: data.senderName,
-                messageType: "message",
-                message: data.text,
+                unseenMessages: data.conversation.unseenMessages,
               },
               {
                 withCredentials: true,
               }
             )
             .then((response) => {
-              console.log("CREATED NOTIFICATION");
+              messageNotificationsNoContext.increment(1);
             })
             .catch((error) => {
-              console.error("API Error:", error);
+              console.log(error);
             });
-          if (window.location.pathname === "/notifications") {
-            setReloadNotificationPage((prevReload) => prevReload + 1);
-          } else {
-            increment();
-          }
         } catch (error) {
           console.log(error);
         }

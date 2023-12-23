@@ -65,6 +65,10 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
                 conv = {
                   _id: null,
                   members: [user?._id, receiverId],
+                  unseenMessages: {
+                    [String(user._id)]: 0,
+                    [String(receiverId)]: 0,
+                  },
                 };
                 setConversations([conv, ...conversationsTemp]);
                 // setConversationsTemp([conv, ...response.data]);
@@ -111,61 +115,96 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("in useEffect for prev chat click");
-    console.log("CONVERSATION", conversation);
-    // console.log("#$#$@#@#", conversation.unseenMessages);
-    // console.log("user", typeof user._id);
-    // console.log("$^%^%", conversation.unseenMessages[user._id]);
-    // console.log(Object.keys(conversation.unseenMessages));
+    const handleSelectedConversation = async () => {
+      console.log("in useEffect for prev chat click");
+      console.log("CONVERSATION", conversation);
+      // console.log("#$#$@#@#", conversation.unseenMessages);
+      // console.log("user", typeof user._id);
+      // console.log("$^%^%", conversation.unseenMessages[user._id]);
+      // console.log(Object.keys(conversation.unseenMessages));
 
-    if (conversation) {
-      navigate("chatting");
-    }
-    if (receiverId !== null && conversation?._id === null) {
-      setReceiverIdValue(null);
-    }
+      if (conversation) {
+        navigate("chatting");
+        if (conversation.unseenMessages[user._id] > 0) {
+          conversation.unseenMessages[user._id] = 0;
+          try {
+            await axios
+              .put(
+                `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${conversation._id}`,
+                {
+                  unseenMessages: conversation.unseenMessages,
+                },
+                {
+                  withCredentials: true,
+                }
+              )
+              .then((response) => {})
+              .catch((error) => {
+                console.log(error);
+              });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+      if (receiverId !== null && conversation?._id === null) {
+        setReceiverIdValue(null);
+      }
+    };
+    handleSelectedConversation();
   }, [conversation]);
 
   return (
     <div className="previousChats">
       {conversations.map((c) => (
         <div
+          className="userChatsContainer"
           style={{
             backgroundColor:
               conversation?._id === c._id ? "#2f2d52" : "transparent",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            // color: conversation === c ? "white" : "inherit",
+            // display: "flex",
+            // flexDirection: "row",
+            // justifyContent: "space-between",
+            // alignItems: "center",
+            // marginTop: "19px",
+            transition: "background-color 0.3s ease",
           }}
           onClick={() => setConversationValue(c)}
+          onMouseOver={(event) =>
+            (event.currentTarget.style.backgroundColor = "#2f2d52")
+          }
+          onMouseOut={(event) =>
+            (event.currentTarget.style.backgroundColor =
+              conversation?._id === c._id ? "#2f2d52" : "transparent")
+          }
         >
           <UserChats conversation={c} currentUser={user} />
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              height: "60px",
-              marginTop: "0px",
-              paddingRight: "10px",
-            }}
-          >
-            <p
-              className="chatMessageTime"
-              style={{ marginTop: "3px", marginRight: "5px" }}
+          {c?.unseenMessages[user._id] > 0 ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "60px",
+                marginTop: "0px",
+                paddingRight: "10px",
+              }}
             >
-              {formatDistanceToNow(new Date(c.updatedAt)).indexOf("day") !== -1
-                ? formatDistanceToNow(new Date(c.updatedAt))
-                : format(new Date(c.updatedAt), "HH:mm")}
-            </p>
-            <Badge
-              style={{ marginRight: "30px" }}
-              badgeContent={c.unseenMessages[user._id]}
-              color="secondary"
-            />
-          </div>
+              <p
+                className="chatMessageTime"
+                style={{ marginTop: "3px", marginRight: "5px" }}
+              >
+                {formatDistanceToNow(new Date(c.updatedAt)).indexOf("day") !==
+                -1
+                  ? formatDistanceToNow(new Date(c.updatedAt))
+                  : format(new Date(c.updatedAt), "HH:mm")}
+              </p>
+              <Badge
+                style={{ marginRight: "30px" }}
+                badgeContent={c.unseenMessages[user._id]}
+                color="secondary"
+              />
+            </div>
+          ) : null}
         </div>
       ))}
     </div>

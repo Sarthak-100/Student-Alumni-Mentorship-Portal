@@ -214,6 +214,7 @@ const Chatting = ({ setLoadConversations }) => {
           // senderId: user.email,
           senderName: user.name,
           receiverId: receiverIdTemp,
+          conversation: conversation,
           text: newMessage,
         });
       } else {
@@ -222,7 +223,7 @@ const Chatting = ({ setLoadConversations }) => {
           senderId: user._id,
           senderName: user.name,
           receiverId: receiverIdTemp,
-          conversationId: conversation._id,
+          conversation: conversation,
           text: newMessage,
         });
       }

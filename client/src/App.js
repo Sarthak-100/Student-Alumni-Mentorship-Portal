@@ -86,7 +86,7 @@ const App = () => {
                                 element={<CreateProfile />}
                               />
                             </Route>
-                            <Route path="/chat" element={<Chat />}>
+                            <Route path="/chat/" element={<Chat />}>
                               {/* <Route path="/chat2" element={<Chat2 />}> */}
                               <Route path="welcome" element={<ChatWelcome />} />
                               <Route path="chatting" element={<Chatting />} />

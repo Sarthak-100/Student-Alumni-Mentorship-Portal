@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
   // send and get message
   socket.on(
     "sendMessage",
-    async ({ senderId, senderName, receiverId, conversationId, text }) => {
+    async ({ senderId, senderName, receiverId, conversation, text }) => {
       const user = getUser(receiverId);
       // console.log(receiverId);
       console.log(user);
@@ -78,18 +78,18 @@ io.on("connection", (socket) => {
         io.to(user?.socketId).emit("getMessageNotification", {
           senderId,
           senderName,
-          text,
+          conversation,
         });
       } else {
         // console.log("conversationId", conversationId);
-        const conversation = await Conversation.findById(conversationId);
+        const conversationT = await Conversation.findById(conversation._id);
         // console.log("conversation", conversation);
-        conversation.unseenMessages[receiverId] += 1;
+        conversationT.unseenMessages[receiverId] += 1;
         // console.log("conversation", conversation);
         try {
           await Conversation.updateOne(
-            { _id: conversationId },
-            { $set: { unseenMessages: conversation.unseenMessages } }
+            { _id: conversation._id },
+            { $set: { unseenMessages: conversationT.unseenMessages } }
           );
         } catch (error) {
           console.log(error);
@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
 
   socket.on(
     "newConversation&Message",
-    async ({ senderId, senderName, receiverId, text }) => {
+    async ({ senderId, senderName, receiverId, conversation, text }) => {
       const user = getUser(receiverId);
       // console.log(receiverId);
       // console.log(user);
@@ -116,21 +116,19 @@ io.on("connection", (socket) => {
           {
             senderId,
             senderName,
-            text,
+            conversation,
           }
         );
       } else {
-        const newNotification = new Notification({
-          receiverId,
-          senderId,
-          senderName,
-          messageType: "chatMessage",
-          message: text,
-        });
-
+        const conversationT = await Conversation.findById(conversation._id);
+        // console.log("conversation", conversation);
+        conversationT.unseenMessages[receiverId] += 1;
+        // console.log("conversation", conversation);
         try {
-          const savedNotification = await newNotification.save();
-          console.log(savedNotification);
+          await Conversation.updateOne(
+            { _id: conversation._id },
+            { $set: { unseenMessages: conversationT.unseenMessages } }
+          );
         } catch (error) {
           console.log(error);
         }
