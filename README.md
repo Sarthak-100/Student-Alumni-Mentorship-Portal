@@ -1,6 +1,8 @@
 # Student Alumni Mentorship Portal
 
-![Project Logo](resources/logo.jpeg)
+![Project Logo](resources/logo.png)
+
+:star:**Please star the repository if you happen to like the project**
 
 The Student Alumni Mentorship Portal is a web-based platform designed to foster meaningful connections between current students and alumni of IIIT Delhi. This software facilitates mentorship relationships, enabling students to seek guidance, share experiences, and build professional networks with alumni mentors.
 
@@ -90,5 +92,5 @@ Contributions are welcome! Please follow the [coding standards](docs/Coding%20St
 
 ## License
 
-This project is licensed under the [MIT License](link_to_license).
+This project is licensed under the [MIT License](LICENSE).
 
