@@ -40,7 +40,7 @@
   
   
   
-      .search {
+      /* .search {
         border-bottom: 2px solid gray;
   
         .searchForm {
@@ -87,7 +87,7 @@
             font-weight: 500;
           }
         }
-      }
+      } */
   
       .previousChats{
         /* flex: 2; */
@@ -100,51 +100,72 @@
         gap: 10px;
         color: white;
         cursor: pointer;
-  
-  
-        .userChats{
-          padding-left: 7px;
+        
+
+        .userChatsContainer{
           display: flex;
           flex-direction: row;
-          /* gap: 10px; */
-          
-          height: 60px;
-          /* width: 6px; */
+          justify-content: space-between;
           align-items: center;
-          /* padding-left: 0; */
-          &:hover {
-            background-color: #2f2d52;
-          }
+
+          /* display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "19px", */
           
-          .img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-          }
   
-          .chatInfo{
-            margin-left: 10px;
-            /* padding: 0%; */
+  
+          .userChats{
+            padding-left: 7px;
             display: flex;
-            flex-direction: column;
-            align-items: vertical-align;
+            flex-direction: row;
+            /* gap: 10px; */
             
+            height: 60px;
+            /* width: 6px; */
+            align-items: center;
+            /* padding-left: 0; */
+            /* &:hover {
+              background-color: #2f2d52;
+            } */
             
-  
-            .span {
-              font-size: 18px;
-              font-weight: 500;
+            .img {
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              object-fit: cover;
             }
-  
-            .lastMessage{
-              margin: 1px;
-              font-size: 14px;
-              color: lightgray;
-              display: inline;
+    
+            .chatInfo{
+              margin-left: 10px;
+              /* padding: 0%; */
+              display: flex;
+              flex-direction: column;
+              align-items: vertical-align;
+              
+              
+    
+              .span {
+                font-size: 18px;
+                font-weight: 500;
+              }
+    
+              .lastMessage{
+                margin: 1px;
+                font-size: 14px;
+                color: lightgray;
+                display: inline;
+              }
             }
           }
+          /* :hover {
+            background-color: #2f2d52;
+          } */
         }
+        /* .userChatsContainer:hover {
+          background-color: #2f2d52;
+        } */
       }
     }
   

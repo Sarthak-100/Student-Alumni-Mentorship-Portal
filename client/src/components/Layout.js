@@ -49,9 +49,10 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
 import { useReportedNoContext } from "../context/ReportedNoContext";
+import { useMessageNotificationsNoContext } from "../context/messageNotificationsNoContext";
 import Calendar from "./Calendar.js";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
-import LogoutIconButton from './LogoutButton';
+import LogoutIconButton from "./LogoutButton";
 import Reports from "../pages/Reports.js";
 import { set } from "lodash";
 import CreateProfile from "../pages/CreateProfile";
@@ -130,8 +131,7 @@ const Layout = () => {
 
   const reportedNoContext = useReportedNoContext();
 
-  // const isStudentOrAlumni =
-  //   user && (user.user_type === "student" || user.user_type === "alumni");
+  const messageNotificationsNoContext = useMessageNotificationsNoContext();
 
   const { clearNotification, setClearNotificationValue } =
     useClearNotificationContext();
@@ -189,6 +189,7 @@ const Layout = () => {
 
   useEffect(() => {
     const getNotificationsNo = async () => {
+      console.log("getNotificationsNo", userContext.user?._id);
       try {
         await axios
           .get(
@@ -209,7 +210,41 @@ const Layout = () => {
       }
     };
     getNotificationsNo();
-  }, []);
+  }, [userContext]);
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        await axios
+          .get(
+            `http://localhost:4000/api/v1/conversations/getConversations?user_id=${userContext.user?._id}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            const conversationsTemp = response.data;
+            console.log(conversationsTemp);
+            let countT = 0;
+            conversationsTemp.forEach((c) => {
+              console.log("%%%%%%", c.unseenMessages[userContext.user?._id]);
+              countT += c.unseenMessages[userContext.user?._id];
+            });
+            console.log(countT);
+            messageNotificationsNoContext.setMessageNotificationsNoValue(
+              countT
+            );
+            console.log(messageNotificationsNoContext.messageNotificationsNo);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getConversations();
+  }, [userContext]);
 
   useEffect(() => {
     const getReportedNo = async () => {
@@ -230,7 +265,7 @@ const Layout = () => {
       }
     };
     getReportedNo();
-  }, []);
+  }, [userContext]);
 
   useEffect(() => {
     if (userContext.user?._id !== undefined) {
@@ -304,31 +339,23 @@ const Layout = () => {
         window.location.pathname !== "/chat/chatting"
       ) {
         try {
+          data.conversation.unseenMessages[userContext.user._id] += 1;
           await axios
-            .post(
-              `http://localhost:4000/api/v1/notifications/newNotification`,
+            .put(
+              `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
               {
-                receiverId: userContext.user?._id,
-                senderId: data.senderId,
-                senderName: data.senderName,
-                messageType: "message",
-                message: data.text,
+                unseenMessages: data.conversation.unseenMessages,
               },
               {
                 withCredentials: true,
               }
             )
             .then((response) => {
-              console.log("CREATED NOTIFICATION");
+              messageNotificationsNoContext.increment(1);
             })
             .catch((error) => {
-              console.error("API Error:", error);
+              console.log(error);
             });
-          if (window.location.pathname === "/notifications") {
-            setReloadNotificationPage((prevReload) => prevReload + 1);
-          } else {
-            increment();
-          }
         } catch (error) {
           console.log(error);
         }
@@ -340,31 +367,23 @@ const Layout = () => {
         window.location.pathname !== "/chat/chatting"
       ) {
         try {
+          data.conversation.unseenMessages[userContext.user._id] += 1;
           await axios
-            .post(
-              `http://localhost:4000/api/v1/notifications/newNotification`,
+            .put(
+              `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
               {
-                receiverId: userContext.user._id,
-                senderId: data.senderId,
-                senderName: data.senderName,
-                messageType: "message",
-                message: data.text,
+                unseenMessages: data.conversation.unseenMessages,
               },
               {
                 withCredentials: true,
               }
             )
             .then((response) => {
-              console.log("CREATED NOTIFICATION");
+              messageNotificationsNoContext.increment(1);
             })
             .catch((error) => {
-              console.error("API Error:", error);
+              console.log(error);
             });
-          if (window.location.pathname === "/notifications") {
-            setReloadNotificationPage((prevReload) => prevReload + 1);
-          } else {
-            increment();
-          }
         } catch (error) {
           console.log(error);
         }
@@ -531,7 +550,14 @@ const Layout = () => {
               <TodayIcon /> {/* Calendar icon */}
             </IconButton>
             <IconButton color="inherit" onClick={handleChat}>
-              <ChatIcon />
+              <Badge
+                badgeContent={
+                  messageNotificationsNoContext.messageNotificationsNo
+                }
+                color="secondary"
+              >
+                <ChatIcon />
+              </Badge>
             </IconButton>
             <Link
               to="/profile"
