@@ -21,6 +21,7 @@ import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay 
 import axios from "axios";
 import { useSocketContext } from "../context/SocketContext";
 import Calendar from "react-calendar";
+import { width } from "@mui/system";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ const UserCard = (props) => {
   };
 
   const showCalendar = () => {
+    props.setUserCardContainerWidth("600px");
     try {
       //fetch availability slots of this alumni from database
       const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
@@ -93,7 +95,7 @@ const UserCard = (props) => {
 
   const fixMeeting = async (event, index) => {
     console.log("fixMeeting", event);
-    
+
     const bookingStudent = {
       _id: user._id,
       email: user.email,
@@ -108,12 +110,17 @@ const UserCard = (props) => {
     if (!updatedEvent.attendees) {
       updatedEvent.attendees = [];
     }
-    console.log("updatedEvent ok", updatedEvent.attendees[0]?._id, "bookingStudent ok", bookingStudent?._id.toString(), updatedEvent.attendees[0]?._id ===
-    bookingStudent?._id.toString());
+    console.log(
+      "updatedEvent ok",
+      updatedEvent.attendees[0]?._id,
+      "bookingStudent ok",
+      bookingStudent?._id.toString(),
+      updatedEvent.attendees[0]?._id === bookingStudent?._id.toString()
+    );
     console.log("Booking Student:", bookingStudent);
     console.log(
       "Comparing IDs:",
-      updatedEvent.attendees?.map((attendee) => attendee?._id),
+      updatedEvent.attendees?.map((attendee) => attendee?._id)
       // bookingStudent?._id.toString(), "ok", typeof bookingStudent?._id, typeof updatedEvent.attendees?.map((attendee) => attendee?._id.toString())
     );
     // Check if the booking student is not already in the attendees list
@@ -216,25 +223,27 @@ const UserCard = (props) => {
           messageType: "Meeting",
           message: `Your meeting with ${user.name} has been cancelled`,
         });
-
       } else {
         console.error(
           "Failed to update event in the database:",
           response.status
         );
       }
-
     } catch (error) {
       console.error("Error cancelling meeting:", error);
     }
   };
 
   const cardStyle = {
-    maxWidth: 300,
+    // minWidth: 300,
+    // maxWidth: 600,
+    padding: "0px",
     margin: "20px auto",
     border: "1px solid #ddd",
     borderRadius: "8px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    // display: "flex",
+    // flexDirection: "row",
   };
 
   const titleStyle = {
@@ -255,145 +264,164 @@ const UserCard = (props) => {
 
   return (
     <Card style={cardStyle}>
-      <CardHeader
-        avatar={
-          <Avatar>
-            {props.cardUser?.name ? props.cardUser.name.charAt(0) : ""}
-          </Avatar>
-        }
-        title={
-          <Typography variant="h6" style={titleStyle}>
-            {props.cardUser?.name || "No Name"}
-          </Typography>
-        }
-        subheader={
-          <Typography variant="body2" style={subheaderStyle}>
-            {props.cardUser?.email}
-          </Typography>
-        }
-      />
-      <CardContent>
-        <Grid container spacing={1}>
-          {/* Display user information */}
-          <Grid item xs={12}>
-            <Typography variant="body1" style={contentStyle}>
-              <strong>Current Work:</strong>{" "}
-              {props.cardUser?.work?.role || "Role not specified"}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1" style={contentStyle}>
-              <strong>Branch:</strong> {props.cardUser?.branch}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1" style={contentStyle}>
-              <strong>Batch:</strong> {props.cardUser?.batch}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1" style={contentStyle}>
-              <strong>Organization:</strong>{" "}
-              {props.cardUser?.work?.organization ||
-                "Organization not specified"}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1" style={contentStyle}>
-              <strong>Location:</strong> {city}, {state}, {country}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions style={{ justifyContent: "center" }}>
-        {/* IconButton to start a chat */}
-        <IconButton color="primary" aria-label="Chat" onClick={handleChat}>
-          <ChatIcon />
-        </IconButton>
-        {/* IconButton to view user profile */}
-        <IconButton
-          color="primary"
-          aria-label="Profile"
-          onClick={handleProfile}
-        >
-          <AccountCircleIcon />
-        </IconButton>
-        <IconButton
-          color="primary"
-          aria-label="Calendar"
-          onClick={showCalendar}
-        >
-          <TodayIcon />
-        </IconButton>
-      </CardActions>
-          {events.length > 0 && (
-          <div style={{ margin: "20px auto", maxWidth: "300px" }}>
-              <Typography
-                variant="h6"
-                style={{
-                  textAlign: "center",
-                  position: 'relative',
-                  display: 'inline-block',
-                  padding: '8px 16px',
-                  background: '#FFFF00', // Pink background color
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                  borderRadius: '8px',
-                  marginBottom: '25px',
-                  marginLeft: "40px", // Adding some margin below the text
-                  margin: '0 auto',
-                }}
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ width: "300px" }}>
+          <CardHeader
+            avatar={
+              <Avatar>
+                {props.cardUser?.name ? props.cardUser.name.charAt(0) : ""}
+              </Avatar>
+            }
+            title={
+              <Typography variant="h6" style={titleStyle}>
+                {props.cardUser?.name || "No Name"}
+              </Typography>
+            }
+            subheader={
+              <Typography variant="body2" style={subheaderStyle}>
+                {props.cardUser?.email}
+              </Typography>
+            }
+          />
+          <div>
+            <CardContent>
+              <Grid container spacing={1}>
+                {/* Display user information */}
+                <Grid item xs={12}>
+                  <Typography variant="body1" style={contentStyle}>
+                    <strong>Current Work:</strong>{" "}
+                    {props.cardUser?.work?.role || "Role not specified"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" style={contentStyle}>
+                    <strong>Branch:</strong> {props.cardUser?.branch}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" style={contentStyle}>
+                    <strong>Batch:</strong> {props.cardUser?.batch}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" style={contentStyle}>
+                    <strong>Organization:</strong>{" "}
+                    {props.cardUser?.work?.organization ||
+                      "Organization not specified"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1" style={contentStyle}>
+                    <strong>Location:</strong> {city}, {state}, {country}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+            <CardActions style={{ justifyContent: "center" }}>
+              {/* IconButton to start a chat */}
+              <IconButton
+                color="primary"
+                aria-label="Chat"
+                onClick={handleChat}
               >
+                <ChatIcon />
+              </IconButton>
+              {/* IconButton to view user profile */}
+              <IconButton
+                color="primary"
+                aria-label="Profile"
+                onClick={handleProfile}
+              >
+                <AccountCircleIcon />
+              </IconButton>
+              <IconButton
+                color="primary"
+                aria-label="Calendar"
+                onClick={showCalendar}
+              >
+                <TodayIcon />
+              </IconButton>
+            </CardActions>
+          </div>
+        </div>
+        {events.length > 0 && (
+          <div
+            style={{
+              width: "300px",
+              marginTop: "10px",
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "center",
+            }}
+          >
+            <Typography
+              variant="h6"
+              style={{
+                // textAlign: "center",
+                position: "relative",
+                display: "inline-block",
+                padding: "8px 16px",
+                background: "#FFFF00", // Pink background color
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                borderRadius: "8px",
+                marginBottom: "25px",
+                marginLeft: "40px", // Adding some margin below the text
+                margin: "0 auto",
+              }}
+            >
               Upcoming Events
             </Typography>
             <ul>
-            {events.map((event, index) => (
-              <li key={index}>
-                {/* Displaying start date with time */}
-                <p>
-                  Start Date/Time:{" "}
-                  {new Date(event.startDateTime).toLocaleString([], {
-                    dateStyle: "long",
-                    timeStyle: "short",
-                  })}
-                </p>
-                {/* Displaying end date with time */}
-                <p>
-                  End Date/Time:{" "}
-                  {new Date(event.endDateTime).toLocaleString([], {
-                    dateStyle: "long",
-                    timeStyle: "short",
-                  })}
-                </p>
-                <p>Summary: {event.summary}</p>
-                {event.description && <p>Description: {event.description}</p>}
-                {/* Render the meeting fixing/cancelation buttons */}
-                {/* Add a IconButton to fix a meeting for this slot */}
-                {event.attendees && event.attendees.some((attendee) => attendee?._id === user._id.toString()) ? (
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    style={{ backgroundColor: '#b71c1c', color: '#fff' }}
-                    onClick={() => cancelMeeting(event, index)}
-                  >
-                    Cancel Meeting
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ backgroundColor: '#4caf50', color: '#fff' }}
-                    onClick={() => fixMeeting(event, index)}
-                  >
-                    Fix Meeting
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {/* Display the profile dialog */}
-      {/* Display the user's profile */}
+              {events.map((event, index) => (
+                <li key={index}>
+                  {/* Displaying start date with time */}
+                  <p>
+                    Start Date/Time:{" "}
+                    {new Date(event.startDateTime).toLocaleString([], {
+                      dateStyle: "long",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                  {/* Displaying end date with time */}
+                  <p>
+                    End Date/Time:{" "}
+                    {new Date(event.endDateTime).toLocaleString([], {
+                      dateStyle: "long",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                  <p>Summary: {event.summary}</p>
+                  {event.description && <p>Description: {event.description}</p>}
+                  {/* Render the meeting fixing/cancelation buttons */}
+                  {/* Add a IconButton to fix a meeting for this slot */}
+                  {event.attendees &&
+                  event.attendees.some(
+                    (attendee) => attendee?._id === user._id.toString()
+                  ) ? (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      style={{ backgroundColor: "#b71c1c", color: "#fff" }}
+                      onClick={() => cancelMeeting(event, index)}
+                    >
+                      Cancel Meeting
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ backgroundColor: "#4caf50", color: "#fff" }}
+                      onClick={() => fixMeeting(event, index)}
+                    >
+                      Fix Meeting
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
       {selectedUser && (
         <ProfileDisplay
           open={openProfile}
