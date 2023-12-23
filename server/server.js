@@ -3,6 +3,7 @@ import connectDB from "./data/DatabaseConnection.js";
 import http from "http";
 import { Server } from "socket.io";
 import { Notification } from "./models/notificationModel.js";
+import { Conversation } from "./models/conversationModel.js";
 import { Admin } from "./models/userModel.js";
 import { Reports } from "./models/reportsModel.js";
 // import io from "socket.io";
@@ -62,7 +63,7 @@ io.on("connection", (socket) => {
   // send and get message
   socket.on(
     "sendMessage",
-    async ({ senderId, senderName, receiverId, text }) => {
+    async ({ senderId, senderName, receiverId, conversationId, text }) => {
       const user = getUser(receiverId);
       // console.log(receiverId);
       console.log(user);
@@ -80,17 +81,16 @@ io.on("connection", (socket) => {
           text,
         });
       } else {
-        const newNotification = new Notification({
-          receiverId,
-          senderId,
-          senderName,
-          messageType: "message",
-          message: text,
-        });
-
+        // console.log("conversationId", conversationId);
+        const conversation = await Conversation.findById(conversationId);
+        // console.log("conversation", conversation);
+        conversation.unseenMessages[receiverId] += 1;
+        // console.log("conversation", conversation);
         try {
-          const savedNotification = await newNotification.save();
-          console.log(savedNotification);
+          await Conversation.updateOne(
+            { _id: conversationId },
+            { $set: { unseenMessages: conversation.unseenMessages } }
+          );
         } catch (error) {
           console.log(error);
         }

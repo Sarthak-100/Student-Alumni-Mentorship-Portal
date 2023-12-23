@@ -13,6 +13,10 @@ const conversationSchema = mongoose.Schema(
       type: String,
       default: "",
     },
+    unseenMessages: {
+      type: Object, // Use Object type
+      default: {},
+    },
   },
   { timestamps: true }
 );

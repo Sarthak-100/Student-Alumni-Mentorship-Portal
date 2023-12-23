@@ -7,6 +7,9 @@ import { useSocketContext } from "../context/SocketContext";
 import { useConversationContext } from "../context/ConversationContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
+import { Badge } from "@mui/material";
+import { formatDistanceToNow, format } from "date-fns";
+
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 
 const PreviousChats = ({ loadConversations, setLoadConversations }) => {
@@ -110,6 +113,11 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   useEffect(() => {
     console.log("in useEffect for prev chat click");
     console.log("CONVERSATION", conversation);
+    // console.log("#$#$@#@#", conversation.unseenMessages);
+    // console.log("user", typeof user._id);
+    // console.log("$^%^%", conversation.unseenMessages[user._id]);
+    // console.log(Object.keys(conversation.unseenMessages));
+
     if (conversation) {
       navigate("chatting");
     }
@@ -125,11 +133,39 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
           style={{
             backgroundColor:
               conversation?._id === c._id ? "#2f2d52" : "transparent",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
             // color: conversation === c ? "white" : "inherit",
           }}
           onClick={() => setConversationValue(c)}
         >
           <UserChats conversation={c} currentUser={user} />
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: "60px",
+              marginTop: "0px",
+              paddingRight: "10px",
+            }}
+          >
+            <p
+              className="chatMessageTime"
+              style={{ marginTop: "3px", marginRight: "5px" }}
+            >
+              {formatDistanceToNow(new Date(c.updatedAt)).indexOf("day") !== -1
+                ? formatDistanceToNow(new Date(c.updatedAt))
+                : format(new Date(c.updatedAt), "HH:mm")}
+            </p>
+            <Badge
+              style={{ marginRight: "30px" }}
+              badgeContent={c.unseenMessages[user._id]}
+              color="secondary"
+            />
+          </div>
         </div>
       ))}
     </div>

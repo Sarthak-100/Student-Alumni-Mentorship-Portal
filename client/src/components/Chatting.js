@@ -222,6 +222,7 @@ const Chatting = ({ setLoadConversations }) => {
           senderId: user._id,
           senderName: user.name,
           receiverId: receiverIdTemp,
+          conversationId: conversation._id,
           text: newMessage,
         });
       }
