@@ -13,6 +13,7 @@ import {
 import UserCard from "./UserCard";
 import FilterMenu from "./Filter";
 import CalendarDisplay from "./CalendarDisplay";
+import { useUserContext } from "../context/UserContext";
 
 const FilterAlumni = () => {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
@@ -21,6 +22,7 @@ const FilterAlumni = () => {
   const [searchText, setSearchText] = useState("");
   const inputRef = useRef(null);
   const [apiResponse, setApiResponse] = useState(null);
+  const { user } = useUserContext();
 
   // Function to open and close the filter menu
   const openFilterMenu = () => {
@@ -45,7 +47,10 @@ const FilterAlumni = () => {
     axios
       .get(apiUrl)
       .then((response) => {
-        setApiResponse(response.data);
+        const filteredData = response.data.result.filter(
+          (currentUser) => currentUser._id !== user._id // Replace 'userId' with the property containing the user ID in your data
+        );
+        setApiResponse({ ...response.data, result: filteredData });
         console.log(response.data);
       })
       .catch((error) => {
@@ -66,8 +71,12 @@ const FilterAlumni = () => {
     axios
       .get(apiUrl)
       .then((response) => {
-        setApiResponse(response.data);
-        console.log(response.data);
+        const filteredData = response.data.result.filter(
+          (currentUser) => currentUser._id !== user._id// Replace 'userId' with the property containing the user ID in your data
+        );
+  
+        setApiResponse({ ...response.data, result: filteredData });
+        console.log(filteredData);
       })
       .catch((error) => {
         console.error("API Error:", error);

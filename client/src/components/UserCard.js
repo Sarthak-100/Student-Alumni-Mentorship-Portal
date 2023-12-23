@@ -13,22 +13,20 @@ import {
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../context/UserContext";
+
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import TodayIcon from "@mui/icons-material/Today";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
-
-  const { user } = useUserContext();
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   
   const handleChat = async () => {
-    console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
+    // console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
     await setReceiverIdValue(props.cardUser._id);
     navigate("/chat/welcome");
   };
