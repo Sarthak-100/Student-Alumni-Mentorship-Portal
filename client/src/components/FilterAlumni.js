@@ -12,9 +12,12 @@ import {
 } from "@mui/material";
 import UserCard from "./UserCard";
 import FilterMenu from "./Filter";
+import CalendarDisplay from "./CalendarDisplay";
 
 const FilterAlumni = () => {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [searchText, setSearchText] = useState("");
   const inputRef = useRef(null);
   const [apiResponse, setApiResponse] = useState(null);
@@ -26,6 +29,11 @@ const FilterAlumni = () => {
 
   const closeFilterMenu = () => {
     setShowFilterMenu(false);
+  };
+
+  const toggleCalendarDisplay = (user) => {
+    setSelectedUser(user); // Store the selected user data
+    setShowCalendar(true);
   };
 
   // Function to fetch the filtered results
@@ -86,11 +94,17 @@ const FilterAlumni = () => {
           <FilterAltIcon />
         </IconButton>
       </Box>
+      {showCalendar && selectedUser && (
+        <CalendarDisplay
+          cardUser={selectedUser}
+          onClose={() => setShowCalendar(false)}
+        />
+      )}
       {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (
         <Grid container spacing={3}>
           {apiResponse.result.map((user, index) => (
             <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-              <UserCard cardUser={user} />
+              <UserCard cardUser={user} toggleCalendar={toggleCalendarDisplay}/>
             </Grid>
           ))}
         </Grid>
