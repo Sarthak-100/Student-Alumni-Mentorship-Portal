@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconButton, Typography, Button, Card } from "@mui/material";
 import TodayIcon from "@mui/icons-material/Today";
 import { useSocketContext } from "../context/SocketContext";
 import { useUserContext } from "../context/UserContext";
+
 import axios from "axios";
 
 const CalendarDisplay = (props) => {
@@ -196,9 +197,14 @@ const CalendarDisplay = (props) => {
     }
   };
 
+  useEffect(() => {
+    // This code will execute when the component mounts or updates
+    showCalendar(); // Call the function to fetch calendar data
+  }, []); // Empty dependency array means it will run only on mount
+
   return (
     <div>
-      {events.length > 0 && (
+      {events.length > 0 &&(
         <Card style={{ margin: "20px auto", maxWidth: "300px" }}>
           <Typography
             variant="h6"

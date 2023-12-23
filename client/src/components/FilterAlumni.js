@@ -33,7 +33,7 @@ const FilterAlumni = () => {
 
   const toggleCalendarDisplay = (user) => {
     setSelectedUser(user); // Store the selected user data
-    setShowCalendar(true);
+    setShowCalendar(!showCalendar);
   };
 
   // Function to fetch the filtered results
