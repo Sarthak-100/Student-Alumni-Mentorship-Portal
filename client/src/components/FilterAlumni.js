@@ -82,7 +82,7 @@ const FilterAlumni = () => {
           (currentUser) => currentUser._id !== user._id // Replace 'userId' with the property containing the user ID in your data
         );
 
-        setApiResponse({ result: filteredData });
+        setApiResponse({ ...response.data, result: filteredData });
         console.log(filteredData);
       })
       .catch((error) => {
