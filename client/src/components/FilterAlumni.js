@@ -24,6 +24,8 @@ const FilterAlumni = () => {
   const [apiResponse, setApiResponse] = useState(null);
   const { user } = useUserContext();
 
+  const [userCardContainerWidth, setUserCardContainerWidth] = useState("300px");
+
   // Function to open and close the filter menu
   const openFilterMenu = () => {
     setShowFilterMenu(true);
@@ -84,8 +86,8 @@ const FilterAlumni = () => {
   };
 
   return (
-    <Grid container direction="column" spacing={3}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+    <div>
+      <div>
         <Input
           ref={inputRef}
           placeholder="Search For Alumni"
@@ -102,21 +104,25 @@ const FilterAlumni = () => {
         <IconButton onClick={openFilterMenu} sx={{ color: "#4285f4" }}>
           <FilterAltIcon />
         </IconButton>
-      </Box>
-      {showCalendar && selectedUser && (
-        <CalendarDisplay
-          cardUser={selectedUser}
-          onClose={() => setShowCalendar(false)}
-        />
-      )}
+
+      </div>
+
       {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (
-        <Grid container spacing={3}>
+        <div>
           {apiResponse.result.map((user, index) => (
-            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-              <UserCard cardUser={user} toggleCalendar={toggleCalendarDisplay}/>
-            </Grid>
+
+            <div style={{ padding: "0", width: userCardContainerWidth }}>
+              <UserCard
+                cardUser={user}
+                setUserCardContainerWidth={setUserCardContainerWidth}
+              />
+            </div>
+            // <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+            //   <UserCard cardUser={user} />
+            // </Grid>
+
           ))}
-        </Grid>
+        </div>
       )}
       <FilterMenu
         open={showFilterMenu}
@@ -124,7 +130,7 @@ const FilterAlumni = () => {
         applyFilters={applyFilters}
         anchorEl={inputRef.current}
       />
-    </Grid>
+    </div>
   );
 };
 
