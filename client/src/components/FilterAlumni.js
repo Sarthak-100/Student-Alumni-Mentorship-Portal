@@ -12,12 +12,17 @@ import {
 } from "@mui/material";
 import UserCard from "./UserCard";
 import FilterMenu from "./Filter";
+import CalendarDisplay from "./CalendarDisplay";
+import { useUserContext } from "../context/UserContext";
 
 const FilterAlumni = () => {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [searchText, setSearchText] = useState("");
   const inputRef = useRef(null);
   const [apiResponse, setApiResponse] = useState(null);
+  const { user } = useUserContext();
 
   const [userCardContainerWidth, setUserCardContainerWidth] = useState("300px");
 
@@ -30,6 +35,11 @@ const FilterAlumni = () => {
     setShowFilterMenu(false);
   };
 
+  const toggleCalendarDisplay = (user) => {
+    setSelectedUser(user); // Store the selected user data
+    setShowCalendar(!showCalendar);
+  };
+
   // Function to fetch the filtered results
   const applyFilters = (filters) => {
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
@@ -39,7 +49,10 @@ const FilterAlumni = () => {
     axios
       .get(apiUrl)
       .then((response) => {
-        setApiResponse(response.data);
+        const filteredData = response.data.result.filter(
+          (currentUser) => currentUser._id !== user._id // Replace 'userId' with the property containing the user ID in your data
+        );
+        setApiResponse({ ...response.data, result: filteredData });
         console.log(response.data);
       })
       .catch((error) => {
@@ -60,8 +73,12 @@ const FilterAlumni = () => {
     axios
       .get(apiUrl)
       .then((response) => {
-        setApiResponse(response.data);
-        console.log(response.data);
+        const filteredData = response.data.result.filter(
+          (currentUser) => currentUser._id !== user._id// Replace 'userId' with the property containing the user ID in your data
+        );
+  
+        setApiResponse({ ...response.data, result: filteredData });
+        console.log(filteredData);
       })
       .catch((error) => {
         console.error("API Error:", error);
@@ -87,10 +104,13 @@ const FilterAlumni = () => {
         <IconButton onClick={openFilterMenu} sx={{ color: "#4285f4" }}>
           <FilterAltIcon />
         </IconButton>
+
       </div>
+
       {apiResponse && apiResponse.result && apiResponse.result.length > 0 && (
         <div>
           {apiResponse.result.map((user, index) => (
+
             <div style={{ padding: "0", width: userCardContainerWidth }}>
               <UserCard
                 cardUser={user}
@@ -100,6 +120,7 @@ const FilterAlumni = () => {
             // <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
             //   <UserCard cardUser={user} />
             // </Grid>
+
           ))}
         </div>
       )}
