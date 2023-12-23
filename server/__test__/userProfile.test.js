@@ -31,7 +31,7 @@ describe("Suite 3: User Profile", () => {
       expect(response.status).toBe(200);
   
       const responseBody = response.body;
-  
+      console.log(responseBody);
       // Check if the email in the response matches the expected email
       expect(responseBody.success).toBe(true);
       expect(responseBody.user.email).toBe(userEmail);
@@ -53,10 +53,10 @@ describe("Suite 3: User Profile", () => {
     });
 
     it('GET http://localhost:4000/api/v1/users/myProfile should return correct user email', async () => {
-      const userEmail = 'ad1@iiitd.ac.in'; // Expected email
+      const userEmail = 'admin@iiitd.ac.in'; // Expected email
   
       const response = await request(app)
-          .get('/api/v1/users/myProfile?email=ad1@iiitd.ac.in');
+          .get('/api/v1/users/myProfile?email=admin@iiitd.ac.in');
   
       expect(response.status).toBe(200);
   
@@ -67,11 +67,12 @@ describe("Suite 3: User Profile", () => {
       expect(responseBody.user.email).toBe(userEmail);
     });
   
+    //Student
     it('GET http://localhost:4000/api/v1/users/getUserProfile should return correct user ID', async () => {
-        const userId = '6561175367dac2a1bc0257c5'; // Expected user ID
+        const userId = '65739750934a5781e193615f'; // Expected user ID
   
         const response = await request(app)
-            .get('/api/v1/users/getUserProfile?id=6561175367dac2a1bc0257c5');
+            .get('/api/v1/users/getUserProfile?id=65739750934a5781e193615f');
   
         expect(response.status).toBe(200);
   
@@ -82,26 +83,28 @@ describe("Suite 3: User Profile", () => {
         expect(responseBody.user._id).toBe(userId);
     });
 
+    //Alumni
+    it('GET http://localhost:4000/api/v1/users/getUserProfile should return correct user ID', async () => {
+        const userId = '657396f6a4b2925807819af2'; // Expected user ID
+  
+        const response = await request(app)
+            .get('/api/v1/users/getUserProfile?id=657396f6a4b2925807819af2');
+  
+        expect(response.status).toBe(200);
+  
+        const responseBody = response.body;
+  
+        // Check if the ID in the response matches the expected user ID
+        expect(responseBody.success).toBe(true);
+        expect(responseBody.user._id).toBe(userId);
+    });
+
+    //Admin
     it('GET http://localhost:4000/api/v1/users/getUserProfile should return correct user ID', async () => {
         const userId = '6547cb605c2697d2853c0735'; // Expected user ID
   
         const response = await request(app)
             .get('/api/v1/users/getUserProfile?id=6547cb605c2697d2853c0735');
-  
-        expect(response.status).toBe(200);
-  
-        const responseBody = response.body;
-  
-        // Check if the ID in the response matches the expected user ID
-        expect(responseBody.success).toBe(true);
-        expect(responseBody.user._id).toBe(userId);
-    });
-
-    it('GET http://localhost:4000/api/v1/users/getUserProfile should return correct user ID', async () => {
-        const userId = '6553bad492213e0210f5c8c9'; // Expected user ID
-  
-        const response = await request(app)
-            .get('/api/v1/users/getUserProfile?id=6553bad492213e0210f5c8c9');
   
         expect(response.status).toBe(200);
   
