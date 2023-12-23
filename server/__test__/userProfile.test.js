@@ -31,7 +31,7 @@ describe("Suite 3: User Profile", () => {
       expect(response.status).toBe(200);
   
       const responseBody = response.body;
-      console.log(responseBody);
+    
       // Check if the email in the response matches the expected email
       expect(responseBody.success).toBe(true);
       expect(responseBody.user.email).toBe(userEmail);
