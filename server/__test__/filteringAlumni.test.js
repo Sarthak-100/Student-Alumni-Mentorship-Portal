@@ -72,4 +72,15 @@ describe("Suite 2: Filtering Alumni", () => {
     });
     });
 
+  it('GET api/v1/student/filter-alumni/getAlumniNameById?alumniId=x should return alumni name with id x', async () => {
+    const response = await request(app).get('/api/v1/student/filter-alumni/getAlumniNameById?alumniId=657396f6a4b2925807819b05');
+    const expectedResponse = {
+        alumniName: 'Harshit Jain'
+      };
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(expectedResponse);
+    
+  });
+  
+
   });

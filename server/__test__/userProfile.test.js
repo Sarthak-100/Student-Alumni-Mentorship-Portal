@@ -114,6 +114,33 @@ describe("Suite 3: User Profile", () => {
         expect(responseBody.success).toBe(true);
         expect(responseBody.user._id).toBe(userId);
     });
-  
+
+
+    it('GET http://localhost:4000/api/v1/users/getBatchwiseCounts should return unique batches', async () => {
+      // Simulate the API call or use a mock function to get the response
+      const response = await request(app).get('/api/v1/users/getBatchwiseCounts');
+    
+      expect(response.status).toBe(200);
+      
+      // Parse the response text to extract the JSON content
+      const responseBody = JSON.parse(response.text);
+    
+      // Verify if the parsed JSON content has the expected structure
+      expect(responseBody).toHaveProperty('success', true);
+      expect(responseBody).toHaveProperty('alumniCounts');
+      expect(responseBody).toHaveProperty('studentCounts');
+    
+      // Verify alumniCounts data
+      const alumniCounts = responseBody.alumniCounts;
+      const alumniIds = alumniCounts.map(item => item._id);
+      const uniqueAlumniIds = new Set(alumniIds);
+      expect(uniqueAlumniIds.size).toEqual(alumniIds.length);
+    
+      // Verify studentCounts data
+      const studentCounts = responseBody.studentCounts;
+      const studentIds = studentCounts.map(item => item._id);
+      const uniqueStudentIds = new Set(studentIds);
+      expect(uniqueStudentIds.size).toEqual(studentIds.length);
+    });
   
   });

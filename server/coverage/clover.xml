@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1703373264177" clover="3.2.0">
-  <project timestamp="1703373264177" name="All files">
-    <metrics statements="409" coveredstatements="222" conditionals="56" coveredconditionals="18" methods="36" coveredmethods="14" elements="501" coveredelements="254" complexity="0" loc="409" ncloc="409" packages="4" files="23" classes="23"/>
+<coverage generated="1703416876985" clover="3.2.0">
+  <project timestamp="1703416876985" name="All files">
+    <metrics statements="409" coveredstatements="238" conditionals="56" coveredconditionals="21" methods="36" coveredmethods="17" elements="501" coveredelements="276" complexity="0" loc="409" ncloc="409" packages="4" files="23" classes="23"/>
     <package name="server">
       <metrics statements="25" coveredstatements="25" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="app.js" path="C:\Users\SARTHAK MAINI\OneDrive\Desktop\Student-Alumni-Mentorship-Portal\server\app.js">
@@ -11,12 +11,12 @@
         <line num="20" count="4" type="stmt"/>
         <line num="21" count="4" type="stmt"/>
         <line num="23" count="4" type="stmt"/>
-        <line num="24" count="17" type="stmt"/>
-        <line num="25" count="17" type="stmt"/>
-        <line num="26" count="17" type="stmt"/>
-        <line num="27" count="17" type="stmt"/>
-        <line num="28" count="17" type="stmt"/>
-        <line num="29" count="17" type="stmt"/>
+        <line num="24" count="20" type="stmt"/>
+        <line num="25" count="20" type="stmt"/>
+        <line num="26" count="20" type="stmt"/>
+        <line num="27" count="20" type="stmt"/>
+        <line num="28" count="20" type="stmt"/>
+        <line num="29" count="20" type="stmt"/>
         <line num="32" count="4" type="stmt"/>
         <line num="33" count="4" type="stmt"/>
         <line num="34" count="4" type="stmt"/>
@@ -34,9 +34,9 @@
       </file>
     </package>
     <package name="server.controllers">
-      <metrics statements="320" coveredstatements="133" conditionals="56" coveredconditionals="18" methods="35" coveredmethods="13"/>
+      <metrics statements="320" coveredstatements="149" conditionals="56" coveredconditionals="21" methods="35" coveredmethods="16"/>
       <file name="conversationController.js" path="C:\Users\SARTHAK MAINI\OneDrive\Desktop\Student-Alumni-Mentorship-Portal\server\controllers\conversationController.js">
-        <metrics statements="28" coveredstatements="11" conditionals="6" coveredconditionals="0" methods="4" coveredmethods="2"/>
+        <metrics statements="28" coveredstatements="16" conditionals="6" coveredconditionals="2" methods="4" coveredmethods="3"/>
         <line num="4" count="4" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>
@@ -56,14 +56,14 @@
         <line num="45" count="0" type="stmt"/>
         <line num="47" count="0" type="stmt"/>
         <line num="51" count="4" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="73" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="73" count="1" type="cond" truecount="2" falsecount="2"/>
         <line num="74" count="0" type="stmt"/>
         <line num="75" count="0" type="stmt"/>
         <line num="78" count="0" type="stmt"/>
-        <line num="90" count="0" type="stmt"/>
-        <line num="92" count="0" type="stmt"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
         <line num="94" count="0" type="stmt"/>
       </file>
       <file name="eventController.js" path="C:\Users\SARTHAK MAINI\OneDrive\Desktop\Student-Alumni-Mentorship-Portal\server\controllers\eventController.js">
@@ -133,7 +133,7 @@
         <line num="174" count="0" type="stmt"/>
       </file>
       <file name="filterController.js" path="C:\Users\SARTHAK MAINI\OneDrive\Desktop\Student-Alumni-Mentorship-Portal\server\controllers\filterController.js">
-        <metrics statements="46" coveredstatements="30" conditionals="12" coveredconditionals="5" methods="4" coveredmethods="3"/>
+        <metrics statements="46" coveredstatements="37" conditionals="12" coveredconditionals="6" methods="4" coveredmethods="4"/>
         <line num="4" count="4" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
@@ -171,14 +171,14 @@
         <line num="75" count="1" type="stmt"/>
         <line num="77" count="0" type="stmt"/>
         <line num="83" count="4" type="stmt"/>
-        <line num="84" count="0" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
-        <line num="88" count="0" type="stmt"/>
-        <line num="90" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="90" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="91" count="0" type="stmt"/>
-        <line num="95" count="0" type="stmt"/>
-        <line num="97" count="0" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="98" count="1" type="stmt"/>
         <line num="100" count="0" type="stmt"/>
       </file>
       <file name="filterStudentController.js" path="C:\Users\SARTHAK MAINI\OneDrive\Desktop\Student-Alumni-Mentorship-Portal\server\controllers\filterStudentController.js">
@@ -279,7 +279,7 @@
         <line num="33" count="0" type="stmt"/>
       </file>
       <file name="userController.js" path="C:\Users\SARTHAK MAINI\OneDrive\Desktop\Student-Alumni-Mentorship-Portal\server\controllers\userController.js">
-        <metrics statements="98" coveredstatements="39" conditionals="24" coveredconditionals="10" methods="7" coveredmethods="2"/>
+        <metrics statements="98" coveredstatements="43" conditionals="24" coveredconditionals="10" methods="7" coveredmethods="3"/>
         <line num="15" count="4" type="stmt"/>
         <line num="16" count="3" type="stmt"/>
         <line num="17" count="3" type="stmt"/>
@@ -364,10 +364,10 @@
         <line num="262" count="0" type="stmt"/>
         <line num="267" count="0" type="stmt"/>
         <line num="271" count="4" type="stmt"/>
-        <line num="272" count="0" type="stmt"/>
-        <line num="273" count="0" type="stmt"/>
-        <line num="282" count="0" type="stmt"/>
-        <line num="291" count="0" type="stmt"/>
+        <line num="272" count="1" type="stmt"/>
+        <line num="273" count="1" type="stmt"/>
+        <line num="282" count="1" type="stmt"/>
+        <line num="291" count="1" type="stmt"/>
         <line num="297" count="0" type="stmt"/>
         <line num="301" count="4" type="stmt"/>
         <line num="302" count="0" type="stmt"/>

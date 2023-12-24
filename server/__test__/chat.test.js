@@ -88,4 +88,21 @@ describe("Suite 1: Chat Feature", () => {
       expect(responseBody.conversationId).toBe(requestBody.conversationId);
   });
 
+  it('GET /api/v1/conversations/conversationsByDate should return status 200 and distinct IDs', async () => {
+    // Simulate the API call or use a mock function to get the response
+    const response = await request(app).get('/api/v1/conversations/conversationsByDate');
+  
+    // Verify the status code
+    expect(response.status).toBe(200);
+  
+    // Parse the response body
+    const responseBody = JSON.parse(response.text);
+  
+    // Verify that IDs are distinct
+    const ids = responseBody.map(item => item._id);
+    const uniqueIds = new Set(ids);
+  
+    expect(uniqueIds.size).toEqual(ids.length);
+  });
+
 });

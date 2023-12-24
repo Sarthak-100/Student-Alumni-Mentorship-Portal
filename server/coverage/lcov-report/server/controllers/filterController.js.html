@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.21% </span>
+                <span class="strong">80.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/46</span>
+                <span class='fraction'>37/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.66% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/12</span>
+                <span class='fraction'>6/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.21% </span>
+                <span class="strong">80.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/46</span>
+                <span class='fraction'>37/46</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -251,21 +251,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -355,22 +355,22 @@ const filter = async (req, res) =&gt; {
   }
 };
 &nbsp;
-const getAlumniNameById = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const { alumniId } = <span class="cstat-no" title="statement not covered" >req.query;</span> // Change to req.query instead of req.params
+const getAlumniNameById = async (req, res) =&gt; {
+  try {
+    const { alumniId } = req.query; // Change to req.query instead of req.params
 &nbsp;
     // Query the database to find the alumni's name by ID
-    const alumni = <span class="cstat-no" title="statement not covered" >await Alumni.findById(alumniId);</span>
+    const alumni = await Alumni.findById(alumniId);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (!alumni) {</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!alumni) {
 <span class="cstat-no" title="statement not covered" >      return res.status(404).json({ error: 'Alumni not found' });</span>
     }
 &nbsp;
     // Extract the name from the retrieved alumni data
-    const alumniName = <span class="cstat-no" title="statement not covered" >alumni.name;</span>
+    const alumniName = alumni.name;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    res.status(200).json({ alumniName });</span>
-<span class="cstat-no" title="statement not covered" >    return alumniName;</span>
+    res.status(200).json({ alumniName });
+    return alumniName;
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    res.status(500).json({ error: 'An error occurred while fetching the alumni name.' });</span>
   }
@@ -385,7 +385,7 @@ export { values, filter, prefix , getAlumniNameById};
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-12-23T23:14:23.913Z
+                at 2023-12-24T11:21:16.764Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
