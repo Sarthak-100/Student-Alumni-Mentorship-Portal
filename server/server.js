@@ -69,11 +69,20 @@ io.on("connection", (socket) => {
       console.log(user);
       console.log("$$$$");
       console.log(users);
+      console.log(conversation);
       if (user) {
+        io.to(user?.socketId).emit("updateLastAndUnseenMessage", {
+          senderId,
+          senderName,
+          receiverId,
+          conversation,
+          text,
+        });
         io.to(user?.socketId).emit("getMessage", {
           senderId,
           senderName,
           text,
+          conversation,
         });
         io.to(user?.socketId).emit("getMessageNotification", {
           senderId,
@@ -81,8 +90,9 @@ io.on("connection", (socket) => {
           conversation,
         });
       } else {
+        console.log("PRESENT HERE");
         // console.log("conversationId", conversationId);
-        const conversationT = await Conversation.findById(conversation._id);
+        let conversationT = await Conversation.findById(conversation._id);
         // console.log("conversation", conversation);
         conversationT.unseenMessages[receiverId] += 1;
         // console.log("conversation", conversation);
@@ -105,6 +115,18 @@ io.on("connection", (socket) => {
       // console.log(receiverId);
       // console.log(user);
       // console.log(users);
+      let conversationT = await Conversation.findById(conversation._id);
+      // console.log("conversation", conversation);
+      conversationT.unseenMessages[receiverId] += 1;
+      // console.log("conversation", conversation);
+      try {
+        await Conversation.updateOne(
+          { _id: conversation._id },
+          { $set: { unseenMessages: conversationT.unseenMessages } }
+        );
+      } catch (error) {
+        console.log(error);
+      }
       if (user) {
         io.to(user?.socketId).emit("receiveNewConversation&Message", {
           senderId,
@@ -116,25 +138,20 @@ io.on("connection", (socket) => {
           {
             senderId,
             senderName,
-            conversation,
+            conversationT,
           }
         );
-      } else {
-        const conversationT = await Conversation.findById(conversation._id);
-        // console.log("conversation", conversation);
-        conversationT.unseenMessages[receiverId] += 1;
-        // console.log("conversation", conversation);
-        try {
-          await Conversation.updateOne(
-            { _id: conversation._id },
-            { $set: { unseenMessages: conversationT.unseenMessages } }
-          );
-        } catch (error) {
-          console.log(error);
-        }
       }
     }
   );
+
+  socket.on("reloadSenderConversations", async (senderId) => {
+    const user = getUser(senderId);
+    console.log("reloadSenderConversations", senderId);
+    if (user) {
+      io.to(user?.socketId).emit("receiveReloadSenderConversations", senderId);
+    }
+  });
 
   socket.on(
     "changeBlockedStatus",

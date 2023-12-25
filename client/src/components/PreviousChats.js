@@ -8,7 +8,7 @@ import { useConversationContext } from "../context/ConversationContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@mui/material";
-import { formatDistanceToNow, format } from "date-fns";
+import { formatDistanceToNow, format, set } from "date-fns";
 
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 
@@ -110,6 +110,66 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
     };
   });
 
+  useEffect(() => {
+    socket.on("updateLastAndUnseenMessage", async (data) => {
+      console.log("in updateLastAndUnseenMessage");
+      console.log("data", data);
+      console.log("conversation", conversation);
+      if (data.conversation._id !== conversation._id) {
+        try {
+          let unseenMessagesT = data.conversation.unseenMessages;
+          unseenMessagesT[data.receiverId] =
+            data.conversation.unseenMessages[data.receiverId] + 1;
+          console.log("unseenMessagesT", unseenMessagesT);
+          console.log(
+            "+1 from unseenMessagesT",
+            unseenMessagesT[data.receiverId] + 1
+          );
+          console.log(
+            "+1 from data.conversation",
+            data.conversation.unseenMessages[data.receiverId] + 1
+          );
+          await axios
+            .put(
+              `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
+              {
+                unseenMessages: unseenMessagesT,
+              },
+              {
+                withCredentials: true,
+              }
+            )
+            .then((response) => {
+              setLoadConversations(
+                (prevLoadConversations) => prevLoadConversations + 1
+              );
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        socket.emit("reloadSenderConversations", data.senderId);
+      } else {
+        setLoadConversations(
+          (prevLoadConversations) => prevLoadConversations + 1
+        );
+        // conversation.lastMessage = data.conversation.lastMessage;
+        // setConversationValue(data.conversation);
+      }
+    });
+    socket.on("receiveReloadSenderConversations", async (data) => {
+      setLoadConversations(
+        (prevLoadConversations) => prevLoadConversations + 1
+      );
+    });
+    return () => {
+      socket.off("updateLastAndUnseenMessage");
+      socket.off("receiveReloadSenderConversations");
+    };
+  });
+
   // console.log(currentChat);
 
   const navigate = useNavigate();
@@ -118,13 +178,10 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
     const handleSelectedConversation = async () => {
       console.log("in useEffect for prev chat click");
       console.log("CONVERSATION", conversation);
-      // console.log("#$#$@#@#", conversation.unseenMessages);
-      // console.log("user", typeof user._id);
-      // console.log("$^%^%", conversation.unseenMessages[user._id]);
-      // console.log(Object.keys(conversation.unseenMessages));
-
       if (conversation) {
+        // if (window.location.pathname !== "/chat/chatting") {
         navigate("chatting");
+        // }
         if (conversation.unseenMessages[user._id] > 0) {
           conversation.unseenMessages[user._id] = 0;
           try {
@@ -145,6 +202,10 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
           } catch (error) {
             console.log(error);
           }
+          const otherMember = conversation?.members.find(
+            (m) => m !== user?._id
+          );
+          socket.emit("reloadSenderConversations", otherMember);
         }
       }
       if (receiverId !== null && conversation?._id === null) {
@@ -162,11 +223,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
           style={{
             backgroundColor:
               conversation?._id === c._id ? "#2f2d52" : "transparent",
-            // display: "flex",
-            // flexDirection: "row",
-            // justifyContent: "space-between",
-            // alignItems: "center",
-            // marginTop: "19px",
             transition: "background-color 0.3s ease",
           }}
           onClick={() => setConversationValue(c)}
