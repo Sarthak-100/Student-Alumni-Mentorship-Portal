@@ -377,27 +377,32 @@ const Chatting = ({ setLoadConversations }) => {
           </Typography>
           {user.user_type !== "admin" ? (
             <div>
-              {user.user_type !== "student" ? (
-                <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: blocked ? "#00FF00" : "#FF0000",
-                    marginLeft: "12px",
-                  }}
-                  className="IconButton"
-                  onClick={blockBtController}
-                >
-                  {blocked ? "Unblock" : "Block"}
-                </Button>
-              ) : null}
-              <IconButton
-                size="large"
-                aria-label="display more actions"
-                edge="end"
-                onClick={handleReport}
-              >
-                <ReportIcon style={{ color: "#FF0000" }} />
-              </IconButton>
+              {chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+                .user_type === "admin" ? null : (
+                <>
+                  {user.user_type !== "student" ? (
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: blocked ? "#00FF00" : "#FF0000",
+                        marginLeft: "12px",
+                      }}
+                      className="IconButton"
+                      onClick={blockBtController}
+                    >
+                      {blocked ? "Unblock" : "Block"}
+                    </Button>
+                  ) : null}
+                  <IconButton
+                    size="large"
+                    aria-label="display more actions"
+                    edge="end"
+                    onClick={handleReport}
+                  >
+                    <ReportIcon style={{ color: "#FF0000" }} />
+                  </IconButton>
+                </>
+              )}
             </div>
           ) : (
             <Button
