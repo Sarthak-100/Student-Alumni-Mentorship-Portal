@@ -80,10 +80,13 @@ const Chatting = ({ setLoadConversations }) => {
     const tempName =
       chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.name;
 
-    const tempUserType = user.user_type === "student" ? "alumni" : "student";
+    const tempUserType =
+      chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+        ?.user_type;
     socket.emit("userReported", {
       reporterId: user._id,
       reporterName: user.name,
+      reporterUserType: user.user_type,
       reportedId: receiverIdTemp,
       reportedName: tempName,
       reportedUserType: tempUserType,
@@ -92,6 +95,10 @@ const Chatting = ({ setLoadConversations }) => {
   };
 
   const scrollRef = useRef();
+
+  useEffect(() => {
+    setBlockedValue(conversation?.blocked);
+  }, [conversation]);
 
   useEffect(() => {
     socket.on("getMessage", (data) => {
@@ -291,12 +298,17 @@ const Chatting = ({ setLoadConversations }) => {
   const blockBtController = async (e) => {
     const status = !blocked;
     console.log("#$#$#$#$#$#Status", status);
+    conversation.blocked = status;
+    conversation.blockedUser = status
+      ? conversation?.members.find((m) => m !== user?._id)
+      : null;
     try {
       await axios
         .put(
           `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${conversation?._id}`,
           {
             blocked: status,
+            blockedUser: conversation.blockedUser,
           },
           {
             withCredentials: true,
@@ -314,13 +326,22 @@ const Chatting = ({ setLoadConversations }) => {
         (member) => member !== user._id
       );
 
+      const receiverName = chattedUsers[receiverIdTemp]?.name;
+      const receiver_user_type = chattedUsers[receiverIdTemp]?.user_type;
+
       socket.emit("changeBlockedStatus", {
         senderId: user._id,
         senderName: user.name,
         receiverIdArg: receiverIdTemp,
+        receiverName: receiverName,
+        receiver_user_type: receiver_user_type,
         blockedStatus: status,
       });
-      conversation.blocked = status;
+
+      socket.emit(
+        "reloadConversations",
+        conversation?.members.find((m) => m !== user?._id)
+      );
     } catch (error) {
       console.log(error);
     }
@@ -363,50 +384,35 @@ const Chatting = ({ setLoadConversations }) => {
                 ?.name
             }
           </Typography>
-          {/* <IconButton
-            size="large"
-            aria-label="display more actions"
-            edge="end"
-            color="inherit"
-          >
-            <VideoCallIcon />
-          </IconButton> */}
-          {/* {user.user_type !== "student" ? (
-            <IconButton
-              variant="contained"
-              style={{
-                backgroundColor: blocked ? "#00FF00" : "#FF0000",
-                marginLeft: "12px",
-              }}
-              className="IconButton"
-              onClick={blockBtController}
-            >
-              {blocked ? "Unblock" : "Block"}
-            </IconButton>
-          ) : null} */}
           {user.user_type !== "admin" ? (
             <div>
-              {user.user_type !== "student" ? (
-                <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: blocked ? "#00FF00" : "#FF0000",
-                    marginLeft: "12px",
-                  }}
-                  className="IconButton"
-                  onClick={blockBtController}
-                >
-                  {blocked ? "Unblock" : "Block"}
-                </Button>
-              ) : null}
-              <IconButton
-                size="large"
-                aria-label="display more actions"
-                edge="end"
-                onClick={handleReport}
-              >
-                <ReportIcon style={{ color: "#FF0000" }} />
-              </IconButton>
+              {chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+                .user_type === "admin" ? null : (
+                <>
+                  {user.user_type !== "student" &&
+                  conversation.blockedUser !== user._id ? (
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: blocked ? "#00FF00" : "#FF0000",
+                        marginLeft: "12px",
+                      }}
+                      className="IconButton"
+                      onClick={blockBtController}
+                    >
+                      {blocked ? "Unblock" : "Block"}
+                    </Button>
+                  ) : null}
+                  <IconButton
+                    size="large"
+                    aria-label="display more actions"
+                    edge="end"
+                    onClick={handleReport}
+                  >
+                    <ReportIcon style={{ color: "#FF0000" }} />
+                  </IconButton>
+                </>
+              )}
             </div>
           ) : (
             <Button
@@ -426,7 +432,7 @@ const Chatting = ({ setLoadConversations }) => {
         ))}
       </ReactScrollToBottom>
       <div>
-        {!conversation.blocked || user.user_type !== "student" ? (
+        {conversation.blockedUser !== user._id ? (
           <div className="sendMsg">
             <Input
               onKeyPress={(event) =>

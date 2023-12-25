@@ -45,12 +45,13 @@ const Report = (props) => {
     color: "#888",
   };
 
-  const handleChatButton = async (e) => {
-    if (props.report.reportedUserType === "student") {
-      await setReceiverIdValue(props.report.reportedId);
-    } else {
-      await setReceiverIdValue(props.report.reporterId);
-    }
+  const handleChatWithReporter = async (e) => {
+    await setReceiverIdValue(props.report.reporterId);
+    navigate("/chat/welcome");
+  };
+
+  const handleChatWithReported = async (e) => {
+    await setReceiverIdValue(props.report.reportedId);
     navigate("/chat/welcome");
   };
 
@@ -90,8 +91,13 @@ const Report = (props) => {
       );
       console.log("Issue resolved:", response);
       setOpenResolvedDialog(true);
-      // Notify parent component (Reports.js) about the resolved report
-      //   props.onReportResolved(props.report._id);
+      socket.emit("sendResolvedNotification", {
+        receiverId: props.report.reporterId,
+        senderName: "Admin",
+        reason: props.report.reason,
+        reportedName: props.report.reportedName,
+        reportedUserType: props.report.reportedUserType,
+      });
     } catch (error) {
       console.error("API Error:", error);
     }
@@ -107,7 +113,10 @@ const Report = (props) => {
     <div style={notificationStyle}>
       <div className="notification-content">
         <div style={headerStyle}>
-          <strong>Reporter:</strong> {props.report.reporterName}
+          <strong>Reporter:</strong>{" "}
+          {props.report.reporterUserType === "student" ? "Student" : "Alumni"} -
+          {">"}
+          {props.report.reporterName}
         </div>
         <div style={headerStyle}>
           <strong>Reported:</strong>{" "}
@@ -120,16 +129,16 @@ const Report = (props) => {
         <Button
           style={{ textTransform: "none" }}
           variant="contained"
-          onClick={handleChatButton}
+          onClick={handleChatWithReporter}
         >
-          Chat With Student
+          Chat With {props.report.reporterName}
         </Button>
         <Button
           style={{ marginLeft: "13px", textTransform: "none" }}
           variant="contained"
-          onClick={handleChatButton}
+          onClick={handleChatWithReported}
         >
-          Chat With Alumni
+          Chat With {props.report.reportedName}
         </Button>
         <Button
           style={{

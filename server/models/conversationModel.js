@@ -9,6 +9,10 @@ const conversationSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    blockedUser: {
+      type: String,
+      default: null,
+    },
     lastMessage: {
       type: String,
       default: "",

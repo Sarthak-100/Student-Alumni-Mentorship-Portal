@@ -16,11 +16,18 @@ const ReportPrompt = ({ open, onClose, onSubmit }) => {
 
   const handleSubmit = () => {
     onSubmit(reportReason);
+    setReportReason("");
+    onClose();
+  };
+
+  // Reset the text field value when the modal is closed
+  const handleClose = () => {
+    setReportReason("");
     onClose();
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box
         sx={{
           position: "absolute",

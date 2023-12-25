@@ -442,7 +442,21 @@ const Layout = () => {
         increment();
       }
     });
+    socket.on("getResolvedNotification", async (data) => {
+      if (window.location.pathname === "/notifications") {
+        setReloadNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        increment();
+      }
+    });
     socket.on("getFixMeetingNotification", async (data) => {
+      if (window.location.pathname === "/notifications") {
+        setReloadNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        increment();
+      }
+    });
+    socket.on("notifyingAdminStudentBlocked", async (data) => {
       if (window.location.pathname === "/notifications") {
         setReloadNotificationPage((prevReload) => prevReload + 1);
       } else {
@@ -455,7 +469,9 @@ const Layout = () => {
       socket.off("updateBlockedStatusNotification");
       socket.off("reportNotificationAdmin");
       socket.off("reportNotificationUser");
+      socket.off("getResolvedNotification");
       socket.off("getFixMeetingNotification");
+      socket.off("notifyingAdminStudentBlocked");
     };
   });
 

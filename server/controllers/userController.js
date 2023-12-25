@@ -41,7 +41,8 @@ export const getMyProfile = async (req, res, next) => {
         }
       }
     }
-    user["user_type"] = user_type;
+    // user["user_type"] = user_type;
+    user.user_type = user_type;
 
     res.status(200).json({
       success: true,
@@ -89,6 +90,7 @@ export const getUserProfile = async (req, res, next) => {
     res.status(200).json({
       success: true,
       user: user,
+      user_type: user_type,
     });
   } catch (error) {
     next(error);
