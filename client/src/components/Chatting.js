@@ -97,6 +97,10 @@ const Chatting = ({ setLoadConversations }) => {
   const scrollRef = useRef();
 
   useEffect(() => {
+    setBlockedValue(conversation?.blocked);
+  }, [conversation]);
+
+  useEffect(() => {
     socket.on("getMessage", (data) => {
       if (data.conversation._id === conversation._id) {
         console.log(
