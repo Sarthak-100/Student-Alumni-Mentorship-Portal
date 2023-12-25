@@ -449,6 +449,13 @@ const Layout = () => {
         increment();
       }
     });
+    socket.on("notifyingAdminStudentBlocked", async (data) => {
+      if (window.location.pathname === "/notifications") {
+        setReloadNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        increment();
+      }
+    });
     return () => {
       socket.off("getMessageNotification");
       socket.off("receiveNewConversation&MessageNotification");
@@ -456,6 +463,7 @@ const Layout = () => {
       socket.off("reportNotificationAdmin");
       socket.off("reportNotificationUser");
       socket.off("getFixMeetingNotification");
+      socket.off("notifyingAdminStudentBlocked");
     };
   });
 

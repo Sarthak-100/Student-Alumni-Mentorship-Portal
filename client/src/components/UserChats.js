@@ -47,9 +47,12 @@ const UserChats = (props) => {
           }
         )
         .then((response) => {
-          setUser(response.data.user);
-          setChattedUsersValue(friendId, response.data.user);
-          console.log("&&&&&&In User CHat", friendId, response.data.user);
+          let tempUser = response.data.user;
+          let user_type = response.data.user_type;
+          tempUser.user_type = user_type;
+          setUser(tempUser);
+          setChattedUsersValue(friendId, tempUser);
+          console.log("&&&&&&In User CHat", friendId, tempUser);
           if (receiverId === friendId) {
             setConversationValue(props.conversation);
           }

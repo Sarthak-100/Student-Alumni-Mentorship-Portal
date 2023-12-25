@@ -155,7 +155,14 @@ io.on("connection", (socket) => {
 
   socket.on(
     "changeBlockedStatus",
-    async ({ senderId, senderName, receiverIdArg, blockedStatus }) => {
+    async ({
+      senderId,
+      senderName,
+      receiverIdArg,
+      receiverName,
+      receiver_user_type,
+      blockedStatus,
+    }) => {
       const user = getUser(receiverIdArg);
       if (user) {
         io.to(user?.socketId).emit("updateBlockedStatus", {
@@ -170,15 +177,40 @@ io.on("connection", (socket) => {
         });
       } else {
         const newNotification = new Notification({
-          receiverIdArg,
+          receiverId: receiverIdArg,
           senderId,
           senderName,
           messageType: "blockingUpdate",
-          message: `You have been ${blockedStatus ? "blocked" : "unblocked"}.}`,
+          message: `You have been ${blockedStatus ? "blocked" : "unblocked"}.`,
         });
 
         try {
           const savedNotification = await newNotification.save();
+          console.log(savedNotification);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (blockedStatus) {
+        const admin = getUserByUserType("admin");
+        if (admin) {
+          io.to(admin?.socketId).emit("notifyingAdminStudentBlocked", {
+            senderId,
+            senderName,
+            blockedStatus,
+          });
+        }
+        // console.log("inside blockedStatus", admin);
+        // console.log("inside blockedStatus", receiver_user_type);
+        const newNotification2 = new Notification({
+          receiverId: admin?.userId,
+          senderId,
+          senderName,
+          messageType: "notifyingAdminStudentBlocked",
+          message: `Blocked ${receiver_user_type}: ${receiverName}.`,
+        });
+        try {
+          const savedNotification = await newNotification2.save();
           console.log(savedNotification);
         } catch (error) {
           console.log(error);
@@ -217,14 +249,6 @@ io.on("connection", (socket) => {
         reportedUserType: reportedUserType,
         reason: reason,
       });
-
-      // receiverId: document._id.toString(),
-      // senderId: reporterId,
-      // senderName: reporterName,
-      // messageType: "report",
-      // message: `Reported ${reportedUserType}: ${reportedName}.`,
-      // reportedUserId: reportedId,
-      // reportingReason: reason,
 
       try {
         const savedReport = await report.save();

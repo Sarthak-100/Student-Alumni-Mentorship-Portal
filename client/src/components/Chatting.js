@@ -314,10 +314,15 @@ const Chatting = ({ setLoadConversations }) => {
         (member) => member !== user._id
       );
 
+      const receiverName = chattedUsers[receiverIdTemp]?.name;
+      const receiver_user_type = chattedUsers[receiverIdTemp]?.user_type;
+
       socket.emit("changeBlockedStatus", {
         senderId: user._id,
         senderName: user.name,
         receiverIdArg: receiverIdTemp,
+        receiverName: receiverName,
+        receiver_user_type: receiver_user_type,
         blockedStatus: status,
       });
       conversation.blocked = status;
