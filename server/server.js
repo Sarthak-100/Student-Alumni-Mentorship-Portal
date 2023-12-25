@@ -224,6 +224,7 @@ io.on("connection", (socket) => {
     async ({
       reporterId,
       reporterName,
+      reporterUserType,
       reportedId,
       reportedName,
       reportedUserType,
@@ -244,6 +245,7 @@ io.on("connection", (socket) => {
       const report = new Reports({
         reporterId: reporterId,
         reporterName: reporterName,
+        reporterUserType: reporterUserType,
         reportedId: reportedId,
         reportedName: reportedName,
         reportedUserType: reportedUserType,

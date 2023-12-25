@@ -80,10 +80,13 @@ const Chatting = ({ setLoadConversations }) => {
     const tempName =
       chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.name;
 
-    const tempUserType = user.user_type === "student" ? "alumni" : "student";
+    const tempUserType =
+      chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+        ?.user_type;
     socket.emit("userReported", {
       reporterId: user._id,
       reporterName: user.name,
+      reporterUserType: user.user_type,
       reportedId: receiverIdTemp,
       reportedName: tempName,
       reportedUserType: tempUserType,
