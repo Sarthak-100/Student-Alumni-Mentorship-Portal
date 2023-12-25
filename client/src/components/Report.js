@@ -91,8 +91,13 @@ const Report = (props) => {
       );
       console.log("Issue resolved:", response);
       setOpenResolvedDialog(true);
-      // Notify parent component (Reports.js) about the resolved report
-      //   props.onReportResolved(props.report._id);
+      socket.emit("sendResolvedNotification", {
+        receiverId: props.report.reporterId,
+        senderName: "Admin",
+        reason: props.report.reason,
+        reportedName: props.report.reportedName,
+        reportedUserType: props.report.reportedUserType,
+      });
     } catch (error) {
       console.error("API Error:", error);
     }

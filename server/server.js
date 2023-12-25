@@ -282,6 +282,33 @@ io.on("connection", (socket) => {
     }
   );
 
+  socket.on(
+    "sendResolvedNotification",
+    async ({
+      receiverId,
+      senderName,
+      reason,
+      reportedName,
+      reportedUserType,
+    }) => {
+      const user = getUser(receiverId);
+      if (user) {
+        io.to(user?.socketId).emit("getResolvedNotification", {});
+      }
+      const newNotification = new Notification({
+        receiverId,
+        senderName,
+        messageType: "reportResolved",
+        message: `Your report against ${reportedUserType}: ${reportedName} with Reason: "${reason}" has been resolved.`,
+      });
+      try {
+        const savedNotification = await newNotification.save();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
+
   socket.on("sendRemoveUserNotification", ({ removedUserId }) => {
     const user = getUser(removedUserId);
     if (user) {
