@@ -363,27 +363,6 @@ const Chatting = ({ setLoadConversations }) => {
                 ?.name
             }
           </Typography>
-          {/* <IconButton
-            size="large"
-            aria-label="display more actions"
-            edge="end"
-            color="inherit"
-          >
-            <VideoCallIcon />
-          </IconButton> */}
-          {/* {user.user_type !== "student" ? (
-            <IconButton
-              variant="contained"
-              style={{
-                backgroundColor: blocked ? "#00FF00" : "#FF0000",
-                marginLeft: "12px",
-              }}
-              className="IconButton"
-              onClick={blockBtController}
-            >
-              {blocked ? "Unblock" : "Block"}
-            </IconButton>
-          ) : null} */}
           {user.user_type !== "admin" ? (
             <div>
               {user.user_type !== "student" ? (
