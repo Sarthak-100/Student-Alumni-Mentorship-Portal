@@ -159,7 +159,7 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
         // setConversationValue(data.conversation);
       }
     });
-    socket.on("receiveReloadSenderConversations", async (data) => {
+    socket.on("receiveReloadConversations", async (data) => {
       setLoadConversations(
         (prevLoadConversations) => prevLoadConversations + 1
       );
@@ -205,7 +205,7 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
           const otherMember = conversation?.members.find(
             (m) => m !== user?._id
           );
-          socket.emit("reloadSenderConversations", otherMember);
+          socket.emit("reloadConversations", otherMember);
         }
       }
       if (receiverId !== null && conversation?._id === null) {

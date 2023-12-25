@@ -145,11 +145,11 @@ io.on("connection", (socket) => {
     }
   );
 
-  socket.on("reloadSenderConversations", async (senderId) => {
-    const user = getUser(senderId);
-    console.log("reloadSenderConversations", senderId);
+  socket.on("reloadConversations", async (id) => {
+    const user = getUser(id);
+    console.log("reloadSenderConversations", id);
     if (user) {
-      io.to(user?.socketId).emit("receiveReloadSenderConversations", senderId);
+      io.to(user?.socketId).emit("receiveReloadConversations", id);
     }
   });
 

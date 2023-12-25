@@ -298,12 +298,17 @@ const Chatting = ({ setLoadConversations }) => {
   const blockBtController = async (e) => {
     const status = !blocked;
     console.log("#$#$#$#$#$#Status", status);
+    conversation.blocked = status;
+    conversation.blockedUser = status
+      ? conversation?.members.find((m) => m !== user?._id)
+      : null;
     try {
       await axios
         .put(
           `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${conversation?._id}`,
           {
             blocked: status,
+            blockedUser: conversation.blockedUser,
           },
           {
             withCredentials: true,
@@ -332,7 +337,11 @@ const Chatting = ({ setLoadConversations }) => {
         receiver_user_type: receiver_user_type,
         blockedStatus: status,
       });
-      conversation.blocked = status;
+
+      socket.emit(
+        "reloadConversations",
+        conversation?.members.find((m) => m !== user?._id)
+      );
     } catch (error) {
       console.log(error);
     }
@@ -380,7 +389,8 @@ const Chatting = ({ setLoadConversations }) => {
               {chattedUsers[conversation?.members.find((m) => m !== user?._id)]
                 .user_type === "admin" ? null : (
                 <>
-                  {user.user_type !== "student" ? (
+                  {user.user_type !== "student" &&
+                  conversation.blockedUser !== user._id ? (
                     <Button
                       variant="contained"
                       style={{
@@ -422,7 +432,7 @@ const Chatting = ({ setLoadConversations }) => {
         ))}
       </ReactScrollToBottom>
       <div>
-        {!conversation.blocked || user.user_type !== "student" ? (
+        {conversation.blockedUser !== user._id ? (
           <div className="sendMsg">
             <Input
               onKeyPress={(event) =>
