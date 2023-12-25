@@ -20,6 +20,7 @@ import ReportingPrompt from "./ReportingPrompt";
 import { useAuth0 } from "@auth0/auth0-react";
 // import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
+import { set } from "date-fns";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -93,20 +94,20 @@ const Chatting = ({ setLoadConversations }) => {
   const scrollRef = useRef();
 
   useEffect(() => {
-    console.log("^^^^^^^^^ ABOVE GETMESSAGES ^^^^^^^^^^");
-    console.log(socket);
     socket.on("getMessage", (data) => {
-      // setLoadConversationsValue(1);
-      console.log("^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^");
-      console.log(
-        "^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^",
-        window.location.pathname
-      );
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      });
+      if (data.conversation._id === conversation._id) {
+        console.log(
+          "^^^^^^^^^ INSIDE GETMESSAGES ^^^^^^^^^^",
+          window.location.pathname,
+          data
+        );
+        setArrivalMessage({
+          sender: data.senderId,
+          text: data.text,
+          createdAt: Date.now(),
+        });
+        console.log("((((((())))))) INSIDE GETMESSAGES )))))))))", messages);
+      }
     });
     return () => {
       socket.off("getMessage");
@@ -137,7 +138,8 @@ const Chatting = ({ setLoadConversations }) => {
     arrivalMessage &&
       conversation?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage, conversation]);
+    // setLoadConversations((prevLoadConversations) => prevLoadConversations + 1);
+  }, [arrivalMessage]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -207,26 +209,8 @@ const Chatting = ({ setLoadConversations }) => {
 
       const receiverName = chattedUsers[receiverIdTemp]?.name;
 
-      // if (receiverIdTemp === receiverId) {
-      if (messages.length === 0) {
-        socket.emit("newConversation&Message", {
-          senderId: user._id,
-          // senderId: user.email,
-          senderName: user.name,
-          receiverId: receiverIdTemp,
-          conversation: conversation,
-          text: newMessage,
-        });
-      } else {
-        socket.emit("sendMessage", {
-          // senderId: user.email,
-          senderId: user._id,
-          senderName: user.name,
-          receiverId: receiverIdTemp,
-          conversation: conversation,
-          text: newMessage,
-        });
-      }
+      conversation.lastMessage = newMessage;
+
       try {
         await axios
           .post(`http://localhost:4000/api/v1/messages/newMessage`, message)
@@ -263,6 +247,31 @@ const Chatting = ({ setLoadConversations }) => {
       } catch (error) {
         console.log(error);
       }
+
+      if (messages.length === 0) {
+        socket.emit("newConversation&Message", {
+          senderId: user._id,
+          // senderId: user.email,
+          senderName: user.name,
+          receiverId: receiverIdTemp,
+          conversation: conversation,
+          text: newMessage,
+        });
+      } else {
+        console.log(
+          "$%$%$%$%$%$%$%$%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+          conversation
+        );
+        socket.emit("sendMessage", {
+          // senderId: user.email,
+          senderId: user._id,
+          senderName: user.name,
+          receiverId: receiverIdTemp,
+          conversation: conversation,
+          text: newMessage,
+        });
+      }
+
       setLoadConversations(
         (prevLoadConversations) => prevLoadConversations + 1
       );

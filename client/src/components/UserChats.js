@@ -53,6 +53,12 @@ const UserChats = (props) => {
           if (receiverId === friendId) {
             setConversationValue(props.conversation);
           }
+          if (
+            conversation !== null &&
+            props.conversation._id === conversation._id
+          ) {
+            setConversationValue(props.conversation);
+          }
         })
         .catch((error) => {
           console.error("API Error:", error);
