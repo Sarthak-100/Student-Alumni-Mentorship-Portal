@@ -366,27 +366,28 @@ const Layout = () => {
         window.location.pathname !== "/chat/welcome" &&
         window.location.pathname !== "/chat/chatting"
       ) {
-        try {
-          data.conversation.unseenMessages[userContext.user._id] += 1;
-          await axios
-            .put(
-              `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
-              {
-                unseenMessages: data.conversation.unseenMessages,
-              },
-              {
-                withCredentials: true,
-              }
-            )
-            .then((response) => {
-              messageNotificationsNoContext.increment(1);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        } catch (error) {
-          console.log(error);
-        }
+        // try {
+        //   data.conversation.unseenMessages[userContext.user._id] += 1;
+        //   await axios
+        //     .put(
+        //       `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
+        //       {
+        //         unseenMessages: data.conversation.unseenMessages,
+        //       },
+        //       {
+        //         withCredentials: true,
+        //       }
+        //     )
+        //     .then((response) => {
+        //       messageNotificationsNoContext.increment(1);
+        //     })
+        //     .catch((error) => {
+        //       console.log(error);
+        //     });
+        // } catch (error) {
+        //   console.log(error);
+        // }
+        messageNotificationsNoContext.increment(1);
       }
     });
     socket.on("updateBlockedStatusNotification", async (data) => {
