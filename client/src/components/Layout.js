@@ -42,9 +42,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import LayersIcon from "@mui/icons-material/Layers";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
 import { useClearNotificationContext } from "../context/ClearNotificationContext";
@@ -54,8 +52,16 @@ import Calendar from "./Calendar.js";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import LogoutIconButton from "./LogoutButton";
 import Reports from "../pages/Reports.js";
-import { set } from "lodash";
 import CreateProfile from "../pages/CreateProfile";
+// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
+const iconContainerStyle = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  gap: '0.00008rem', // Adjust the gap between icons
+  marginRight: '0.05rem', // Adjust the right margin for the entire icon container
+};
 
 // Set the width of the drawer
 const drawerWidth = 240;
@@ -538,7 +544,7 @@ const Layout = () => {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, fontSize: '1.5rem' }}
             >
               Dashboard
             </Typography>
@@ -558,33 +564,32 @@ const Layout = () => {
                 </Badge>
               </IconButton>
             ) : null}
-            <IconButton color="inherit">
-              <Badge badgeContent={notificationsNo} color="secondary">
-                <NotificationsIcon onClick={handleNotification} />
-              </Badge>
-            </IconButton>
-            <IconButton color="inherit" onClick={handleCalendarClick}>
-              <TodayIcon /> {/* Calendar icon */}
-            </IconButton>
-            <IconButton color="inherit" onClick={handleChat}>
-              <Badge
-                badgeContent={
-                  messageNotificationsNoContext.messageNotificationsNo
-                }
-                color="secondary"
-              >
-                <ChatIcon />
-              </Badge>
-            </IconButton>
-            <Link
-              to="/profile"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <IconButton color="inherit">
-                <AccountCircleIcon />
+            <div style={iconContainerStyle}>
+              <IconButton color="inherit" title="Notifications">
+                <Badge badgeContent={notificationsNo} color="secondary">
+                  <NotificationsIcon style={{ fontSize: '2rem' }} onClick={handleNotification} />
+                </Badge>
               </IconButton>
-            </Link>
-            <LogoutIconButton />
+              <IconButton color="inherit" title="Calendar" onClick={handleCalendarClick}>
+                <TodayIcon style={{ fontSize: '2rem' }} />
+              </IconButton>
+              <IconButton color="inherit" title="Chat" onClick={handleChat}>
+                <Badge
+                  badgeContent={messageNotificationsNoContext.messageNotificationsNo}
+                  color="secondary"
+                >
+                  <ChatIcon style={{ fontSize: '2rem' }} />
+                </Badge>
+              </IconButton>
+              <Link to="/profile" style={{ textDecoration: "none", color: "inherit" }}>
+                <IconButton color="inherit" title="Profile">
+                  <AccountCircleIcon style={{ fontSize: '2rem' }} />
+                </IconButton>
+              </Link>
+              <IconButton color="inherit" title="Logout">
+                <LogoutIconButton style={{ fontSize: '2rem' }} />
+              </IconButton>
+            </div>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

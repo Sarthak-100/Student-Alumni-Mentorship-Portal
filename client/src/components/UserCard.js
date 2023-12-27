@@ -30,18 +30,20 @@ const UserCard = (props) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [slots, setSlots] = useState([]);
   const [events, setEvents] = useState([]);
+  const [showEvents, setShowEvents] = useState(false);
   const [meetingFixed, setMeetingFixed] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState([]);
   const { socket } = useSocketContext();
+
+  useEffect(() => {
+    // Clear events when a new user is selected
+    setEvents([]);
+  }, [props.cardUser]);
 
   const handleChat = async () => {
     // console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
     await setReceiverIdValue(props.cardUser._id);
     navigate("/chat/welcome");
-  };
-
-  const handleCalendarDisplay = () => {
-    props.toggleCalendar(props.cardUser);
   };
 
   // Destructure the nested location object
@@ -50,6 +52,13 @@ const UserCard = (props) => {
   const handleProfile = () => {
     setSelectedUser(props.cardUser); // Store the selected user data
     setOpenProfile(true); // Open the profile dialog
+  };
+
+  const handleCalendarDisplay = () => {
+    if (showEvents) {
+      setEvents([]); // Clear events if they are displayed
+    }
+    setShowEvents((prevShowEvents) => !prevShowEvents); // Toggle events display
   };
 
   const showCalendar = () => {
@@ -339,14 +348,19 @@ const UserCard = (props) => {
               <IconButton
                 color="primary"
                 aria-label="Calendar"
-                onClick={showCalendar}
+                onClick={() => {
+                  if (!showEvents) {
+                    showCalendar();
+                  }
+                  handleCalendarDisplay();
+                }}
               >
                 <TodayIcon />
               </IconButton>
             </CardActions>
           </div>
         </div>
-        {events.length > 0 && (
+        {showEvents && events.length > 0 && (
           <div
             style={{
               width: "300px",
