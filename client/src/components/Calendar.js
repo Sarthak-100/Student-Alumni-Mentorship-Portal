@@ -14,12 +14,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@mui/material";
 import MeetingCard from "./MeetingCard";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SyncIcon from '@mui/icons-material/Sync';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
+import socket from "../chatSocket.js";
 
 const Calendar = () => {
   const [startDate, setStart] = useState(new Date());
@@ -471,6 +471,10 @@ const Calendar = () => {
 
   async function deleteEvent(eventId, googleEventId) {
     try {
+
+      //notify all attendees about the cancellation of the event
+      socket.emit("getUpdateDeletedEvent", { eventId, userId: user._id });
+      
       // Delete the event from the database
       const deleteResponse = await axios.delete(
         `http://localhost:4000/api/v1/deleteEvent/details?eventId=${eventId}`
@@ -479,31 +483,32 @@ const Calendar = () => {
       if (deleteResponse.status === 200) {
         console.log("Event deleted from the database");
 
-        // if (googleEventId) {
-        //   // Delete event from Google Calendar if it has a googleEventId
-        //   const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
-        //   const googleDeleteResponse = await fetch(googleCalendarUrl, {
-        //     method: "DELETE",
-        //     headers: {
-        //       Authorization: "Bearer " + session.provider_token,
-        //       "Content-Type": "application/json",
-        //     },
-        //   });
+        if (googleEventId) {
+          // Delete event from Google Calendar if it has a googleEventId
+          const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
+          const googleDeleteResponse = await fetch(googleCalendarUrl, {
+            method: "DELETE",
+            headers: {
+              Authorization: "Bearer " + session.provider_token,
+              "Content-Type": "application/json",
+            },
+          });
 
-        //   if (googleDeleteResponse.ok) {
-        //     console.log("Event deleted from Google Calendar");
-        //   } else {
-        //     console.error(
-        //       "Failed to delete event from Google Calendar:",
-        //       googleDeleteResponse.status
-        //     );
-        //   }
-        // }
+          if (googleDeleteResponse.ok) {
+            console.log("Event deleted from Google Calendar");
+          } else {
+            console.error(
+              "Failed to delete event from Google Calendar:",
+              googleDeleteResponse.status
+            );
+          }
+        }
 
         // Update the state to remove the deleted event from the UI
         setUpcomingEvents((prevEvents) =>
           prevEvents.filter((event) => event._id !== eventId)
         );
+
       } else {
         console.error("Failed to delete event:", deleteResponse.status);
       }

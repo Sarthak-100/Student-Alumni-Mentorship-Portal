@@ -587,7 +587,7 @@ const Layout = () => {
                 </IconButton>
               </Link>
               <IconButton color="inherit" title="Logout">
-                <LogoutIconButton style={{ fontSize: '2rem' }} />
+                <LogoutIconButton style={{ fontSize: '4rem' }} />
               </IconButton>
             </div>
           </Toolbar>

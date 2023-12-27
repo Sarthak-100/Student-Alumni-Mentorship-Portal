@@ -6,7 +6,7 @@ import { Notification } from "./models/notificationModel.js";
 import { Conversation } from "./models/conversationModel.js";
 import { Admin } from "./models/userModel.js";
 import { Reports } from "./models/reportsModel.js";
-// import io from "socket.io";
+import { Event } from "./models/eventModel.js";
 
 connectDB();
 
@@ -346,6 +346,23 @@ io.on("connection", (socket) => {
       }
     }
   );
+
+  socket.on("getUpdateDeletedEvent", async ({ eventId, userId }) => {
+    console.log("getUpdateDeletedEvent", eventId, userId);
+    try {
+      const event = await Event.findById({ _id: eventId });
+      console.log("check event details", event, event.attendees);
+
+      event.attendees.forEach((attendee) => {
+        const attendeeId = attendee._id; // Assuming the attendee object has an '_id' field
+        console.log("Attendee ID:", attendeeId.toString());
+        // Perform further operations with attendeeId
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   // when disconnect
   socket.on("disconnect", () => {
