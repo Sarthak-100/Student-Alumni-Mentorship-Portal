@@ -558,15 +558,15 @@ const Layout = () => {
                 </Badge>
               </IconButton>
             ) : null}
-            <IconButton color="inherit">
+            <IconButton color="inherit" title="Notifications">
               <Badge badgeContent={notificationsNo} color="secondary">
                 <NotificationsIcon onClick={handleNotification} />
               </Badge>
             </IconButton>
-            <IconButton color="inherit" onClick={handleCalendarClick}>
+            <IconButton color="inherit" title="Calendar" onClick={handleCalendarClick}>
               <TodayIcon /> {/* Calendar icon */}
             </IconButton>
-            <IconButton color="inherit" onClick={handleChat}>
+            <IconButton color="inherit" title="Chat" onClick={handleChat}>
               <Badge
                 badgeContent={
                   messageNotificationsNoContext.messageNotificationsNo
@@ -580,11 +580,13 @@ const Layout = () => {
               to="/profile"
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <IconButton color="inherit">
+              <IconButton color="inherit" title="Profile">
                 <AccountCircleIcon />
               </IconButton>
             </Link>
-            <LogoutIconButton />
+            <IconButton color="inherit" title="Logout">
+              <LogoutIconButton />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

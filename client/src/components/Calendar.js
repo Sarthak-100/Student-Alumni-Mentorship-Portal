@@ -16,6 +16,10 @@ import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
 import MeetingCard from "./MeetingCard";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import SyncIcon from '@mui/icons-material/Sync';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Calendar = () => {
   const [startDate, setStart] = useState(new Date());
@@ -576,7 +580,7 @@ const Calendar = () => {
                   </Grid>
                   <hr />
                   <Grid item xs={12} style={{ marginTop: "10px" }}>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       color="primary"
                       style={{ marginRight: "10px" }}
@@ -597,7 +601,34 @@ const Calendar = () => {
                       onClick={() => showUpcomingEvents()}
                     >
                       Show Upcoming Events
-                    </Button>
+                    </Button> */}
+                    <IconButton
+                      color="primary"
+                      aria-label="Create Calendar Event"
+                      onClick={() => createCalendarEvent()}
+                      size="large"
+                      title="Create Calendar Event"
+                    >
+                      <AddCircleOutlineIcon />
+                    </IconButton>
+                    <IconButton
+                      color="primary"
+                      aria-label="Sync Calendar"
+                      onClick={() => syncCalendar()}
+                      size="large"
+                      title="Sync Calendar"
+                    >
+                      <SyncIcon />
+                    </IconButton>
+                    <IconButton
+                      color="primary"
+                      aria-label="Show Upcoming Events"
+                      onClick={() => showUpcomingEvents()}
+                      size="large"
+                      title="Show Upcoming Events"
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
 
                     {upcomingEvents.map((event) => (
                       <div key={event._id}>
@@ -634,15 +665,16 @@ const Calendar = () => {
                         {event.attendees.length === 0 && (
                           <p> Attendees: None</p>
                         )}
-                        <Button
-                          variant="contained"
+                        <IconButton
                           color="secondary"
-                          onClick={() =>
-                            deleteEvent(event._id, event.googleEventId)
-                          }
+                          aria-label="Delete Event"
+                          onClick={() => deleteEvent(event._id, event.googleEventId)}
+                          size="large"
+                          title="Delete Event"
+                          sx={{color: "#FF3D00"}}
                         >
-                          Delete Event
-                        </Button>
+                          <DeleteIcon fontSize="inherit"/>
+                        </IconButton>
                       </div>
                     ))}
                   </Grid>
