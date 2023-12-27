@@ -47,6 +47,7 @@ The Student Alumni Mentorship Software, sponsored by IIIT Delhi's Alumni Affairs
 
 - **Technology**: React.js
 - **Component Library**: Material-UI
+- **Google Calendar API**: Google Cloud Console & Supabase
 - **Authentication**: Auth0
 
 ### Back End
@@ -65,13 +66,13 @@ The Student Alumni Mentorship Software, sponsored by IIIT Delhi's Alumni Affairs
 
 1. **Clone Repository**: `git clone https://github.com/Sarthak-100/Student-Alumni-Mentorship-Portal.git`
 2. **Install Dependencies**:
-   - Frontend: `cd frontend && npm install`
+   - Frontend: `cd frontend && npm install` (use `npm install -force` if former command doesn't work)
    - Backend: `cd backend && npm install`
 3. **Configuration**:
    - Set up environment variables for Auth0, MongoDB, etc.
 4. **Start Application**:
    - Frontend: `cd frontend && npm start`
-   - Backend: `cd backend && npm start`
+   - Backend: `cd backend && npm run dev`
 
 ## Usage
 
