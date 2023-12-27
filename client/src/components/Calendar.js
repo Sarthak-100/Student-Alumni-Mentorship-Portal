@@ -473,8 +473,8 @@ const Calendar = () => {
     try {
 
       //notify all attendees about the cancellation of the event
-      socket.emit("getUpdateDeletedEvent", { eventId, userId: user._id });
-      
+      socket.emit("getUpdateDeletedEvent", { eventId, userId: user._id, userName: user.name });
+
       // Delete the event from the database
       const deleteResponse = await axios.delete(
         `http://localhost:4000/api/v1/deleteEvent/details?eventId=${eventId}`

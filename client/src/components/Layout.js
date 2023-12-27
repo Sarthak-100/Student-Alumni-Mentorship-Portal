@@ -463,6 +463,15 @@ const Layout = () => {
         increment();
       }
     });
+    
+    socket.on("receiveUpdateDeletedEvent", async (data) => {
+      if (window.location.pathname === "/notifications") {
+        setReloadNotificationPage((prevReload) => prevReload + 1);
+      } else {
+        increment();
+      }
+    });
+
     socket.on("notifyingAdminStudentBlocked", async (data) => {
       if (window.location.pathname === "/notifications") {
         setReloadNotificationPage((prevReload) => prevReload + 1);
@@ -476,6 +485,7 @@ const Layout = () => {
       socket.off("updateBlockedStatusNotification");
       socket.off("reportNotificationAdmin");
       socket.off("reportNotificationUser");
+      socket.off("receiveUpdateDeletedEvent");
       socket.off("getResolvedNotification");
       socket.off("getFixMeetingNotification");
       socket.off("notifyingAdminStudentBlocked");

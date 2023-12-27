@@ -302,7 +302,7 @@ io.on("connection", (socket) => {
         message: `Your report against ${reportedUserType}: ${reportedName} with Reason: "${reason}" has been resolved.`,
       });
       try {
-        const savedNotification = await newNotification.save();
+        await newNotification.save();
       } catch (error) {
         console.log(error);
       }
@@ -347,18 +347,36 @@ io.on("connection", (socket) => {
     }
   );
 
-  socket.on("getUpdateDeletedEvent", async ({ eventId, userId }) => {
+  socket.on("getUpdateDeletedEvent", async ({ eventId, userId, userName }) => {
     console.log("getUpdateDeletedEvent", eventId, userId);
     try {
       const event = await Event.findById({ _id: eventId });
       console.log("check event details", event, event.attendees);
 
-      event.attendees.forEach((attendee) => {
-        const attendeeId = attendee._id; // Assuming the attendee object has an '_id' field
-        console.log("Attendee ID:", attendeeId.toString());
-        // Perform further operations with attendeeId
+      event.attendees.forEach(async (attendee) => {
+        const attendeeId = attendee._id.toString(); // Assuming the attendee object has an '_id' field
+        const user = getUser(attendeeId);
+        if (user) {
+          io.to(user?.socketId).emit("receiveUpdateDeletedEvent");
+        }
+        const newNotification = new Notification({
+          receiverId: attendeeId,
+          senderId: userId,
+          senderName: userName,
+          messageType: "eventDeleted",
+          message: `Event ${event.summary} on ${new Date(
+            new Date(event.startDateTime).getTime()
+          ).toLocaleString([], {
+            dateStyle: "long",
+            timeStyle: "short",
+          })}, has been cancelled.`,
+        });
+        try {
+          await newNotification.save();
+        } catch (error) {
+          console.log(error);
+        }
       });
-
     } catch (error) {
       console.log(error);
     }
