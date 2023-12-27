@@ -147,7 +147,7 @@ io.on("connection", (socket) => {
 
   socket.on("reloadConversations", async (id) => {
     const user = getUser(id);
-    console.log("reloadSenderConversations", id);
+    console.log("reloadConversations", id);
     if (user) {
       io.to(user?.socketId).emit("receiveReloadConversations", id);
     }

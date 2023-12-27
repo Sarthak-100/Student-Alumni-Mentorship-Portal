@@ -140,6 +140,7 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
               }
             )
             .then((response) => {
+              socket.emit("reloadConversations", data.senderId);
               setLoadConversations(
                 (prevLoadConversations) => prevLoadConversations + 1
               );
@@ -150,7 +151,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
         } catch (error) {
           console.log(error);
         }
-        socket.emit("reloadSenderConversations", data.senderId);
       } else {
         setLoadConversations(
           (prevLoadConversations) => prevLoadConversations + 1
