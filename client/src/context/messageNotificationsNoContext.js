@@ -1,4 +1,3 @@
-// MessageNotificationsNo.js
 import { createContext, useContext, useState } from "react";
 
 const MessageNotificationsNo = createContext();

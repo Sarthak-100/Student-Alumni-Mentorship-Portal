@@ -10,13 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { formatDistanceToNow, format, set } from "date-fns";
 
-// import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 
 const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   const [conversations, setConversations] = useState([]);
-  // const { loadConversations } = useLoadConversationsContext();
-
-  // const [loadConversations, setLoadConversations] = useState(null);
 
   const { user } = useUserContext();
 
@@ -24,13 +20,7 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
 
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
-  // console.log("in Welcome", "000000000000000000000000", receiverId);
-
   const { socket } = useSocketContext();
-
-  // const tempSetConversationValue = async (c) => {
-  //   setConversationValue(c);
-  // };
 
   useEffect(() => {
     const getConversations = async () => {
@@ -58,9 +48,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
               console.log("receiverId", receiverId);
               if (dictionaryWithElement) {
                 setConversations(conversationsTemp);
-                // setConversationsTemp(response.data);
-                // await setConversationValue(dictionaryWithElement);
-                // setReceiverIdValue(null);
               } else {
                 conv = {
                   _id: null,
@@ -71,18 +58,9 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
                   },
                 };
                 setConversations([conv, ...conversationsTemp]);
-                // setConversationsTemp([conv, ...response.data]);
-                // setConversationValue(conv);
-                // setConversations((prevConversations) => [
-                //   conv,
-                //   ...res,
-                // ]);
               }
-              // console.log("------------+++++++++", conv);
-              // setConversationValue(conv);
             } else {
               setConversations(conversationsTemp);
-              // setConversationsTemp(response.data);
             }
           })
           .catch((error) => {
@@ -100,7 +78,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   useEffect(() => {
     console.log(socket);
     socket.on("receiveNewConversation&Message", (data) => {
-      // console.log("in receiveNewConversation&Message");
       setLoadConversations(
         (prevLoadConversations) => prevLoadConversations + 1
       );
@@ -155,8 +132,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
         setLoadConversations(
           (prevLoadConversations) => prevLoadConversations + 1
         );
-        // conversation.lastMessage = data.conversation.lastMessage;
-        // setConversationValue(data.conversation);
       }
     });
     socket.on("receiveReloadConversations", async (data) => {
@@ -170,7 +145,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
     };
   });
 
-  // console.log(currentChat);
 
   const navigate = useNavigate();
 
@@ -179,7 +153,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
       console.log("in useEffect for prev chat click");
       console.log("CONVERSATION", conversation);
       if (conversation) {
-        // if (window.location.pathname !== "/chat/chatting") {
         navigate("chatting");
         // }
         if (conversation.unseenMessages[user._id] > 0) {

@@ -1,16 +1,12 @@
 import app from "./app.js";
 import connectDB from "./data/DatabaseConnection.js";
-import http from "http";
 import { Server } from "socket.io";
 import { Notification } from "./models/notificationModel.js";
 import { Conversation } from "./models/conversationModel.js";
-import { Admin } from "./models/userModel.js";
 import { Reports } from "./models/reportsModel.js";
 import { Event } from "./models/eventModel.js";
 
 connectDB();
-
-// const server = http.createServer();
 
 const io = new Server(8900, {
   cors: {
@@ -65,7 +61,6 @@ io.on("connection", (socket) => {
     "sendMessage",
     async ({ senderId, senderName, receiverId, conversation, text }) => {
       const user = getUser(receiverId);
-      // console.log(receiverId);
       console.log(user);
       console.log("$$$$");
       console.log(users);
@@ -91,11 +86,8 @@ io.on("connection", (socket) => {
         });
       } else {
         console.log("PRESENT HERE");
-        // console.log("conversationId", conversationId);
         let conversationT = await Conversation.findById(conversation._id);
-        // console.log("conversation", conversation);
         conversationT.unseenMessages[receiverId] += 1;
-        // console.log("conversation", conversation);
         try {
           await Conversation.updateOne(
             { _id: conversation._id },
@@ -112,13 +104,8 @@ io.on("connection", (socket) => {
     "newConversation&Message",
     async ({ senderId, senderName, receiverId, conversation, text }) => {
       const user = getUser(receiverId);
-      // console.log(receiverId);
-      // console.log(user);
-      // console.log(users);
       let conversationT = await Conversation.findById(conversation._id);
-      // console.log("conversation", conversation);
       conversationT.unseenMessages[receiverId] += 1;
-      // console.log("conversation", conversation);
       try {
         await Conversation.updateOne(
           { _id: conversation._id },
@@ -237,11 +224,7 @@ io.on("connection", (socket) => {
         console.log("inside userReported");
         io.to(user?.socketId).emit("reportNotificationAdmin", {});
       }
-      // const result = await Admin.findOne({}).exec();
-      // if (!result) {
-      //   console.error("Error:", err);
-      // } else {
-      //   console.log(result[0]);
+      
       const report = new Reports({
         reporterId: reporterId,
         reporterName: reporterName,
@@ -348,10 +331,8 @@ io.on("connection", (socket) => {
   );
 
   socket.on("getUpdateDeletedEvent", async ({ eventId, userId, userName }) => {
-    console.log("getUpdateDeletedEvent", eventId, userId);
     try {
       const event = await Event.findById({ _id: eventId });
-      console.log("check event details", event, event.attendees);
 
       event.attendees.forEach(async (attendee) => {
         const attendeeId = attendee._id.toString(); // Assuming the attendee object has an '_id' field

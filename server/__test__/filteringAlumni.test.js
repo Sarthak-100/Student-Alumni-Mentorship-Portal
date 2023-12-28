@@ -22,22 +22,6 @@ describe("Suite 2: Filtering Alumni", () => {
     await mongoose.disconnect();
   });
 
-  // it("responds with JSON containing a message", async () => {
-  //   const response = await request(app).get("/api/data");
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toEqual({ message: "This is a sample response" });
-  // });
-
-  // it("User Login", async () => {
-  //   const user = {
-  //     email: "ad1@iiitd.ac.in",
-  //     password: "ad1p",
-  //     user_type: "admin",
-  //   };
-  //   const response = await request(app).get("/api/v1/users/login").send(user);
-  //   expect(response.status).toBe(200);
-  // }, 30000);
-
   it('GET /api/v1/student/filter-alumni/values should retrieve distinct values', async () => {
     const response = await request(app).get('/api/v1/student/filter-alumni/values');
     expect(response.status).toBe(200);

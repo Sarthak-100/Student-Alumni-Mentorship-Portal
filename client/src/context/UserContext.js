@@ -1,4 +1,3 @@
-// UserContext.js
 import { createContext, useContext, useState } from "react";
 
 const UserContext = createContext();
@@ -13,7 +12,6 @@ export const UserProvider = ({ children }) => {
 
   const logout = ({ returnTo }) => {
     // Perform logout logic, clear user data, etc.
-    // setUser(null);
     window.location.href = "http://localhost:5000";
   };
 

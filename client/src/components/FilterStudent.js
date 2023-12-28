@@ -5,10 +5,7 @@ import {
   IconButton,
   Input,
   Grid,
-  Card,
-  CardContent,
   Box,
-  Typography,
 } from "@mui/material";
 import StudentUserCard from "./Student_User_Card";
 import StudentFilterMenu from "./StudentFilterMenu";

@@ -6,7 +6,6 @@ import {
   useSupabaseClient,
   useSessionContext,
 } from "@supabase/auth-helpers-react";
-import { v4 as uuid } from "uuid";
 import { IconButton, Typography, TextField, Grid } from "@mui/material";
 import { useUserContext } from "../context/UserContext";
 import DatePicker from "react-datepicker";
@@ -23,11 +22,8 @@ const Calendar = () => {
   const [endDate, setEnd] = useState(new Date());
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
-  // const [apiResponse, setApiResponse] = useState({});
   const { user } = useUserContext();
   const [pastMeetings, setPastMeetings] = useState([]);
-  // const [upcomingEvents, setUpcomingEvents] = useState([]);
-  // const [effectCount, setEffectCount] = useState(0);
 
   const navigate = useNavigate();
   const session = useSession(); // tokens, when session exists we have a user
@@ -83,17 +79,6 @@ const Calendar = () => {
     // Fetch past meetings when component mounts
     handleShowPastMeetings();
   }, []); // Run this effect only once on component mount
-
-
-  // useEffect(() => {
-  //   // console.log("in use effect sync calendar");
-  //   // // setEffectCount((prevCount) => prevCount + 1);
-  //   // console.log("effect count kitna h", effectCount);
-  //   // if (session !== null && session?.provider_token !== undefined && effectCount === 0) {
-  //   //   syncCalendar(); // Call the syncCalendar function on component mount
-  //   // }
-  //   signIn();
-  // }, []);
 
   if (isLoading) {
     return <></>;

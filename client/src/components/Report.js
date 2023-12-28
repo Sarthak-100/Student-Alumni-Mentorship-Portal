@@ -168,7 +168,6 @@ const Report = (props) => {
         </div>
       </div>
 
-      {/* Resolved Dialog */}
       <Dialog open={openResolvedDialog} onClose={handleDialogClose}>
         <DialogTitle>{"Issue Resolved"}</DialogTitle>
         <DialogContent>
@@ -181,7 +180,6 @@ const Report = (props) => {
         </DialogActions>
       </Dialog>
 
-      {/* Remove Dialog */}
       <Dialog open={openRemoveDialog} onClose={handleDialogClose}>
         <DialogTitle>{"Student/Alumni Removed"}</DialogTitle>
         <DialogContent>

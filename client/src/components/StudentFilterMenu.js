@@ -40,7 +40,6 @@ const StudentFilterMenu = ({ open, onClose, applyFilters, anchorEl }) => {
 
     applyFilters(filters);
     setApplyClicked(false);
-    // onClose(); // Close the popover after applying filters
   };
 
   const handleClearFilters = () => {

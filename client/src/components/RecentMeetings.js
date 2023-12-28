@@ -28,7 +28,6 @@ const RecentMeetings = () => {
       time: '10:00 AM',
       location: 'Zoom'
     },
-    // ... other meeting data
   ];
 
   return (

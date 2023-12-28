@@ -5,22 +5,17 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { Avatar, Input, Button } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
-import VideoCallIcon from "@mui/icons-material/VideoCall";
 import Message from "./Message";
 import ReactScrollToBottom from "react-scroll-to-bottom";
 import { useConversationContext } from "../context/ConversationContext";
 import { useUserContext } from "../context/UserContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useChattedUsersContext } from "../context/ChattedUsers";
-import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import BlockingPrompt from "./BlockingPrompt";
 import ReportIcon from "@mui/icons-material/Report";
 import ReportingPrompt from "./ReportingPrompt";
 import { useAuth0 } from "@auth0/auth0-react";
-// import { useLoadConversationsContext } from "../context/LoadConversationsContext";
 import axios from "axios";
-import { set } from "date-fns";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -32,8 +27,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 const Chatting = ({ setLoadConversations }) => {
-  const [id, setid] = useState("");
-
   const [messages, setMessages] = useState([]);
 
   const [newMessage, setNewMessage] = useState("");
@@ -42,8 +35,6 @@ const Chatting = ({ setLoadConversations }) => {
 
   const { conversation, setConversationValue } = useConversationContext();
 
-  // const { setLoadConversationsValue } = useLoadConversationsContext();
-
   const { user } = useUserContext();
 
   const authContext = useAuth0();
@@ -51,8 +42,6 @@ const Chatting = ({ setLoadConversations }) => {
   const { socket } = useSocketContext();
 
   const { chattedUsers } = useChattedUsersContext();
-
-  const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
   const [blocked, setBlockedValue] = useState(conversation?.blocked);
 
@@ -160,8 +149,6 @@ const Chatting = ({ setLoadConversations }) => {
             }
           )
           .then((response) => {
-            // console.log(response);
-            // console.log(response.data);
             setMessages(response.data);
           })
           .catch((error) => {
@@ -197,7 +184,6 @@ const Chatting = ({ setLoadConversations }) => {
             )
             .then((response) => {
               console.log(response);
-              // setConversationValue(response.data);
               conversation._id = response.data._id;
             })
             .catch((error) => {
@@ -213,8 +199,6 @@ const Chatting = ({ setLoadConversations }) => {
         text: newMessage,
         conversationId: conversation._id,
       };
-
-      const receiverName = chattedUsers[receiverIdTemp]?.name;
 
       conversation.lastMessage = newMessage;
 
@@ -270,7 +254,6 @@ const Chatting = ({ setLoadConversations }) => {
           conversation
         );
         socket.emit("sendMessage", {
-          // senderId: user.email,
           senderId: user._id,
           senderName: user.name,
           receiverId: receiverIdTemp,
@@ -350,12 +333,6 @@ const Chatting = ({ setLoadConversations }) => {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // const handleReport = () => {
-  //   const receiverIdTemp = conversation?.members.find(
-  //     (member) => member !== user._id
-  //   );
-  // };
 
   return (
     <div className="chatting">

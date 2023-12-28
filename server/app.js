@@ -36,7 +36,6 @@ app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/reports", reportRouter);
 app.use("/api/v1/filter-student", filterStudentRouter);
 
-//API for filtering alumni profiles as per added filters
 app.use("/api/v1/student/filter-alumni", filterRouter);
 app.use("api/v1/users/updateAvatar", userRouter);
 app.use("/api/v1/saveEvent", eventRouter);

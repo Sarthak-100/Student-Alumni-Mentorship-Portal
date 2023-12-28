@@ -1,6 +1,6 @@
 // ProfileDisplay.test.js
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, } from '@testing-library/react';
 import ProfileDisplay from './ProfileDisplay';
 
 test('renders profile dialog with email Id as passed when open is true', () => {

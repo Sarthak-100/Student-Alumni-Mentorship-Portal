@@ -13,14 +13,10 @@ const Navbar = () => {
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
   const handleBack = () => {
-    // setConversationValue(null);
     if (conversation?._id === null) {
       setConversationValue(null);
       setReceiverIdValue(null);
     }
-    // } else {
-    //   setReceiverIdValue(null);
-    // }
     navigate("/");
   };
 

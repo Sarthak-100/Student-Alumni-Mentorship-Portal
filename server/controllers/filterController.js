@@ -1,4 +1,3 @@
-// import alumni from "../models/alumniModel.js";
 import { Alumni } from "../models/userModel.js";
 
 const values = async (req, res) => {

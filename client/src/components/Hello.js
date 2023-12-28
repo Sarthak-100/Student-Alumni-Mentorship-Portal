@@ -4,7 +4,6 @@ import Carousel from './Carousel';
 import { useUserContext } from '../context/UserContext';
 import { Typography, Box, Grid } from '@mui/material';
 import { styled } from "@mui/system";
-import RecentMeetings from './RecentMeetings';
 import ChartComponent from './Chart';
 import RecentChats from './RecentChats'; // Imported the RecentChats component
 
