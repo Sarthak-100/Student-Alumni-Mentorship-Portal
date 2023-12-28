@@ -60,8 +60,7 @@ const iconContainerStyle = {
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center',
-  gap: '0.00008rem', // Adjust the gap between icons
-  marginRight: '0.05rem', // Adjust the right margin for the entire icon container
+  marginRight: 0, // Adjust the right margin for the entire icon container
 };
 
 // Set the width of the drawer
@@ -507,10 +506,6 @@ const Layout = () => {
     navigate("/reports");
   };
 
-  const handleCreateProfile = () => {
-    navigate("/createProfile");
-  };
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -538,9 +533,6 @@ const Layout = () => {
             >
               Dashboard
             </Typography>
-            {/* <Button style={{ color: "#FF0000" }} onClick={handleCreateProfile}>
-              CreateProfile
-            </Button> */}
             {userContext.user?.user_type === "admin" ? (
               <IconButton color="inherit">
                 <Badge
@@ -548,7 +540,6 @@ const Layout = () => {
                   color="secondary"
                 >
                   <AssignmentLateIcon
-                    // style={{ color: "#FF0000" }}
                     onClick={handleReports}
                   />
                 </Badge>
@@ -577,7 +568,7 @@ const Layout = () => {
                 </IconButton>
               </Link>
               <IconButton color="inherit" title="Logout">
-                <LogoutIconButton style={{ fontSize: '4rem' }} />
+                <LogoutIconButton />
               </IconButton>
             </div>
           </Toolbar>
