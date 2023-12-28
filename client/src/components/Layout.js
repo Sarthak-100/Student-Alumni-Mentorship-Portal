@@ -49,6 +49,7 @@ import { useClearNotificationContext } from "../context/ClearNotificationContext
 import { useReportedNoContext } from "../context/ReportedNoContext";
 import { useMessageNotificationsNoContext } from "../context/messageNotificationsNoContext";
 import Calendar from "./Calendar.js";
+import UpcomingEvents from "./UpcomingEvents.js";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import LogoutIconButton from "./LogoutButton";
 import Reports from "../pages/Reports.js";
@@ -679,6 +680,7 @@ const Layout = () => {
               <Route path="/filterStudent" element={<FilterStudent />} />
               <Route path="/stats" element={<Admin_Charts />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/upcoming-events" element={<UpcomingEvents />} />
               <Route
                 path="/notifications"
                 element={

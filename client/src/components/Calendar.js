@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
+import { Link } from 'react-router-dom';
 import {
   useSession,
   useSupabaseClient,
   useSessionContext,
 } from "@supabase/auth-helpers-react";
 import { v4 as uuid } from "uuid";
-import { IconButton, Typography, TextField, Grid, Button } from "@mui/material";
-import dayjs from "dayjs";
+import { IconButton, Typography, TextField, Grid } from "@mui/material";
 import { useUserContext } from "../context/UserContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,18 +17,16 @@ import MeetingCard from "./MeetingCard";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SyncIcon from '@mui/icons-material/Sync';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import DeleteIcon from '@mui/icons-material/Delete';
-import socket from "../chatSocket.js";
 
 const Calendar = () => {
   const [startDate, setStart] = useState(new Date());
   const [endDate, setEnd] = useState(new Date());
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
-  const [apiResponse, setApiResponse] = useState({});
+  // const [apiResponse, setApiResponse] = useState({});
   const { user } = useUserContext();
   const [pastMeetings, setPastMeetings] = useState([]);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  // const [upcomingEvents, setUpcomingEvents] = useState([]);
   // const [effectCount, setEffectCount] = useState(0);
 
   const navigate = useNavigate();
@@ -50,18 +47,6 @@ const Calendar = () => {
       return response.data.alumniName;
     } catch (error) {
       console.error("Error fetching alumni name:", error);
-      return ""; // Return an empty string if there's an error
-    }
-  };
-
-  const fetchStudentNameById = async (studentId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/api/v1/filter-student/getStudentNameById?studentId=${studentId}`
-      );
-      return response.data.studentName;
-    } catch (error) {
-      console.error("Error fetching student name:", error);
       return ""; // Return an empty string if there's an error
     }
   };
@@ -113,14 +98,6 @@ const Calendar = () => {
   if (isLoading) {
     return <></>;
   }
-
-  const handleStartDateChange = (date) => {
-    setStart(date);
-  };
-
-  const handleEndDateChange = (date) => {
-    setEnd(date);
-  };
 
   function signIn() {
     const { error } = supabase.auth.signInWithOAuth({
@@ -430,93 +407,6 @@ const Calendar = () => {
     }
   }
 
-  async function showUpcomingEvents() {
-    console.log("in show upcoming events");
-    try {
-      const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
-      const userId = user._id;
-      const apiUrl = `${baseUrl}?userId=${userId}`;
-      const response = await axios.get(apiUrl);
-
-      if (response.status === 200) {
-        const events = response.data.events;
-        //add attendee name with the event
-        const eventsWithAttendeeNames = await Promise.all(
-          events.map(async (event) => {
-            const attendeeNames = await Promise.all(
-              event.attendees.map(async (attendee) => {
-                // if (attendee.userType === "student") {
-                //   const studentName = await fetchStudentNameById(attendee.userId);
-                //   return { ...attendee, name: studentName };
-                // } else {
-                //   const alumniName = await fetchAlumniNameById(attendee.userId);
-                //   return { ...attendee, name: alumniName };
-                // }
-                const studentName = await fetchStudentNameById(attendee._id);
-                return { ...attendee, name: studentName };
-              })
-            );
-            return { ...event, attendees: attendeeNames };
-          })
-        );
-        console.log("events", eventsWithAttendeeNames);
-        setUpcomingEvents(eventsWithAttendeeNames);
-      } else {
-        console.error("Failed to fetch upcoming events:", response.status);
-      }
-    } catch (error) {
-      console.error("Error fetching upcoming events:", error);
-    }
-  }
-
-  async function deleteEvent(eventId, googleEventId) {
-    try {
-
-      //notify all attendees about the cancellation of the event
-      socket.emit("getUpdateDeletedEvent", { eventId, userId: user._id, userName: user.name });
-
-      // Delete the event from the database
-      const deleteResponse = await axios.delete(
-        `http://localhost:4000/api/v1/deleteEvent/details?eventId=${eventId}`
-      );
-
-      if (deleteResponse.status === 200) {
-        console.log("Event deleted from the database");
-
-        if (googleEventId) {
-          // Delete event from Google Calendar if it has a googleEventId
-          const googleCalendarUrl = `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`;
-          const googleDeleteResponse = await fetch(googleCalendarUrl, {
-            method: "DELETE",
-            headers: {
-              Authorization: "Bearer " + session.provider_token,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (googleDeleteResponse.ok) {
-            console.log("Event deleted from Google Calendar");
-          } else {
-            console.error(
-              "Failed to delete event from Google Calendar:",
-              googleDeleteResponse.status
-            );
-          }
-        }
-
-        // Update the state to remove the deleted event from the UI
-        setUpcomingEvents((prevEvents) =>
-          prevEvents.filter((event) => event._id !== eventId)
-        );
-
-      } else {
-        console.error("Failed to delete event:", deleteResponse.status);
-      }
-    } catch (error) {
-      console.error("Error deleting event:", error);
-    }
-  }
-
   console.log(session);
   console.log(startDate);
   console.log(endDate);
@@ -585,28 +475,6 @@ const Calendar = () => {
                   </Grid>
                   <hr />
                   <Grid item xs={12} style={{ marginTop: "10px" }}>
-                    {/* <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ marginRight: "10px" }}
-                      onClick={() => createCalendarEvent()}
-                    >
-                      Create Calendar Event
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => syncCalendar()}
-                    >
-                      Sync Calendar
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => showUpcomingEvents()}
-                    >
-                      Show Upcoming Events
-                    </Button> */}
                     <IconButton
                       color="primary"
                       aria-label="Create Calendar Event"
@@ -625,63 +493,16 @@ const Calendar = () => {
                     >
                       <SyncIcon />
                     </IconButton>
-                    <IconButton
-                      color="primary"
-                      aria-label="Show Upcoming Events"
-                      onClick={() => showUpcomingEvents()}
-                      size="large"
-                      title="Show Upcoming Events"
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-
-                    {upcomingEvents.map((event) => (
-                      <div key={event._id}>
-                        <p>
-                          Start Date/Time:{" "}
-                          {new Date(event.startDateTime).toLocaleString([], {
-                            dateStyle: "long",
-                            timeStyle: "short",
-                          })}
-                        </p>
-                        <p>
-                          End Date/Time:{" "}
-                          {new Date(event.endDateTime).toLocaleString([], {
-                            dateStyle: "long",
-                            timeStyle: "short",
-                          })}
-                        </p>
-                        <p>Summary: {event.summary}</p>
-                        {event.description && (
-                          <p>Description: {event.description}</p>
-                        )}
-                        {event.attendees && event.attendees.length > 0 && (
-                          <div>
-                            <p>Attendees:</p>
-                            <ul>
-                              {event.attendees.map((attendee, index) => (
-                                <li key={index}>
-                                  {attendee.name} ({attendee.email})
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        {event.attendees.length === 0 && (
-                          <p> Attendees: None</p>
-                        )}
-                        <IconButton
-                          color="secondary"
-                          aria-label="Delete Event"
-                          onClick={() => deleteEvent(event._id, event.googleEventId)}
-                          size="large"
-                          title="Delete Event"
-                          sx={{color: "#FF3D00"}}
-                        >
-                          <DeleteIcon fontSize="inherit"/>
-                        </IconButton>
-                      </div>
-                    ))}
+                    <Link to={{ pathname: "/upcoming-events", state: { user: user, session: session } }}>
+                      <IconButton
+                        color="primary"
+                        aria-label="Show Upcoming Events"
+                        size="large"
+                        title="Show Upcoming Events"
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Link>
                   </Grid>
                 </Grid>
               </>
