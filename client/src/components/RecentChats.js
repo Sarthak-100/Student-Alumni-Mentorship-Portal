@@ -77,7 +77,14 @@ const RecentChats = () => {
     };
 
     fetchChats();
-  }, []); // Empty dependency array to run the effect only once
+  }, []);
+
+  const formatChatTime = (time) => {
+    const [dateStr, timeStr] = time.split(', ');
+    const [hours, minutes] = timeStr.split(':').slice(0, 2);
+    const formattedTimeString = `${dateStr}, ${hours}:${minutes}`;
+    return formattedTimeString;
+  };
 
   const handleChatButton = async (e) => {
     console.log("WWWWWWW", e.target.value);
@@ -104,7 +111,7 @@ const RecentChats = () => {
                   {chat.user} {/* Displaying user's name */}
                 </ChatUser>
                 <ChatTime variant="caption">
-                  {chat.time} {/* Displaying chat time */}
+                  {formatChatTime(chat.time)} {/* Displaying chat time */}
                 </ChatTime>
               </CardContent>
               <Button
