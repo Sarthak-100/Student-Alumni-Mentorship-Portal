@@ -352,7 +352,7 @@ const Chatting = ({ setLoadConversations }) => {
                 chattedUsers[conversation?.members.find((m) => m !== user?._id)]
                   ?.img
               }
-              sx={{ width: 24, height: 26 }}
+              sx={{ width: 42, height: 42 }}
             />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
