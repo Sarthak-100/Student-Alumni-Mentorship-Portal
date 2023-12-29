@@ -373,6 +373,7 @@ const Chatting = ({ setLoadConversations }) => {
                       style={{
                         backgroundColor: blocked ? "#00FF00" : "#FF0000",
                         marginLeft: "12px",
+                        fontSize: "16px",
                       }}
                       className="IconButton"
                       onClick={blockBtController}
@@ -386,7 +387,7 @@ const Chatting = ({ setLoadConversations }) => {
                     edge="end"
                     onClick={handleReport}
                   >
-                    <ReportIcon style={{ color: "#FF0000" }} />
+                    <ReportIcon style={{ color: "#FF0000", fontSize: 50 }} />
                   </IconButton>
                 </>
               )}
