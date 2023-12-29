@@ -120,7 +120,7 @@ export const getPastEvents = async (req, res) => {
             { 'attendees._id': userId,
             endDateTime: { $lt: currentDate },
             }
-        );
+        ).sort({ endDateTime: -1 });
 
         res.status(200).json({ events });
     } catch (error) {
