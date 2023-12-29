@@ -68,7 +68,7 @@ export const getEventDetails = async (req, res) => {
         const events = await Event.find({
             alumni: userId,
             endDateTime: { $gte: currentDate },
-        });
+        }).sort({ startDateTime: 1 });
         
         res.status(200).json({ events });
     } catch (error) {
