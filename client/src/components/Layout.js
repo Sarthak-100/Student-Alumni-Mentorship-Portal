@@ -49,18 +49,17 @@ import { useClearNotificationContext } from "../context/ClearNotificationContext
 import { useReportedNoContext } from "../context/ReportedNoContext";
 import { useMessageNotificationsNoContext } from "../context/messageNotificationsNoContext";
 import Calendar from "./Calendar.js";
+import UpcomingEvents from "./UpcomingEvents.js";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import LogoutIconButton from "./LogoutButton";
 import Reports from "../pages/Reports.js";
 import CreateProfile from "../pages/CreateProfile";
-// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const iconContainerStyle = {
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center',
-  gap: '0.00008rem', // Adjust the gap between icons
-  marginRight: '0.05rem', // Adjust the right margin for the entire icon container
+  marginRight: 0, // Adjust the right margin for the entire icon container
 };
 
 // Set the width of the drawer
@@ -372,27 +371,6 @@ const Layout = () => {
         window.location.pathname !== "/chat/welcome" &&
         window.location.pathname !== "/chat/chatting"
       ) {
-        // try {
-        //   data.conversation.unseenMessages[userContext.user._id] += 1;
-        //   await axios
-        //     .put(
-        //       `http://localhost:4000/api/v1/conversations/updateConversation?conversationId=${data.conversation._id}`,
-        //       {
-        //         unseenMessages: data.conversation.unseenMessages,
-        //       },
-        //       {
-        //         withCredentials: true,
-        //       }
-        //     )
-        //     .then((response) => {
-        //       messageNotificationsNoContext.increment(1);
-        //     })
-        //     .catch((error) => {
-        //       console.log(error);
-        //     });
-        // } catch (error) {
-        //   console.log(error);
-        // }
         messageNotificationsNoContext.increment(1);
       }
     });
@@ -527,10 +505,6 @@ const Layout = () => {
     navigate("/reports");
   };
 
-  const handleCreateProfile = () => {
-    navigate("/createProfile");
-  };
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
@@ -558,9 +532,6 @@ const Layout = () => {
             >
               Dashboard
             </Typography>
-            {/* <Button style={{ color: "#FF0000" }} onClick={handleCreateProfile}>
-              CreateProfile
-            </Button> */}
             {userContext.user?.user_type === "admin" ? (
               <IconButton color="inherit">
                 <Badge
@@ -568,7 +539,6 @@ const Layout = () => {
                   color="secondary"
                 >
                   <AssignmentLateIcon
-                    // style={{ color: "#FF0000" }}
                     onClick={handleReports}
                   />
                 </Badge>
@@ -597,7 +567,7 @@ const Layout = () => {
                 </IconButton>
               </Link>
               <IconButton color="inherit" title="Logout">
-                <LogoutIconButton style={{ fontSize: '4rem' }} />
+                <LogoutIconButton />
               </IconButton>
             </div>
           </Toolbar>
@@ -679,6 +649,7 @@ const Layout = () => {
               <Route path="/filterStudent" element={<FilterStudent />} />
               <Route path="/stats" element={<Admin_Charts />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/upcoming-events" element={<UpcomingEvents />} />
               <Route
                 path="/notifications"
                 element={

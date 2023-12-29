@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import { useChattedUsersContext } from "../context/ChattedUsers";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +17,6 @@ const ChatCard = styled(Card)(({ theme }) => ({
 const ChatUser = styled(Typography)(({ theme }) => ({
   fontWeight: "bold",
   marginBottom: theme.spacing(1),
-}));
-
-const ChatMessage = styled(Typography)(({ theme }) => ({
-  color: "#333",
 }));
 
 const ChatTime = styled(Typography)(({ theme }) => ({

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Student } from "../models/userModel.js";
 
 const studentValues = async (req, res) => {

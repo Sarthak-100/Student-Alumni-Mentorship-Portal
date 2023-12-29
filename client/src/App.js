@@ -8,7 +8,6 @@ import { ChattedUsersProvider } from "./context/ChattedUsers";
 import { ReceiverIdProvider } from "./context/ReceiverIdContext";
 import { NotificationsNoProvider } from "./context/NotificationsNoContext";
 import { ReportedNoProvider } from "./context/ReportedNoContext";
-// import Calendar from "./components/Calendar";
 import { Route, Routes } from "react-router-dom";
 import FilterAlumni from "./components/FilterAlumni.js";
 import FilterStudent from "./components/FilterStudent";
@@ -24,6 +23,7 @@ import Layout from "./components/Layout";
 import Hello from "./components/Hello";
 import Admin_Charts from "./components/Admin_Charts";
 import Calendar from "./components/Calendar";
+import UpcomingEvents from "./components/UpcomingEvents";
 import { ClearNotificationProvider } from "./context/ClearNotificationContext";
 import { MessageNotificationsNoProvider } from "./context/messageNotificationsNoContext";
 import "./style.css";
@@ -76,6 +76,7 @@ const App = () => {
                               />
                               <Route path="/stats" element={<Admin_Charts />} />
                               <Route path="calendar" element={<Calendar />} />
+                              <Route path="/upcoming-events" element={<UpcomingEvents />} />
                               <Route
                                 path="notifications"
                                 element={<Notifications />}

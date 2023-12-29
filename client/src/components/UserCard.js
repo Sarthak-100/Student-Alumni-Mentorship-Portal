@@ -20,7 +20,6 @@ import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import axios from "axios";
 import { useSocketContext } from "../context/SocketContext";
-import Calendar from "react-calendar";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -31,7 +30,6 @@ const UserCard = (props) => {
   const [slots, setSlots] = useState([]);
   const [events, setEvents] = useState([]);
   const [showEvents, setShowEvents] = useState(false);
-  const [meetingFixed, setMeetingFixed] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState([]);
   const { socket } = useSocketContext();
 
@@ -132,7 +130,6 @@ const UserCard = (props) => {
     console.log(
       "Comparing IDs:",
       updatedEvent.attendees?.map((attendee) => attendee?._id)
-      // bookingStudent?._id.toString(), "ok", typeof bookingStudent?._id, typeof updatedEvent.attendees?.map((attendee) => attendee?._id.toString())
     );
     // Check if the booking student is not already in the attendees list
     const isStudentAlreadyAttendee = updatedEvent.attendees.some(
@@ -246,15 +243,11 @@ const UserCard = (props) => {
   };
 
   const cardStyle = {
-    // minWidth: 300,
-    // maxWidth: 600,
     padding: "0px",
     margin: "20px auto",
     border: "1px solid #ddd",
     borderRadius: "8px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    // display: "flex",
-    // flexDirection: "row",
   };
 
   const titleStyle = {

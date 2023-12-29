@@ -4,15 +4,9 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   IconButton,
   Input,
-  Grid,
-  Card,
-  CardContent,
-  Box,
-  Typography,
 } from "@mui/material";
 import UserCard from "./UserCard";
 import FilterMenu from "./Filter";
-import CalendarDisplay from "./CalendarDisplay";
 import { useUserContext } from "../context/UserContext";
 
 const FilterAlumni = () => {
@@ -34,11 +28,6 @@ const FilterAlumni = () => {
 
   const closeFilterMenu = () => {
     setShowFilterMenu(false);
-  };
-
-  const toggleCalendarDisplay = (user) => {
-    setSelectedUser(user); // Store the selected user data
-    setShowCalendar(!showCalendar);
   };
 
   // Function to fetch the filtered results
@@ -66,7 +55,6 @@ const FilterAlumni = () => {
   // Function to handle search text change
   const handleSearchChange = (e) => {
     if (selectedUserCalenderDisplay) {
-      // document.getElementById(selectedUserCalenderDisplay)?.setEvents(null);
       setSelectedUserCalenderDisplay(null);
     }
     const searchText = e.target.value;

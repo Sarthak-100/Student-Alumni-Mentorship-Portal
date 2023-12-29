@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import { useConversationContext } from "../context/ConversationContext";
 import { useChattedUsersContext } from "../context/ChattedUsers";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const UserChats = (props) => {
@@ -14,31 +12,12 @@ const UserChats = (props) => {
 
   const { receiverId } = useReceiverIdContext();
 
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const friendId = props.conversation?.members.find(
-  //     (m) => m !== props.currentUser?._id
-  //   );
-  //   if (receiverId === friendId) {
-  //     setConversationValue(props.conversation);
-  //   }
-  //   console.log("in useEffect for prev chat click");
-  //   console.log("RECEIVER ID", receiverId);
-  //   console.log("FRIEND ID", friendId);
-  //   console.log("CONVERSATION", conversation);
-  //   if (conversation) {
-  //     navigate("chatting");
-  //   }
-  // }, []);
-
   useEffect(() => {
     console.log("INSIDE USER CHATS:", props.conversation);
     const friendId = props.conversation?.members.find(
       (m) => m !== props.currentUser?._id
     );
     const getUser = async () => {
-      // console.log("@@@@@@@@@@@@@@@@@@@@@@@@", friendId);
       await axios
         .get(
           `http://localhost:4000/api/v1/users/getUserProfile?id=${friendId}`,
@@ -69,14 +48,9 @@ const UserChats = (props) => {
     };
     getUser();
   }, [props.currentUser, props.conversation]);
-  // const navigate = useNavigate();
   return (
     <div
       className="userChats"
-      // onClick={() => {
-      //   setConversationValue(props.conversation);
-      //   navigate("chatting");
-      // }}
     >
       <img className="img" src={user?.img} alt="user" />
       <div className="chatInfo">

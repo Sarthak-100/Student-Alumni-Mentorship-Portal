@@ -1,4 +1,3 @@
-// NotificationsNo.js
 import { createContext, useContext, useState } from "react";
 
 const NotificationsNo = createContext();

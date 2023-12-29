@@ -12,11 +12,6 @@ function Login() {
 
   const [logInStatus, setLogInStatus] = React.useState("");
   const [signInStatus, setSignInStatus] = React.useState("");
-
-  // const session = useSession(); // tokens, when session exists we have a user
-  // const supabase = useSupabaseClient(); // talk to supabase!
-  // const { isLoading } = useSessionContext();
-  // console.log("supabase", supabase);
   
   const navigate = useNavigate();
 
@@ -39,19 +34,6 @@ function Login() {
         data,
         config
       );
-
-      // const { error } = supabase.auth.signInWithOAuth({
-      //   provider: 'google',
-      //   options: {
-      //     scopes: 'https://www.googleapis.com/auth/calendar'
-      //   }
-      // });
-      // if (error) {
-      //   alert("Error logging in to Google provider with Supabase");
-      //   console.log(error);
-      // }else {
-      //   console.log("Supabase login successful");
-      // }
 
       console.log("Login : ", response);
       setLogInStatus({ msg: "Success", key: Math.random() });
@@ -81,19 +63,6 @@ function Login() {
         data,
         config
       );
-
-      // const { error } = supabase.auth.signInWithOAuth({
-      //   provider: 'google',
-      //   options: {
-      //     scopes: 'https://www.googleapis.com/auth/calendar'
-      //   }
-      // });
-      // if (error) {
-      //   alert("Error logging in to Google provider with Supabase");
-      //   console.log(error);
-      // }else {
-      //   console.log("Supabase login successful");
-      // }
 
       console.log(response);
       setSignInStatus({ msg: "Success", key: Math.random() });

@@ -1,7 +1,5 @@
 import router from "express";
 
-// import isAuthenticated from "../middlewares/auth.js";
-
 import {
   getNotifications,
   newNotification,

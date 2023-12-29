@@ -7,8 +7,8 @@ const LogoutIconButton = () => {
   
   return (
     isAuthenticated && (
-      <IconButton onClick={() => logout({ returnTo: 'http://localhost:5000' })} color="inherit">
-        <ExitToAppIcon />
+      <IconButton onClick={() => logout({ returnTo: 'http://localhost:5000' }) } color="inherit">
+        <ExitToAppIcon style={{ fontSize: '2rem' }} />
       </IconButton>
     )
   );
