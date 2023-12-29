@@ -24,8 +24,12 @@ const MeetingCard = ({ meeting }) => {
           <br />
           <strong>Summary:</strong> {meeting.summary}
           <br />
-          <strong>Description:</strong> {meeting.description}
-          <br />
+          {meeting.description && (
+            <>
+              <strong>Description:</strong> {meeting.description}
+              <br />
+            </>
+          )}
           <strong>Start Time:</strong>{" "}
           {new Date(meeting.startDateTime).toLocaleString()}
           <br />
