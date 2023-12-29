@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
 import Report from "../components/Report";
-import { format } from "timeago.js";
 import { useReportedNoContext } from "../context/ReportedNoContext";
 
 const Reports = ({ reloadReportNotificationPage }) => {

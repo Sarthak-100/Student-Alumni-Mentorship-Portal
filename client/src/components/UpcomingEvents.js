@@ -164,7 +164,7 @@ const UpcomingEvents = () => {
                 onClick={() => deleteEvent(event._id, event.googleEventId)}
                 size="large"
                 title="Delete Event"
-                sx={{color: "#FF3D00"}}
+                sx={{ color: "#C41E3A" }}
               >
                 <DeleteIcon fontSize="inherit"/>
               </IconButton>

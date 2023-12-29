@@ -14,6 +14,7 @@ import {
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import TodayIcon from "@mui/icons-material/Today";
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useReceiverIdContext } from "../context/ReceiverIdContext";
@@ -32,6 +33,7 @@ const UserCard = (props) => {
   const [showEvents, setShowEvents] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState([]);
   const { socket } = useSocketContext();
+  const [calendarIcon, setCalendarIcon] = useState(<TodayIcon />);
 
   useEffect(() => {
     // Clear events when a new user is selected
@@ -56,6 +58,9 @@ const UserCard = (props) => {
     if (showEvents) {
       setEvents([]); // Clear events if they are displayed
     }
+    setCalendarIcon((prevIcon) =>
+      showEvents ? <TodayIcon /> : <EventBusyIcon style={{ color: "#C41E3A" }} /> // Toggle calendar icon based on showEvents state
+    );
     setShowEvents((prevShowEvents) => !prevShowEvents); // Toggle events display
   };
 
@@ -348,7 +353,7 @@ const UserCard = (props) => {
                   handleCalendarDisplay();
                 }}
               >
-                <TodayIcon />
+                {calendarIcon}
               </IconButton>
             </CardActions>
           </div>
