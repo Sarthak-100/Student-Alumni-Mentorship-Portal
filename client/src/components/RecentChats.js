@@ -107,11 +107,11 @@ const RecentChats = () => {
               }}
             >
               <CardContent>
-                <ChatUser variant="subtitle1">
+                <ChatUser variant="subtitle1" sx={{ fontSize: '1.1rem' }}>
                   {chat.user} {/* Displaying user's name */}
                 </ChatUser>
-                <ChatTime variant="caption">
-                  {formatChatTime(chat.time)} {/* Displaying chat time */}
+                <ChatTime variant="caption" sx={{ fontSize: '1rem' }}>
+                  {formatChatTime(chat.time)} {/* Displaying formatted chat time */}
                 </ChatTime>
               </CardContent>
               <Button
