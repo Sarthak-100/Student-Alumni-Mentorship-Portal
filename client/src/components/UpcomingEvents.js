@@ -5,10 +5,14 @@ import { Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import socket from "../chatSocket.js";
 import { IconButton } from '@mui/material';
+import { useUserContext } from "../context/UserContext";
+import { useSession } from "@supabase/auth-helpers-react";
 
-const UpcomingEvents = ( {user, session} ) => {
-  console.log("dekho", user, session);
+const UpcomingEvents = () => {
+  
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const { user } = useUserContext();
+  const session = useSession();
 
   const fetchStudentNameById = async (studentId) => {
     try {
@@ -38,7 +42,6 @@ const UpcomingEvents = ( {user, session} ) => {
         const events = response.data.events;
         if (events.length === 0) {
           console.log("No upcoming events");
-          alert("No upcoming events");
           return;
         }
           
@@ -47,13 +50,6 @@ const UpcomingEvents = ( {user, session} ) => {
           events.map(async (event) => {
             const attendeeNames = await Promise.all(
               event.attendees.map(async (attendee) => {
-                // if (attendee.userType === "student") {
-                //   const studentName = await fetchStudentNameById(attendee.userId);
-                //   return { ...attendee, name: studentName };
-                // } else {
-                //   const alumniName = await fetchAlumniNameById(attendee.userId);
-                //   return { ...attendee, name: alumniName };
-                // }
                 const studentName = await fetchStudentNameById(attendee._id);
                 return { ...attendee, name: studentName };
               })
@@ -124,7 +120,10 @@ const UpcomingEvents = ( {user, session} ) => {
       <div style={{ width: '600px', margin: '30px auto' }}>
         <h2>Upcoming Events</h2>
         {/* Display upcoming events */}
-        {upcomingEvents.map((event) => (
+        {upcomingEvents.length === 0 && (
+          <p>No upcoming events</p>
+        )}
+        {upcomingEvents.length > 0 && upcomingEvents.map((event) => (
           <div key={event._id}>
             <p>
               Start Date/Time:{" "}

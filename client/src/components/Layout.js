@@ -54,7 +54,6 @@ import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import LogoutIconButton from "./LogoutButton";
 import Reports from "../pages/Reports.js";
 import CreateProfile from "../pages/CreateProfile";
-// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const iconContainerStyle = {
   display: 'flex',

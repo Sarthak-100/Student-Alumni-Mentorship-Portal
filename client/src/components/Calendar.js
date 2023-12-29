@@ -159,7 +159,6 @@ const Calendar = () => {
           console.log("Syncing events with Google Calendar");
 
           events.forEach(async (event) => {
-            // console.log("event", event, event.attendees.length, event.attendees);
             // Check if this event has attendees booked
             if (event.attendees && event.attendees.length > 0) {
               console.log(
@@ -229,7 +228,6 @@ const Calendar = () => {
                         event: updatedEvent,
                       })
                       .then((response) => {
-                        // setApiResponse(response.data);
                         console.log(response.data);
                         if (response.status == 200) {
                           console.log("Event updated in database");
@@ -428,14 +426,12 @@ const Calendar = () => {
                       Event End Time
                     </Typography>
 
-                    {/* <input type="text" onChange={(e) => setStart(new Date(e.target.value))} /> */}
                     <DatePicker
                       selected={endDate}
                       onChange={(date) => setEnd(date)}
                       showTimeSelect
                       dateFormat="Pp"
                     />
-                    {/* <input type="text" onChange={(e) => setEnd(new Date(e.target.value))} /> */}
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="body1" style={{ fontWeight: "bold" }}>
@@ -478,7 +474,11 @@ const Calendar = () => {
                     >
                       <SyncIcon />
                     </IconButton>
-                    <Link to={{ pathname: "/upcoming-events", state: { user: user, session: session } }}>
+                    <Link to={{ pathname: "/upcoming-events", state: { user: user, session: session } }}
+                    onClick={() => {
+                      console.log("User:", user);
+                      console.log("Session:", session);
+                    }}>
                       <IconButton
                         color="primary"
                         aria-label="Show Upcoming Events"
