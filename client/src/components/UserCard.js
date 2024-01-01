@@ -21,6 +21,7 @@ import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import axios from "axios";
 import { useSocketContext } from "../context/SocketContext";
+import { set } from "date-fns";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -28,7 +29,6 @@ const UserCard = (props) => {
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [slots, setSlots] = useState([]);
   const [events, setEvents] = useState([]);
   const [showEvents, setShowEvents] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState([]);
@@ -41,7 +41,6 @@ const UserCard = (props) => {
   }, [props.cardUser]);
 
   const handleChat = async () => {
-    // console.log("USER CARD inside handleChat", props.cardUser._id, user._id);
     await setReceiverIdValue(props.cardUser._id);
     navigate("/chat/welcome");
   };
@@ -58,7 +57,7 @@ const UserCard = (props) => {
     if (showEvents) {
       setEvents([]); // Clear events if they are displayed
     }
-    setCalendarIcon((prevIcon) =>
+    setCalendarIcon(() =>
       showEvents ? <TodayIcon /> : <EventBusyIcon style={{ color: "#C41E3A" }} /> // Toggle calendar icon based on showEvents state
     );
     setShowEvents((prevShowEvents) => !prevShowEvents); // Toggle events display
@@ -75,10 +74,8 @@ const UserCard = (props) => {
       axios
         .get(apiUrl)
         .then((response) => {
-          // console.log(response.data);
           if (response.status == 200) {
             console.log("Slots fetched successfully!", response.data);
-            setSlots(response.data);
             const fetchedEvents = response.data.events; // Replace 'events' with the actual key containing events in your response
             const initialStatus = fetchedEvents.map(() => false);
             setMeetingStatus(initialStatus);
@@ -86,6 +83,8 @@ const UserCard = (props) => {
             if (fetchedEvents.length === 0) {
               // Display an alert if there are no events
               alert(props.cardUser.name + " has no available meetings slots.");
+            }else {
+              handleCalendarDisplay(fetchedEvents.length);
             }
           } else {
             console.error(
@@ -159,8 +158,6 @@ const UserCard = (props) => {
 
         if (response.status === 200) {
           console.log("Event updated successfully in the database!");
-          // Update the event in the local state as well, if required
-          // setEvents([...events]); // Assuming events state exists
         } else {
           console.error(
             "Failed to update event in the database:",
@@ -298,8 +295,7 @@ const UserCard = (props) => {
                 {/* Display user information */}
                 <Grid item xs={12}>
                   <Typography variant="body1" style={contentStyle}>
-                    <strong>Current Work:</strong>{" "}
-                    {props.cardUser?.work?.role || "Role not specified"}
+                    <strong>Batch:</strong> {props.cardUser?.batch}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -307,19 +303,20 @@ const UserCard = (props) => {
                     <strong>Branch:</strong> {props.cardUser?.branch}
                   </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ minHeight: "64px" }}>
                   <Typography variant="body1" style={contentStyle}>
-                    <strong>Batch:</strong> {props.cardUser?.batch}
+                    <strong>Current Work:</strong>{" "}
+                    {props.cardUser?.work?.role || "Role not specified"}
                   </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ minHeight: "64px" }}>
                   <Typography variant="body1" style={contentStyle}>
                     <strong>Organization:</strong>{" "}
                     {props.cardUser?.work?.organization ||
                       "Organization not specified"}
                   </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ minHeight: "64px" }}>
                   <Typography variant="body1" style={contentStyle}>
                     <strong>Location:</strong> {city}, {state}, {country}
                   </Typography>
@@ -331,6 +328,7 @@ const UserCard = (props) => {
               <IconButton
                 color="primary"
                 aria-label="Chat"
+                title="Start Chat"
                 onClick={handleChat}
               >
                 <ChatIcon />
@@ -339,6 +337,7 @@ const UserCard = (props) => {
               <IconButton
                 color="primary"
                 aria-label="Profile"
+                title="View Profile"
                 onClick={handleProfile}
               >
                 <AccountCircleIcon />
@@ -346,23 +345,21 @@ const UserCard = (props) => {
               <IconButton
                 color="primary"
                 aria-label="Calendar"
-                onClick={() => {
-                  if (!showEvents) {
-                    showCalendar();
-                  }
-                  handleCalendarDisplay();
-                }}
+                title="View Calendar"
+                onClick={() => { showCalendar(); }}
               >
                 {calendarIcon}
               </IconButton>
             </CardActions>
           </div>
         </div>
-        {showEvents && events.length > 0 && (
+        {events.length > 0 && (
           <div
             style={{
               width: "300px",
               marginTop: "10px",
+              marginRight: "40px",
+              alignItems: "left",
               display: "flex",
               flexDirection: "column",
               alignContent: "center",
@@ -371,7 +368,6 @@ const UserCard = (props) => {
             <Typography
               variant="h6"
               style={{
-                // textAlign: "center",
                 position: "relative",
                 display: "inline-block",
                 padding: "8px 16px",
@@ -379,7 +375,7 @@ const UserCard = (props) => {
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                 borderRadius: "8px",
                 marginBottom: "25px",
-                marginLeft: "40px", // Adding some margin below the text
+                marginLeft: "40px",
                 margin: "0 auto",
               }}
             >
