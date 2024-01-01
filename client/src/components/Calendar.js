@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
-import MeetingCard from "./MeetingCard";
+import MeetingCard from "./StudentMeetingCard";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SyncIcon from '@mui/icons-material/Sync';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -463,6 +463,9 @@ const Calendar = () => {
                       size="large"
                       title="Create Calendar Event"
                     >
+                      {/* <Typography variant="subtitle1" fontWeight="bold" fontSize={"20px"} >
+                        Create Event
+                      </Typography> */}
                       <AddCircleOutlineIcon />
                     </IconButton>
                     <IconButton

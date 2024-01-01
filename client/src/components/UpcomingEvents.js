@@ -7,6 +7,8 @@ import socket from "../chatSocket.js";
 import { IconButton } from '@mui/material';
 import { useUserContext } from "../context/UserContext";
 import { useSession } from "@supabase/auth-helpers-react";
+import MeetingCard from "./AlumniMeetingCard.js";
+import { Grid, Typography } from "@mui/material";
 
 const UpcomingEvents = () => {
   
@@ -120,56 +122,20 @@ const UpcomingEvents = () => {
       <div style={{ width: '600px', margin: '30px auto' }}>
         <h2>Upcoming Events</h2>
         {/* Display upcoming events */}
-        {upcomingEvents.length === 0 && (
-          <p>No upcoming events</p>
+        {upcomingEvents.length > 0 ? (
+          <Grid container spacing={3}>
+            {upcomingEvents.map((meeting) => (
+              <Grid key={meeting._id} item xs={12}>
+                <MeetingCard meeting={meeting} onDelete={deleteEvent}/>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Typography variant="body1">
+            No upcoming events
+          </Typography>
         )}
-        {upcomingEvents.length > 0 && upcomingEvents.map((event) => (
-          <div key={event._id}>
-            <p>
-              Start Date/Time:{" "}
-              {new Date(event.startDateTime).toLocaleString([], {
-                dateStyle: "long",
-                timeStyle: "short",
-              })}
-            </p>
-            <p>
-              End Date/Time:{" "}
-              {new Date(event.endDateTime).toLocaleString([], {
-                dateStyle: "long",
-                timeStyle: "short",
-              })}
-            </p>
-            <p>Summary: {event.summary}</p>
-            {event.description && (
-              <p>Description: {event.description}</p>
-            )}
-            {event.attendees && event.attendees.length > 0 && (
-              <div>
-                <p>Attendees:</p>
-                <ul>
-                  {event.attendees.map((attendee, index) => (
-                    <li key={index}>
-                      {attendee.name} ({attendee.email})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {event.attendees.length === 0 && (
-              <p> Attendees: None</p>
-            )}
-            <IconButton
-                color="secondary"
-                aria-label="Delete Event"
-                onClick={() => deleteEvent(event._id, event.googleEventId)}
-                size="large"
-                title="Delete Event"
-                sx={{ color: "#C41E3A" }}
-              >
-                <DeleteIcon fontSize="inherit"/>
-              </IconButton>
-            </div>
-        ))}
+        <br />
         <Link to="/calendar">
           <Button variant="contained" color="primary">
             Back to Calendar

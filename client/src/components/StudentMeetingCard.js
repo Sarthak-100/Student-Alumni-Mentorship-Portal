@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography, } from "@mui/material";
 
-const MeetingCard = ({ meeting }) => {
+const StudentMeetingCard = ({ meeting }) => {
   const cardStyle = {
     backgroundColor: "#f9f9f9",
     borderRadius: "8px",
@@ -42,4 +42,4 @@ const MeetingCard = ({ meeting }) => {
   );
 };
 
-export default MeetingCard;
+export default StudentMeetingCard;
