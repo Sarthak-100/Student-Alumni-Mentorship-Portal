@@ -56,9 +56,9 @@ import Reports from "../pages/Reports.js";
 import CreateProfile from "../pages/CreateProfile";
 
 const iconContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "flex-end",
+  alignItems: "center",
   marginRight: 0, // Adjust the right margin for the entire icon container
 };
 
@@ -441,7 +441,7 @@ const Layout = () => {
         increment();
       }
     });
-    
+
     socket.on("receiveUpdateDeletedEvent", async (data) => {
       if (window.location.pathname === "/notifications") {
         setReloadNotificationPage((prevReload) => prevReload + 1);
@@ -528,7 +528,7 @@ const Layout = () => {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1, fontSize: '1.5rem' }}
+              sx={{ flexGrow: 1, fontSize: "1.5rem" }}
             >
               Dashboard
             </Typography>
@@ -538,32 +538,42 @@ const Layout = () => {
                   badgeContent={reportedNoContext?.reportedNo}
                   color="secondary"
                 >
-                  <AssignmentLateIcon
-                    onClick={handleReports}
-                  />
+                  <AssignmentLateIcon onClick={handleReports} />
                 </Badge>
               </IconButton>
             ) : null}
             <div style={iconContainerStyle}>
               <IconButton color="inherit" title="Notifications">
                 <Badge badgeContent={notificationsNo} color="secondary">
-                  <NotificationsIcon style={{ fontSize: '2rem' }} onClick={handleNotification} />
+                  <NotificationsIcon
+                    style={{ fontSize: "2rem" }}
+                    onClick={handleNotification}
+                  />
                 </Badge>
               </IconButton>
-              <IconButton color="inherit" title="Calendar" onClick={handleCalendarClick}>
-                <TodayIcon style={{ fontSize: '2rem' }} />
+              <IconButton
+                color="inherit"
+                title="Calendar"
+                onClick={handleCalendarClick}
+              >
+                <TodayIcon style={{ fontSize: "2rem" }} />
               </IconButton>
               <IconButton color="inherit" title="Chat" onClick={handleChat}>
                 <Badge
-                  badgeContent={messageNotificationsNoContext.messageNotificationsNo}
+                  badgeContent={
+                    messageNotificationsNoContext.messageNotificationsNo
+                  }
                   color="secondary"
                 >
-                  <ChatIcon style={{ fontSize: '2rem' }} />
+                  <ChatIcon style={{ fontSize: "2rem" }} />
                 </Badge>
               </IconButton>
-              <Link to="/profile" style={{ textDecoration: "none", color: "inherit" }}>
+              <Link
+                to="/profile"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 <IconButton color="inherit" title="Profile">
-                  <AccountCircleIcon style={{ fontSize: '2rem' }} />
+                  <AccountCircleIcon style={{ fontSize: "2rem" }} />
                 </IconButton>
               </Link>
               <IconButton color="inherit" title="Logout">

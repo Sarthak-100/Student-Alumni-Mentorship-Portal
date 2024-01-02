@@ -30,6 +30,10 @@
       /* flex: 1; */
       border-right: 1px solid white;
       background-color: #3e3c61;
+      height: calc(100%);
+      /* overflow: scroll; */
+      
+      
       
   
       .navbar{
@@ -45,6 +49,9 @@
         gap: 10px;
         color: white;
         cursor: pointer;
+        height: calc(100% - 50px);
+        /* overflow: scroll; */
+        
         
 
         .userChatsContainer{
@@ -100,7 +107,7 @@
         background-color: #ddddf7;
         padding: 10px;
         height: calc(100% - 153px);
-        overflow: scroll;
+        /* overflow: scroll; */
   
         .msg_content{
           
