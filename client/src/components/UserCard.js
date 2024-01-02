@@ -21,7 +21,6 @@ import { useReceiverIdContext } from "../context/ReceiverIdContext";
 import ProfileDisplay from "./ProfileDisplay"; // Importing your ProfileDisplay component
 import axios from "axios";
 import { useSocketContext } from "../context/SocketContext";
-import { set } from "date-fns";
 
 const UserCard = (props) => {
   const navigate = useNavigate();
@@ -64,7 +63,6 @@ const UserCard = (props) => {
   };
 
   const showCalendar = () => {
-    props.setSelectedUserCalenderDisplay(props.cardUser._id);
     try {
       //fetch availability slots of this alumni from database
       const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
@@ -85,6 +83,11 @@ const UserCard = (props) => {
               alert(props.cardUser.name + " has no available meetings slots.");
             }else {
               handleCalendarDisplay(fetchedEvents.length);
+              if (!showEvents) {
+                props.setSelectedUserCalenderDisplay(props.cardUser._id);
+              } else {
+                props.setSelectedUserCalenderDisplay(null);
+              }
             }
           } else {
             console.error(
@@ -356,13 +359,10 @@ const UserCard = (props) => {
         {events.length > 0 && (
           <div
             style={{
-              width: "300px",
               marginTop: "10px",
-              marginRight: "40px",
-              alignItems: "left",
               display: "flex",
               flexDirection: "column",
-              alignContent: "center",
+              alignContent: "left",
             }}
           >
             <Typography
@@ -371,7 +371,7 @@ const UserCard = (props) => {
                 position: "relative",
                 display: "inline-block",
                 padding: "8px 16px",
-                background: "#FFFF00", // Pink background color
+                background: "#FFFF00",
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                 borderRadius: "8px",
                 marginBottom: "25px",

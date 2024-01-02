@@ -11,15 +11,12 @@ import { useUserContext } from "../context/UserContext";
 
 const FilterAlumni = () => {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [searchText, setSearchText] = useState("");
   const inputRef = useRef(null);
   const [apiResponse, setApiResponse] = useState(null);
   const { user } = useUserContext();
 
-  const [selectedUserCalenderDisplay, setSelectedUserCalenderDisplay] =
-    useState(null);
+  const [selectedUserCalenderDisplay, setSelectedUserCalenderDisplay] = useState(null);
 
   // Function to open and close the filter menu
   const openFilterMenu = () => {
@@ -108,7 +105,7 @@ const FilterAlumni = () => {
               style={{
                 padding: "0",
                 width:
-                  selectedUserCalenderDisplay === user._id ? "600px" : "300px",
+                  selectedUserCalenderDisplay === user._id ? "620px" : "300px",
                 marginLeft: "20px",
               }}
             >
@@ -117,9 +114,6 @@ const FilterAlumni = () => {
                 setSelectedUserCalenderDisplay={setSelectedUserCalenderDisplay}
               />
             </div>
-            // <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-            //   <UserCard cardUser={user} />
-            // </Grid>
           ))}
         </div>
       )}
