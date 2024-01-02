@@ -21,20 +21,20 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
 
   const { socket } = useSocketContext();
 
-  const divRef = useRef(null);
-  const [isOverflowing, setIsOverflowing] = useState(false);
+  // const divRef = useRef(null);
+  // const [isOverflowing, setIsOverflowing] = useState(false);
 
-  useEffect(() => {
-    const container = divRef.current;
+  // useEffect(() => {
+  //   const container = divRef.current;
 
-    if (container) {
-      // Check if the content overflows horizontally or vertically
-      const isVerticallyOverflowing =
-        container.scrollHeight > container.clientHeight;
+  //   if (container) {
+  //     // Check if the content overflows horizontally or vertically
+  //     const isVerticallyOverflowing =
+  //       container.scrollHeight > container.clientHeight;
 
-      setIsOverflowing(isVerticallyOverflowing);
-    }
-  }, []);
+  //     setIsOverflowing(isVerticallyOverflowing);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -203,9 +203,10 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
 
   return (
     <div
+      // ref={divRef}
+      // className={isOverflowing ? "previousChatsScrollable" : "previousChats"}
       className="previousChats"
-      ref={divRef}
-      style={{ overflow: isOverflowing ? "scroll" : "hidden" }}
+      // style={{ overflow: isOverflowing ? "scroll" : "hidden" }}
     >
       {conversations.map((c) => (
         <div
