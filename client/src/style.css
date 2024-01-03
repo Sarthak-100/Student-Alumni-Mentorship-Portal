@@ -124,7 +124,7 @@
         background-color: #ddddf7;
         padding: 10px;
         height: calc(100% - 153px);
-        /* overflow: scroll; */
+        /* overflow-y: hidden; */
   
         .msg_content{
           
@@ -165,6 +165,23 @@
             }
           }
         }
+      }
+
+      .messages:hover {
+        overflow-y: auto; /* Show the scrollbar on hover */
+      }
+
+      .messages::-webkit-scrollbar {
+        width: 8px; /* Set the width of the scrollbar */
+      }
+      
+      .messages::-webkit-scrollbar-thumb {
+        background-color: #888; /* Set the color of the scrollbar thumb */
+        border-radius: 4px; /* Optional: Add rounded corners to the thumb */
+      }
+      
+      .messages::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Set the color of the scrollbar track */
       }
       
       .sendMsg{
