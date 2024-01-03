@@ -27,7 +27,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ChatIcon from "@mui/icons-material/Chat";
 import ProfilePage from "./../pages/ProfilePage";
 import Notifications from "./../pages/Notifications";
-import Admin_Charts from "./Admin_Charts";
+import Admin_Charts from "./AdminCharts";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
 import FilterStudent from "./FilterStudent.js";
