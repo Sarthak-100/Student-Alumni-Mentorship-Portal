@@ -25,7 +25,7 @@ const prefix = async (req, res) => {
     const result = await Alumni.find({
       name: { $regex: "^" + req.query.prefix, $options: "i" },
       removed: false,
-    });
+    }).sort({ name: 1 });
 
     res.status(200).json({ result });
     return result;
@@ -45,7 +45,7 @@ const filter = async (req, res) => {
       current_organization,
       current_location,
     } = req.query;
-    // const { batch, branch, current_role, current_organization } = req.params;
+
     const filters = {};
 
     if (branch) {
@@ -68,7 +68,7 @@ const filter = async (req, res) => {
 
     filters.removed = false;
 
-    const result = await Alumni.find(filters);
+    const result = await Alumni.find(filters).sort({ name: 1 });
 
     res.status(200).json({ result });
     return result;
@@ -99,6 +99,5 @@ const getAlumniNameById = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the alumni name.' });
   }
 };
-
 
 export { values, filter, prefix , getAlumniNameById};
