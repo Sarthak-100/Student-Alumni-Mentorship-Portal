@@ -21,7 +21,7 @@ import LoginButton from "./components/LoginButton";
 import Chatting from "./components/Chatting";
 import Layout from "./components/Layout";
 import Hello from "./components/Hello";
-import Admin_Charts from "./components/Admin_Charts";
+import Admin_Charts from "./components/AdminCharts";
 import Calendar from "./components/Calendar";
 import UpcomingEvents from "./components/UpcomingEvents";
 import { ClearNotificationProvider } from "./context/ClearNotificationContext";

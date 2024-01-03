@@ -25,20 +25,15 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-
-import TodayIcon from "@mui/icons-material/Today";
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
-
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";
-import LoginIconButton from "./LoginIconButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/SocketContext";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
-import { io } from "socket.io-client";
 import socket from "../chatSocket.js";
 
 // Set the width of the drawer
@@ -100,15 +95,11 @@ const Dashboard = () => {
   const [open, setOpen] = useState(true);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
-  const [searchText, setSearchText] = useState("");
-  const [showCalendar, setShowCalendar] = useState(false);
   const inputRef = useRef(null);
 
   // Context and authentication hooks
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
-
-  // console.log("@@@@@@AuthOuser", user);
 
   const { setSocketValue } = useSocketContext();
 
@@ -145,17 +136,14 @@ const Dashboard = () => {
           )
           .then((response) => {
             if (response.data.success) {
-              // console.log("INSIDE PROFILE API", response.data);
               let tempUser = response.data.user;
               let user_type = response.data.user_type;
               tempUser.user_type = user_type;
-              // console.log("INSIDE PROFILE API 2", tempUser);
               userContext.login(tempUser);
               setSocketValue(socket);
             } else {
               console.log("Login Failed");
               logout({ returnTo: "http://localhost:5000" });
-              // logout();
             }
           })
           .catch((error) => {
@@ -192,49 +180,6 @@ const Dashboard = () => {
     };
     getNotificationsNo();
   });
-
-  // Function to fetch the filtered results
-  const applyFilters = (filters) => {
-    const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
-
-    const filterParams = new URLSearchParams(filters).toString();
-    const apiUrl = `${baseUrl}?${filterParams}`;
-    console.log(apiUrl);
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setApiResponse(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("API Error:", error);
-      });
-
-    closeFilterMenu();
-  };
-
-  // Function to handle search text change
-  const handleSearchChange = (e) => {
-    const searchText = e.target.value;
-    setSearchText(searchText);
-
-    // Make API call to fetch filtered results based on searchText
-    const apiUrl = `http://localhost:4000/api/v1/student/filter-alumni/alumniPrefix?prefix=${searchText}`;
-    console.log(apiUrl);
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setApiResponse(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("API Error:", error);
-      });
-  };
-
-  const handleCalendarClick = () => {
-    navigate("/calendar");
-  };
 
   // Function to handle chat IconButton click
   const handleChat = () => {

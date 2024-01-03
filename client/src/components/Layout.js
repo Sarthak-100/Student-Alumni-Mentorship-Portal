@@ -16,7 +16,6 @@ import {
   Badge,
   Divider,
   Drawer as MuiDrawer,
-  Button,
 } from "@mui/material";
 
 // Import icons and components
@@ -27,7 +26,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ChatIcon from "@mui/icons-material/Chat";
 import ProfilePage from "./../pages/ProfilePage";
 import Notifications from "./../pages/Notifications";
-import Admin_Charts from "./Admin_Charts";
+import Admin_Charts from "./AdminCharts";
 import Hello from "./Hello";
 import FilterAlumni from "./FilterAlumni.js";
 import FilterStudent from "./FilterStudent.js";
@@ -56,9 +55,9 @@ import Reports from "../pages/Reports.js";
 import CreateProfile from "../pages/CreateProfile";
 
 const iconContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "flex-end",
+  alignItems: "center",
   marginRight: 0, // Adjust the right margin for the entire icon container
 };
 
@@ -441,7 +440,7 @@ const Layout = () => {
         increment();
       }
     });
-    
+
     socket.on("receiveUpdateDeletedEvent", async (data) => {
       if (window.location.pathname === "/notifications") {
         setReloadNotificationPage((prevReload) => prevReload + 1);
@@ -528,42 +527,53 @@ const Layout = () => {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1, fontSize: '1.5rem' }}
+              sx={{ flexGrow: 1, fontSize: "1.5rem" }}
             >
               Dashboard
             </Typography>
             {userContext.user?.user_type === "admin" ? (
-              <IconButton color="inherit">
+              <IconButton color="inherit" title="Complaints">
                 <Badge
                   badgeContent={reportedNoContext?.reportedNo}
                   color="secondary"
+                  
                 >
-                  <AssignmentLateIcon
-                    onClick={handleReports}
-                  />
+                  <AssignmentLateIcon onClick={handleReports} style={{ fontSize: "1.75rem" }}/>
                 </Badge>
               </IconButton>
             ) : null}
             <div style={iconContainerStyle}>
               <IconButton color="inherit" title="Notifications">
                 <Badge badgeContent={notificationsNo} color="secondary">
-                  <NotificationsIcon style={{ fontSize: '2rem' }} onClick={handleNotification} />
+                  <NotificationsIcon
+                    style={{ fontSize: "2rem" }}
+                    onClick={handleNotification}
+                  />
                 </Badge>
               </IconButton>
-              <IconButton color="inherit" title="Calendar" onClick={handleCalendarClick}>
-                <TodayIcon style={{ fontSize: '2rem' }} />
+              <IconButton
+                color="inherit"
+                title="Calendar"
+                onClick={handleCalendarClick}
+              >
+                <TodayIcon style={{ fontSize: "2rem" }} />
               </IconButton>
               <IconButton color="inherit" title="Chat" onClick={handleChat}>
                 <Badge
-                  badgeContent={messageNotificationsNoContext.messageNotificationsNo}
+                  badgeContent={
+                    messageNotificationsNoContext.messageNotificationsNo
+                  }
                   color="secondary"
                 >
-                  <ChatIcon style={{ fontSize: '2rem' }} />
+                  <ChatIcon style={{ fontSize: "2rem" }} />
                 </Badge>
               </IconButton>
-              <Link to="/profile" style={{ textDecoration: "none", color: "inherit" }}>
+              <Link
+                to="/profile"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 <IconButton color="inherit" title="Profile">
-                  <AccountCircleIcon style={{ fontSize: '2rem' }} />
+                  <AccountCircleIcon style={{ fontSize: "2rem" }} />
                 </IconButton>
               </Link>
               <IconButton color="inherit" title="Logout">

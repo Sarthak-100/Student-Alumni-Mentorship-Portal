@@ -54,7 +54,7 @@ describe("Suite 2: Filtering Alumni", () => {
     entities.forEach((entity) => {
       expect(entity.work.role).toBe('Software Engineer');
     });
-    });
+  });
 
   it('GET api/v1/student/filter-alumni/getAlumniNameById?alumniId=x should return alumni name with id x', async () => {
     const response = await request(app).get('/api/v1/student/filter-alumni/getAlumniNameById?alumniId=657396f6a4b2925807819b05');
@@ -67,4 +67,4 @@ describe("Suite 2: Filtering Alumni", () => {
   });
   
 
-  });
+});

@@ -20,7 +20,7 @@ const studentPrefix = async (req, res) => {
     const result = await Student.find({
       name: { $regex: "^" + req.query.prefix, $options: "i" },
       removed: false,
-    });
+    }).sort({ name: 1 });
 
     res.status(200).json({ result });
     return result;
@@ -33,7 +33,7 @@ const studentPrefix = async (req, res) => {
 
 const studentFilter = async (req, res) => {
   try {
-    const { batch, branch } = req.query;
+    const { batch, branch, searchPrefix } = req.query;
     const filters = {};
 
     if (branch) {
@@ -45,7 +45,12 @@ const studentFilter = async (req, res) => {
 
     filters.removed = false;
 
-    const result = await Student.find(filters);
+    if (searchPrefix) {
+      // Combine prefix search with existing filters
+      filters.name = { $regex: "^" + searchPrefix, $options: "i" };
+    }
+
+    const result = await Student.find(filters).sort({ name: 1 });
 
     res.status(200).json({ result });
     return result;

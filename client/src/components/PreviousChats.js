@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { formatDistanceToNow, format, set } from "date-fns";
 
-
 const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   const [conversations, setConversations] = useState([]);
 
@@ -21,6 +20,21 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   const { receiverId, setReceiverIdValue } = useReceiverIdContext();
 
   const { socket } = useSocketContext();
+
+  // const divRef = useRef(null);
+  // const [isOverflowing, setIsOverflowing] = useState(false);
+
+  // useEffect(() => {
+  //   const container = divRef.current;
+
+  //   if (container) {
+  //     // Check if the content overflows horizontally or vertically
+  //     const isVerticallyOverflowing =
+  //       container.scrollHeight > container.clientHeight;
+
+  //     setIsOverflowing(isVerticallyOverflowing);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -145,7 +159,6 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
     };
   });
 
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -189,7 +202,12 @@ const PreviousChats = ({ loadConversations, setLoadConversations }) => {
   }, [conversation]);
 
   return (
-    <div className="previousChats">
+    <div
+      // ref={divRef}
+      // className={isOverflowing ? "previousChatsScrollable" : "previousChats"}
+      className="previousChats"
+      // style={{ overflow: isOverflowing ? "scroll" : "hidden" }}
+    >
       {conversations.map((c) => (
         <div
           className="userChatsContainer"
