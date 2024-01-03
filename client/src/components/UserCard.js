@@ -37,6 +37,8 @@ const UserCard = (props) => {
   useEffect(() => {
     // Clear events when a new user is selected
     setEvents([]);
+    setShowEvents(false);
+    setCalendarIcon(<TodayIcon />);
   }, [props.cardUser]);
 
   const handleChat = async () => {
