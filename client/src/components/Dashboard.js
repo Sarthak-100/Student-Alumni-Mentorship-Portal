@@ -95,8 +95,6 @@ const Dashboard = () => {
   const [open, setOpen] = useState(true);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
-  const [searchText, setSearchText] = useState("");
-  const [showCalendar, setShowCalendar] = useState(false);
   const inputRef = useRef(null);
 
   // Context and authentication hooks
@@ -182,46 +180,6 @@ const Dashboard = () => {
     };
     getNotificationsNo();
   });
-
-  // Function to fetch the filtered results
-  // const applyFilters = (filters) => {
-  //   const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
-
-  //   const filterParams = new URLSearchParams({...filters, searchPrefix: searchText}).toString();
-  //   console.log("check filter params", filterParams);
-  //   const apiUrl = `${baseUrl}?${filterParams}`;
-  //   console.log(apiUrl);
-  //   axios
-  //     .get(apiUrl)
-  //     .then((response) => {
-  //       setApiResponse(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("API Error:", error);
-  //     });
-
-  //   closeFilterMenu();
-  // };
-
-  // Function to handle search text change
-  const handleSearchChange = (e) => {
-    const searchText = e.target.value;
-    setSearchText(searchText);
-
-    // Make API call to fetch filtered results based on searchText
-    const apiUrl = `http://localhost:4000/api/v1/student/filter-alumni/alumniPrefix?prefix=${searchText}`;
-    console.log(apiUrl);
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setApiResponse(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("API Error:", error);
-      });
-  };
 
   // Function to handle chat IconButton click
   const handleChat = () => {
