@@ -16,7 +16,6 @@ import {
   Badge,
   Divider,
   Drawer as MuiDrawer,
-  Button,
 } from "@mui/material";
 
 // Import icons and components
@@ -533,12 +532,13 @@ const Layout = () => {
               Dashboard
             </Typography>
             {userContext.user?.user_type === "admin" ? (
-              <IconButton color="inherit">
+              <IconButton color="inherit" title="Complaints">
                 <Badge
                   badgeContent={reportedNoContext?.reportedNo}
                   color="secondary"
+                  
                 >
-                  <AssignmentLateIcon onClick={handleReports} />
+                  <AssignmentLateIcon onClick={handleReports} style={{ fontSize: "1.75rem" }}/>
                 </Badge>
               </IconButton>
             ) : null}
