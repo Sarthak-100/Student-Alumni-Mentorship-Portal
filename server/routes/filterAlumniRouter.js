@@ -1,5 +1,5 @@
 import express from 'express';
-import {values,filter,prefix,getAlumniNameById} from '../controllers/filterController.js';
+import {values,filter,prefix,getAlumniNameById} from '../controllers/filterAlumniController.js';
 
 const filterRouter = express.Router();
 

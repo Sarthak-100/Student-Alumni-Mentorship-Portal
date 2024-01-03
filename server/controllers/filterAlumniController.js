@@ -44,8 +44,9 @@ const filter = async (req, res) => {
       current_role,
       current_organization,
       current_location,
+      searchPrefix,
     } = req.query;
-
+    
     const filters = {};
 
     if (branch) {
@@ -67,6 +68,11 @@ const filter = async (req, res) => {
     }
 
     filters.removed = false;
+
+    if (searchPrefix) {
+      // Combine prefix search with existing filters
+      filters.name = { $regex: "^" + searchPrefix, $options: "i" };
+    }
 
     const result = await Alumni.find(filters).sort({ name: 1 });
 

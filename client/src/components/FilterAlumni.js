@@ -15,7 +15,14 @@ const FilterAlumni = () => {
   const inputRef = useRef(null);
   const [apiResponse, setApiResponse] = useState(null);
   const { user } = useUserContext();
-
+  const [filters, setFilters] = useState({
+    batch: "",
+    branch: "",
+    current_role: "",
+    current_organization: "",
+    current_location: "",
+  });
+  
   const [selectedUserCalenderDisplay, setSelectedUserCalenderDisplay] = useState(null);
 
   // Function to open and close the filter menu
@@ -29,10 +36,15 @@ const FilterAlumni = () => {
 
   // Function to fetch the filtered results
   const applyFilters = (filters) => {
+
+    const updatedFilters = {...filters, searchPrefix: searchText};
+    setFilters(updatedFilters);
+
     const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
-    const filterParams = new URLSearchParams(filters).toString();
+    const filterParams = new URLSearchParams(updatedFilters).toString();
     const apiUrl = `${baseUrl}?${filterParams}`;
     console.log(apiUrl);
+    
     axios
       .get(apiUrl)
       .then((response) => {
@@ -57,9 +69,14 @@ const FilterAlumni = () => {
     const searchText = e.target.value;
     setSearchText(searchText);
 
-    // Make API call to fetch filtered results based on searchText
-    const apiUrl = `http://localhost:4000/api/v1/student/filter-alumni/alumniPrefix?prefix=${searchText}`;
+    const updatedFilters = {...filters, searchPrefix: searchText};
+    setFilters(updatedFilters);
+
+    const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
+    const filterParams = new URLSearchParams(updatedFilters).toString();
+    const apiUrl = `${baseUrl}?${filterParams}`;
     console.log(apiUrl);
+
     axios
       .get(apiUrl)
       .then((response) => {

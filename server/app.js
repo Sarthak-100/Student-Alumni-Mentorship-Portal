@@ -6,7 +6,7 @@ import conversationRouter from "./routes/conversationRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import eventRouter from "./routes/eventRouter.js";
 import cookieParser from "cookie-parser";
-import filterRouter from "./routes/filterRouter.js";
+import filterRouter from "./routes/filterAlumniRouter.js";
 import notificationRouter from "./routes/notificationsRoutes.js";
 import reportRouter from "./routes/reportsRoutes.js";
 

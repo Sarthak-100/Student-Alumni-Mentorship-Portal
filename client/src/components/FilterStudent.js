@@ -15,6 +15,10 @@ const FilterStudent = () => {
   const [searchText, setSearchText] = useState("");
   const inputRef = useRef(null);
   const [apiResponse, setApiResponse] = useState(null);
+  const [filters, setFilters] = useState({
+    batch: "",
+    branch: "",
+  });
 
   // Function to open and close the filter menu
   const openFilterMenu = () => {
@@ -27,9 +31,12 @@ const FilterStudent = () => {
 
   // Function to fetch the filtered results
   const applyFilters = (filters) => {
-    const baseUrl =
-      "http://localhost:4000/api/v1/filter-student/student_filter";
-    const filterParams = new URLSearchParams(filters).toString();
+
+    const updatedFilters = {...filters, searchPrefix: searchText};
+    setFilters(updatedFilters);
+
+    const baseUrl = "http://localhost:4000/api/v1/filter-student/student_filter";
+    const filterParams = new URLSearchParams(updatedFilters).toString();
     const apiUrl = `${baseUrl}?${filterParams}`;
     console.log(apiUrl);
     axios
@@ -50,9 +57,14 @@ const FilterStudent = () => {
     const searchText = e.target.value;
     setSearchText(searchText);
 
-    // Make API call to fetch filtered results based on searchText
-    const apiUrl = `http://localhost:4000/api/v1/filter-student/student_prefix?prefix=${searchText}`;
+    const updatedFilters = {...filters, searchPrefix: searchText};
+    setFilters(updatedFilters);
+
+    const baseUrl = "http://localhost:4000/api/v1/filter-student/student_filter";
+    const filterParams = new URLSearchParams(updatedFilters).toString();
+    const apiUrl = `${baseUrl}?${filterParams}`;
     console.log(apiUrl);
+
     axios
       .get(apiUrl)
       .then((response) => {

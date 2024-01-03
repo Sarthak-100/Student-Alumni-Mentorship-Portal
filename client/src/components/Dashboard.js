@@ -25,20 +25,15 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-
-import TodayIcon from "@mui/icons-material/Today";
 import ChatIcon from "@mui/icons-material/Chat";
 import { Link } from "react-router-dom";
-
 import FilterMenu from "./Filter";
 import UserCard from "./UserCard";
 import { useUserContext } from "../context/UserContext";
-import LoginIconButton from "./LoginIconButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/SocketContext";
 import { useNotificationsNoContext } from "../context/NotificationsNoContext.js";
-import { io } from "socket.io-client";
 import socket from "../chatSocket.js";
 
 // Set the width of the drawer
@@ -108,8 +103,6 @@ const Dashboard = () => {
   const userContext = useUserContext();
   const { user, logout } = useAuth0();
 
-  // console.log("@@@@@@AuthOuser", user);
-
   const { setSocketValue } = useSocketContext();
 
   const { notificationsNo, setNotificationsNoValue, increment } =
@@ -145,17 +138,14 @@ const Dashboard = () => {
           )
           .then((response) => {
             if (response.data.success) {
-              // console.log("INSIDE PROFILE API", response.data);
               let tempUser = response.data.user;
               let user_type = response.data.user_type;
               tempUser.user_type = user_type;
-              // console.log("INSIDE PROFILE API 2", tempUser);
               userContext.login(tempUser);
               setSocketValue(socket);
             } else {
               console.log("Login Failed");
               logout({ returnTo: "http://localhost:5000" });
-              // logout();
             }
           })
           .catch((error) => {
@@ -194,24 +184,25 @@ const Dashboard = () => {
   });
 
   // Function to fetch the filtered results
-  const applyFilters = (filters) => {
-    const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
+  // const applyFilters = (filters) => {
+  //   const baseUrl = "http://localhost:4000/api/v1/student/filter-alumni/search";
 
-    const filterParams = new URLSearchParams(filters).toString();
-    const apiUrl = `${baseUrl}?${filterParams}`;
-    console.log(apiUrl);
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setApiResponse(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("API Error:", error);
-      });
+  //   const filterParams = new URLSearchParams({...filters, searchPrefix: searchText}).toString();
+  //   console.log("check filter params", filterParams);
+  //   const apiUrl = `${baseUrl}?${filterParams}`;
+  //   console.log(apiUrl);
+  //   axios
+  //     .get(apiUrl)
+  //     .then((response) => {
+  //       setApiResponse(response.data);
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("API Error:", error);
+  //     });
 
-    closeFilterMenu();
-  };
+  //   closeFilterMenu();
+  // };
 
   // Function to handle search text change
   const handleSearchChange = (e) => {
@@ -230,10 +221,6 @@ const Dashboard = () => {
       .catch((error) => {
         console.error("API Error:", error);
       });
-  };
-
-  const handleCalendarClick = () => {
-    navigate("/calendar");
   };
 
   // Function to handle chat IconButton click
