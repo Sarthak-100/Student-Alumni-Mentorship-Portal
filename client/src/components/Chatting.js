@@ -21,8 +21,9 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(1.3),
+  // height: "30px",
   "@media all": {
-    minHeight: 35,
+    minHeight: "38px",
   },
 }));
 
@@ -344,8 +345,23 @@ const Chatting = ({ setLoadConversations }) => {
 
   return (
     <div className="chatting">
-      <AppBar position="static">
-        <StyledToolbar>
+      <AppBar
+        position="static"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          height: "60px",
+          justifyContent: "space-between",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginLeft: "15px",
+          }}
+        >
           <IconButton
             size="large"
             edge="start"
@@ -360,7 +376,7 @@ const Chatting = ({ setLoadConversations }) => {
                 chattedUsers[conversation?.members.find((m) => m !== user?._id)]
                   ?.img
               }
-              sx={{ width: 42, height: 42 }}
+              sx={{ width: 26, height: 26 }}
             />
           </IconButton>
           <Typography variant="h6" flexGrow={1} sx={{ pt: 0, ml: 0 }}>
@@ -369,54 +385,49 @@ const Chatting = ({ setLoadConversations }) => {
                 ?.name
             }
           </Typography>
-          {user.user_type !== "admin" ? (
-            <div>
-              {chattedUsers[conversation?.members.find((m) => m !== user?._id)]
-                .user_type === "admin" ? null : (
-                <>
-                  {user.user_type !== "student" &&
-                  conversation.blockedUser !== user._id ? (
-                    <>
-                    <Button
-                      variant="contained"
-                      style={{
-                        backgroundColor: blocked ? "#00FF00" : "#FF0000",
-                        marginLeft: "12px",
-                        fontSize: "16px",
-                      }}
-                      className="IconButton"
-                      onClick={handleBlockPromptOpen} // Open blocking prompt on click
-                    >
-                      {blocked ? "Unblock" : "Block"}
-                    </Button>
-                    {/* <BlockingPrompt
-                      open={showBlockingPrompt}
-                      onClose={handleCloseBlockingPrompt} // Function to close the prompt
-                      message="Confirmation message for blocking"
-                    /> */}
-                    </>
-                  ) : null}
-                  <IconButton
-                    size="large"
-                    aria-label="display more actions"
-                    edge="end"
-                    onClick={handleReport}
+        </div>
+        {user.user_type !== "admin" ? (
+          <div>
+            {chattedUsers[conversation?.members.find((m) => m !== user?._id)]
+              .user_type === "admin" ? null : (
+              <>
+                {user.user_type !== "student" &&
+                conversation.blockedUser !== user._id ? (
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: blocked ? "#00FF00" : "#FF0000",
+                      marginLeft: "12px",
+                      fontSize: "16px",
+                    }}
+                    className="IconButton"
+                    onClick={blockBtController}
                   >
-                    <ReportIcon style={{ color: "#FF0000", fontSize: 50 }} />
-                  </IconButton>
-                </>
-              )}
-            </div>
-          ) : (
-            <Button
-              variant="contained"
-              style={{ backgroundColor: "#FF0000" }}
-              className="IconButton"
-            >
-              Remove User
-            </Button>
-          )}
-        </StyledToolbar>
+                    {blocked ? "Unblock" : "Block"}
+                  </Button>
+                ) : null}
+                <IconButton
+                  style={{ marginRight: "5px" }}
+                  size="large"
+                  aria-label="display more actions"
+                  edge="end"
+                  onClick={handleReport}
+                >
+                  <ReportIcon style={{ color: "#FF0000" }} />
+                </IconButton>
+              </>
+            )}
+          </div>
+        ) : (
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#FF0000" }}
+            className="IconButton"
+          >
+            Remove User
+          </Button>
+        )}
+        {/* </StyledToolbar> */}
       </AppBar>
       {/* <Messages /> */}
       <ReactScrollToBottom className="messages">
