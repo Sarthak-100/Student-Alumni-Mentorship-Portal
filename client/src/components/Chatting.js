@@ -325,9 +325,17 @@ const Chatting = ({ setLoadConversations }) => {
         "reloadConversations",
         conversation?.members.find((m) => m !== user?._id)
       );
+      
+      setBlockedValue(true); // Update blocked state
+      handleCloseBlockingPrompt();
+
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleBlockPromptOpen = () => {
+    setShowBlockingPrompt(true);
   };
 
   useEffect(() => {
@@ -368,6 +376,7 @@ const Chatting = ({ setLoadConversations }) => {
                 <>
                   {user.user_type !== "student" &&
                   conversation.blockedUser !== user._id ? (
+                    <>
                     <Button
                       variant="contained"
                       style={{
@@ -376,10 +385,16 @@ const Chatting = ({ setLoadConversations }) => {
                         fontSize: "16px",
                       }}
                       className="IconButton"
-                      onClick={blockBtController}
+                      onClick={handleBlockPromptOpen} // Open blocking prompt on click
                     >
                       {blocked ? "Unblock" : "Block"}
                     </Button>
+                    {/* <BlockingPrompt
+                      open={showBlockingPrompt}
+                      onClose={handleCloseBlockingPrompt} // Function to close the prompt
+                      message="Confirmation message for blocking"
+                    /> */}
+                    </>
                   ) : null}
                   <IconButton
                     size="large"
@@ -457,7 +472,7 @@ const Chatting = ({ setLoadConversations }) => {
       <BlockingPrompt
         open={updateBlockingPrompt}
         onClose={handleCloseOfUpdateBlockingPrompt}
-        message={`You have been ${blocked ? "Blocked" : "Unblocked"} by ${
+        message={`You have been ${blocked ? "blocked" : "unblocked"} by ${
           true &&
           chattedUsers[conversation?.members.find((m) => m !== user?._id)]?.name
         }.`}

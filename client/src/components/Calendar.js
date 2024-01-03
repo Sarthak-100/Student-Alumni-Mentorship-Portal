@@ -107,6 +107,9 @@ const Calendar = () => {
     if (startDate > endDate) {
       alert("Invalid event, start time must be before end time");
       return;
+    } else if (eventName === "") {
+      alert("Invalid event, add some event name");
+      return;
     }
 
     console.log("Creating calendar event");
