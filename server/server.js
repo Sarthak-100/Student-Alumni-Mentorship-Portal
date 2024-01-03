@@ -10,7 +10,7 @@ connectDB();
 
 const io = new Server(8900, {
   cors: {
-    origin: "http://localhost:5000",
+    origin: "https://student-alumni-mentorship-portal.vercel.app/",
   },
 });
 

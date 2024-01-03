@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = ({ returnTo }) => {
     // Perform logout logic, clear user data, etc.
-    window.location.href = "http://localhost:5000";
+    window.location.href = "https://student-alumni-mentorship-portal.vercel.app/";
   };
 
   return (

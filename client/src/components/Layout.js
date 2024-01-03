@@ -184,7 +184,7 @@ const Layout = () => {
 
   useEffect(() => {
     socket.on("getRemoveUserNotification", async (data) => {
-      logout({ returnTo: "http://localhost:5000" });
+      logout({ returnTo: "https://student-alumni-mentorship-portal.vercel.app/" });
     });
     return () => {
       socket.off("getRemoveUserNotification");

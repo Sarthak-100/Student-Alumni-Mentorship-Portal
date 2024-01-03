@@ -7,7 +7,7 @@ const LogoutIconButton = () => {
   
   return (
     isAuthenticated && (
-      <IconButton onClick={() => logout({ returnTo: 'http://localhost:5000' }) } color="inherit">
+      <IconButton onClick={() => logout({ returnTo: 'https://student-alumni-mentorship-portal.vercel.app/' }) } color="inherit">
         <ExitToAppIcon style={{ fontSize: '2rem' }} />
       </IconButton>
     )
