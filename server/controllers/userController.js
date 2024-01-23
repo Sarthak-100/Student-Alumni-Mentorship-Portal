@@ -214,6 +214,8 @@ export const getBatchwiseCounts = async (req, res, next) => {
       },
     ]);
 
+    console.log(alumniCounts, studentCounts);
+
     res.status(200).json({
       success: true,
       alumniCounts,
