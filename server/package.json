@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "server side of the student alumni mentorship portal",
   "main": "index.js",
   "type": "module",
   "jest": {
