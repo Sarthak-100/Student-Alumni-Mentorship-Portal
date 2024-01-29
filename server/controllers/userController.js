@@ -249,3 +249,14 @@ export const removeUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getDemo = async (req, res, next) => {
+  try {
+    
+    let result = "Demo";
+  
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+}

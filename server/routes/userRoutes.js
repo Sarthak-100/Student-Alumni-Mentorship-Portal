@@ -8,6 +8,7 @@ import {
   insertAvatar,
   removeUser,
   createProfile,
+  getDemo,
 } from "../controllers/userController.js";
 
 const userRouter = express.Router();
@@ -25,5 +26,7 @@ userRouter.get("/getBatchwiseCounts", getBatchwiseCounts);
 userRouter.put("/removeUser", removeUser);
 
 userRouter.post("/createProfile", createProfile);
+
+userRouter.get("/demo", getDemo);
 
 export default userRouter;
