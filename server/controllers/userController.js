@@ -253,9 +253,10 @@ export const removeUser = async (req, res, next) => {
 export const getDemo = async (req, res, next) => {
   try {
     
-    let result = "Demo";
+    // let result = "Demo";
+    const alumni = await Alumni.findOne({ email: "ekansh15139@iiitd.ac.in" });
   
-    res.status(200).json(result);
+    res.status(200).json(alumni);
   } catch (error) {
     next(error);
   }
