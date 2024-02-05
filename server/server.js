@@ -224,7 +224,7 @@ io.on("connection", (socket) => {
         console.log("inside userReported");
         io.to(user?.socketId).emit("reportNotificationAdmin", {});
       }
-      
+
       const report = new Reports({
         reporterId: reporterId,
         reporterName: reporterName,
