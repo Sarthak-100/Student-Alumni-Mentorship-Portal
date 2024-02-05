@@ -59,7 +59,7 @@ app.use("/api/v1/deleteEvent", eventRouter);
 
 connectDB();
 
-const io = new Server(8900, {
+const io = new Server(9000, {
   cors: {
     origin: "https://student-alumni-mentorship-portal.vercel.app/",
   },
