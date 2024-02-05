@@ -67,7 +67,7 @@ const UserCard = (props) => {
   const showCalendar = () => {
     try {
       //fetch availability slots of this alumni from database
-      const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
+      const baseUrl = "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/fetchSlots/details";
       const userId = props.cardUser._id;
       const apiUrl = `${baseUrl}?userId=${userId}`;
       console.log(apiUrl);
@@ -159,7 +159,7 @@ const UserCard = (props) => {
       updatedEvent.attendees.push(bookingStudent);
       // Update event in the database or Google Calendar
       try {
-        const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+        const baseUrl = "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/updateEvent/update";
         const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
 
         const response = await axios.post(apiUrl, {
@@ -217,7 +217,7 @@ const UserCard = (props) => {
 
       console.log("updatedEvent after cancellation", updatedEvent);
       // Update event in the database or Google Calendar
-      const baseUrl = "http://localhost:4000/api/v1/updateEvent/update";
+      const baseUrl = "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/updateEvent/update";
       const apiUrl = `${baseUrl}?eventId=${updatedEvent.id}`;
 
       const response = await axios.post(apiUrl, {

@@ -44,7 +44,7 @@ const ConversationsByDateBarPlot = () => {
 
   const fetchData = async () => {
     try {
-      let url = 'http://localhost:4000/api/v1/conversations/conversationsByDate';
+      let url = 'https://student-alumni-mentorship-portal-server.vercel.app/api/v1/conversations/conversationsByDate';
 
       if (selectedMonth && selectedYear) {
         url += `?month=${selectedMonth}&year=${selectedYear}`;

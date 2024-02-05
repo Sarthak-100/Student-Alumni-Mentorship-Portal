@@ -38,7 +38,7 @@ const Calendar = () => {
   const fetchAlumniNameById = async (alumniId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/student/filter-alumni/getAlumniNameById?alumniId=${alumniId}`
+        `https://student-alumni-mentorship-portal-server.vercel.app/api/v1/student/filter-alumni/getAlumniNameById?alumniId=${alumniId}`
       );
       return response.data.alumniName;
     } catch (error) {
@@ -51,7 +51,7 @@ const Calendar = () => {
     console.log("in past meetings", user._id);
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/fetchPastMeetings/meetings?userId=${user._id}`
+        `https://student-alumni-mentorship-portal-server.vercel.app/api/v1/fetchPastMeetings/meetings?userId=${user._id}`
       );
 
       if (response.status === 200) {
@@ -126,7 +126,7 @@ const Calendar = () => {
 
         // Save event details in the database without creating it in Google Calendar
         const response = await axios.post(
-          "http://localhost:4000/api/v1/saveEvent/details",
+          "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/saveEvent/details",
           {
             headers: {
               "Content-Type": "application/json",
@@ -152,7 +152,7 @@ const Calendar = () => {
 
       // // Save event details in the database without creating it in Google Calendar
       // const response = await axios.post(
-      //   "http://localhost:4000/api/v1/saveEvent/details",
+      //   "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/saveEvent/details",
       //   {
       //     headers: {
       //       "Content-Type": "application/json",
@@ -182,7 +182,7 @@ const Calendar = () => {
   async function syncCalendar() {
     if (session !== null && session?.provider_token !== undefined) {
       try {
-        const baseUrl = "http://localhost:4000/api/v1/fetchSlots/details";
+        const baseUrl = "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/fetchSlots/details";
         const userId = user._id;
         const apiUrl = `${baseUrl}?userId=${userId}`;
         const response = await axios.get(apiUrl);
@@ -258,7 +258,7 @@ const Calendar = () => {
 
                     //update this event in the database
                     const apiUrl =
-                      "http://localhost:4000/api/v1/updateEvent/update";
+                      "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/updateEvent/update";
                     axios
                       .post(apiUrl, {
                         headers: {
@@ -372,7 +372,7 @@ const Calendar = () => {
 
                     //update this event in the database
                     const apiUrl =
-                      "http://localhost:4000/api/v1/updateEvent/update";
+                      "https://student-alumni-mentorship-portal-server.vercel.app/api/v1/updateEvent/update";
                     axios
                       .post(apiUrl, {
                         headers: {

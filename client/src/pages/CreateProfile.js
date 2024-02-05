@@ -6,7 +6,7 @@ const CreateProfile = () => {
   const createProfile = async () => {
     try {
       await axios
-        .post("http://localhost:4000/api/v1/users/createProfile", {
+        .post("https://student-alumni-mentorship-portal-server.vercel.app/api/v1/users/createProfile", {
           withCredentials: true,
         })
         .then((response) => {
