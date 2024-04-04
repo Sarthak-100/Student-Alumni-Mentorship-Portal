@@ -77,22 +77,14 @@ const UserCard = (props) => {
           if (response.status == 200) {
             console.log("Slots fetched successfully!", response.data);
             const fetchedEvents = response.data.events; // Replace 'events' with the actual key containing events in your response
-
-            // Filter out events with non-empty attendees array or where the user is not an attendee
-            const availableEvents = fetchedEvents.filter(event => 
-              (!event.attendees || event.attendees.length === 0) || 
-              event.attendees.some(attendee => attendee._id === user._id)
-            );
-
-            const initialStatus = availableEvents.map(() => false);
+            const initialStatus = fetchedEvents.map(() => false);
             setMeetingStatus(initialStatus);
-            setEvents(availableEvents);
-
-            if (availableEvents.length === 0) {
-              // Display an alert if there are no available events
+            setEvents(fetchedEvents);
+            if (fetchedEvents.length === 0) {
+              // Display an alert if there are no events
               alert(props.cardUser.name + " has no available meetings slots.");
-            } else {
-              handleCalendarDisplay(availableEvents.length);
+            }else {
+              handleCalendarDisplay(fetchedEvents.length);
               if (!showEvents) {
                 props.setSelectedUserCalenderDisplay(props.cardUser._id);
               } else {

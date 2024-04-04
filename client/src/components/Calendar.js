@@ -114,66 +114,30 @@ const Calendar = () => {
 
     console.log("Creating calendar event");
     try {
-
-        // Loop to create events for the upcoming three weeks
-      for (let i = 0; i <= 21; i += 7) {
-        const startDateTime = new Date(startDate);
-        const endDateTime = new Date(endDate);
-        
-        // Add i days to the start and end dates
-        startDateTime.setDate(startDateTime.getDate() + i);
-        endDateTime.setDate(endDateTime.getDate() + i);
-
-        // Save event details in the database without creating it in Google Calendar
-        const response = await axios.post(
-          "http://localhost:4000/api/v1/saveEvent/details",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // Include necessary event details here for storage in the database
-            userId: session.user.email,
-            summary: eventName,
-            description: eventDescription,
-            startDateTime: startDateTime.toISOString(),
-            endDateTime: endDateTime.toISOString(),
-          }
-        );
-
-        if (response.status === 201) {
-          console.log(`Event for ${i} days after the current is saved in the database`);
-          navigate("/");
-        } else {
-          console.error("Failed to save event details:", response.status);
-          const errorData = response.json();
-          console.error("Error details:", errorData);
+      // Save event details in the database without creating it in Google Calendar
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/saveEvent/details",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Include necessary event details here for storage in the database
+          userId: session.user.email,
+          summary: eventName,
+          description: eventDescription,
+          startDateTime: startDate.toISOString(),
+          endDateTime: endDate.toISOString(),
         }
+      );
+
+      if (response.status === 201) {
+        alert("Event details saved!");
+        navigate("/");
+      } else {
+        console.error("Failed to save event details:", response.status);
+        const errorData = response.json();
+        console.error("Error details:", errorData);
       }
-
-      // // Save event details in the database without creating it in Google Calendar
-      // const response = await axios.post(
-      //   "http://localhost:4000/api/v1/saveEvent/details",
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     // Include necessary event details here for storage in the database
-      //     userId: session.user.email,
-      //     summary: eventName,
-      //     description: eventDescription,
-      //     startDateTime: startDate.toISOString(),
-      //     endDateTime: endDate.toISOString(),
-      //   }
-      // );
-
-      // if (response.status === 201) {
-      //   alert("Event details saved!");
-      //   navigate("/");
-      // } else {
-      //   console.error("Failed to save event details:", response.status);
-      //   const errorData = response.json();
-      //   console.error("Error details:", errorData);
-      // }
     } catch (error) {
       console.error("Error saving event details:", error);
     }

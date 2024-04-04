@@ -124,7 +124,7 @@ const Chatting = ({ setLoadConversations }) => {
 
   useEffect(() => {
     socket.on("getRemoveUserNotificationChat", async (data) => {
-      authContext.logout({ returnTo: "https://student-alumni-mentorship-portal.vercel.app/" });
+      authContext.logout({ returnTo: "http://localhost:5000" });
     });
     return () => {
       socket.off("getRemoveUserNotification");

@@ -143,7 +143,7 @@ const Dashboard = () => {
               setSocketValue(socket);
             } else {
               console.log("Login Failed");
-              logout({ returnTo: "https://student-alumni-mentorship-portal.vercel.app/" });
+              logout({ returnTo: "http://localhost:5000" });
             }
           })
           .catch((error) => {
